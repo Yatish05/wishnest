@@ -99,7 +99,23 @@ export function AuthProvider({ children }) {
         }
       } catch (error) {
         console.error('Fetch profile error:', error);
-        clearAuth();
+        // Only clear auth on explicit 401 Unauthorized.
+        // Network errors, CORS issues, or server-down scenarios on production
+        // should NOT wipe a valid token — the user is still authenticated locally.
+        if (error?.response?.status === 401) {
+          clearAuth();
+        } else {
+          // Keep the locally stored token/user so the app remains usable.
+          // Re-sync state from localStorage in case it wasn't set yet.
+          if (storedUser) {
+            setToken(storedToken);
+            setUser(JSON.parse(storedUser));
+          } else {
+            // We have a token but no cached user — best-effort: stay logged in
+            // without full user object; profile will retry on next page load.
+            setToken(storedToken);
+          }
+        }
       }
 
       setLoading(false);
