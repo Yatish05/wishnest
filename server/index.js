@@ -57,7 +57,7 @@ app.use(cors({
 }));
 
 // Serve sitemap before any body parsers or session middleware
-app.use('/api', sitemapRoutes);
+app.use('/', sitemapRoutes);
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
