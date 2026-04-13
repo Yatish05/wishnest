@@ -132,7 +132,7 @@ export default function LandingPage() {
                 </div>
 
                 <h1 className="landing-title">
-                  A helpful guide for the people who want to gift you well.
+                  Create a free wishlist to get the gifts you'll actually love.
                 </h1>
                 <p className="landing-subtitle">
                   WishNest helps you organise what you&apos;d love to receive, so friends and family can gift with confidence.
@@ -418,6 +418,34 @@ export default function LandingPage() {
               <p>
                 Account details, preferences, and wishlist content stay tied to your account and app permissions.
               </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="faq" className="landing-section landing-section--soft">
+        <div className="container">
+          <div className="landing-section__header">
+            <h2>Frequently Asked Questions</h2>
+            <p>Common questions about our free wishlist maker.</p>
+          </div>
+
+          <div className="landing-info-grid">
+            <article className="landing-info-card card">
+              <h3>What is WishNest?</h3>
+              <p>WishNest is a free gift registry and wishlist maker that lets you organize the items you love from any website into one shareable list.</p>
+            </article>
+            <article className="landing-info-card card">
+              <h3>Is WishNest free to use?</h3>
+              <p>Yes, absolutely! Creating, managing, and sharing your wishlists with friends and family across India is 100% free.</p>
+            </article>
+            <article className="landing-info-card card">
+              <h3>How do I share my wishlist?</h3>
+              <p>Simply click the "Copy Link" button on your wishlist and share it via WhatsApp, email, or text. No sign-up is required for them to view it.</p>
+            </article>
+            <article className="landing-info-card card">
+              <h3>Can I use WishNest for wedding registry?</h3>
+              <p>Yes! It is perfect for weddings, birthdays, baby showers, Diwali, and Rakhi. Add items from anywhere to build your ultimate gift registry.</p>
             </article>
           </div>
         </div>
