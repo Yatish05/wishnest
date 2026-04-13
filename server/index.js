@@ -16,7 +16,6 @@ import helmet from 'helmet';
 import authRoutes from './routes/authRoutes.js';
 import wishlistRoutes from './routes/wishlistRoutes.js';
 import discoverRoutes from './routes/discoverRoutes.js';
-import sitemapRoutes from './routes/sitemapRoutes.js';
 import { initPassport } from './config/passport.js';
 import { protect } from './middleware/authMiddleware.js';
 import Notification from './models/Notification.js';
@@ -56,8 +55,7 @@ app.use(cors({
   credentials: true,
 }));
 
-// Serve sitemap before any body parsers or session middleware
-app.use('/', sitemapRoutes);
+// Express body parsers
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));

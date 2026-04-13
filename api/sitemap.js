@@ -1,21 +1,35 @@
-import express from 'express';
-import Wishlist from '../models/Wishlist.js';
+import mongoose from 'mongoose';
 
-const router = express.Router();
+const MONGODB_URI = process.env.MONGO_URI;
 
-router.get('/sitemap.xml', async (req, res) => {
+if (!MONGODB_URI) {
+  throw new Error('Please define the MONGO_URI environment variable inside .env');
+}
+
+let cachedClient = null;
+
+async function connectToDatabase() {
+  if (cachedClient) {
+    return cachedClient;
+  }
+  const client = await mongoose.connect(MONGODB_URI, {
+    serverSelectionTimeoutMS: 5000,
+  });
+  cachedClient = client;
+  return client;
+}
+
+export default async function handler(req, res) {
   try {
-    // Fetch all public wishlists
-    const wishlists = await Wishlist.find({
-      $or: [
-        { isPublic: true },
-        { visibility: 'public' }
-      ]
-    }).select('_id updatedAt').lean();
+    await connectToDatabase();
+    const db = mongoose.connection.db;
+
+    const wishlists = await db.collection('wishlists').find({
+      $or: [{ isPublic: true }, { visibility: 'public' }],
+    }).project({ _id: 1, updatedAt: 1 }).toArray();
 
     const baseUrl = 'https://wishnest.co.in';
 
-    // Build the static base URL blocks
     let xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
@@ -39,12 +53,10 @@ router.get('/sitemap.xml', async (req, res) => {
     <priority>0.5</priority>
   </url>`;
 
-    // Add dynamic wishlist URLs
-    wishlists.forEach(w => {
-      // Use updatedAt if available, otherwise current date
+    wishlists.forEach((w) => {
       const lastModDate = w.updatedAt ? new Date(w.updatedAt) : new Date();
       const lastMod = lastModDate.toISOString().split('T')[0];
-      
+
       xml += `
   <url>
     <loc>${baseUrl}/wishlist/${w._id}</loc>
@@ -57,12 +69,10 @@ router.get('/sitemap.xml', async (req, res) => {
     xml += `
 </urlset>`;
 
-    res.set('Content-Type', 'text/xml');
-    res.send(xml);
-  } catch (err) {
-    console.error('Sitemap generation error:', err);
-    res.status(500).end();
+    res.setHeader('Content-Type', 'text/xml');
+    res.status(200).send(xml);
+  } catch (error) {
+    console.error('Sitemap API Error:', error);
+    res.status(500).send('Internal Server Error');
   }
-});
-
-export default router;
+}

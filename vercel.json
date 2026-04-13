@@ -6,7 +6,7 @@
     },
     {
       "source": "/sitemap.xml",
-      "destination": "https://wishnest-api.onrender.com/sitemap.xml"
+      "destination": "/api/sitemap"
     },
     {
       "source": "/(.*)",
