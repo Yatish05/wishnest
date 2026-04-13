@@ -6,7 +6,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 dotenv.config({ path: path.join(__dirname, '.env') });
-dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
 import express from 'express';
 import cors from 'cors';
@@ -26,7 +25,6 @@ const app = express();
 const PORT = process.env.PORT || 5001;
 const isProduction = process.env.NODE_ENV === 'production';
 const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
-const mongoUri = process.env.MONGO_URI;
 
 if (isProduction) {
   app.set('trust proxy', 1);
@@ -185,8 +183,31 @@ app.get('/api/search', protect, async (req, res) => {
   }
 });
 
+const connectDB = async () => {
+  console.log('Mongo URI defined:', !!process.env.MONGO_URI);
+
+  if (!process.env.MONGO_URI) {
+    console.error('❌ MONGO_URI is not set.');
+    process.exit(1);
+  }
+
+  try {
+    await mongoose.connect(process.env.MONGO_URI, {
+      serverSelectionTimeoutMS: 5000,
+    });
+    console.log('✅ MongoDB connected');
+  } catch (err) {
+    console.error('❌ MongoDB connection failed:', err.message);
+    console.error(
+      'URI used:',
+      process.env.MONGO_URI ? 'URI exists in env' : 'URI is undefined/missing'
+    );
+    process.exit(1);
+  }
+};
+
 const startServer = async () => {
-  if (!mongoUri) {
+  if (!process.env.MONGO_URI) {
     console.error('❌ MONGO_URI is not set.');
     process.exit(1);
   }
@@ -197,8 +218,7 @@ const startServer = async () => {
   }
 
   try {
-    await mongoose.connect(mongoUri);
-    console.log('✅ MongoDB connected');
+    await connectDB();
 
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
