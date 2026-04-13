@@ -111,9 +111,22 @@ export function AuthProvider({ children }) {
             setToken(storedToken);
             setUser(JSON.parse(storedUser));
           } else {
-            // We have a token but no cached user — best-effort: stay logged in
-            // without full user object; profile will retry on next page load.
-            setToken(storedToken);
+            // No cached user but we have a token (e.g. fresh Google OAuth).
+            // Decode the JWT to extract a basic user object so ProtectedRoute
+            // doesn't kick the user back to /login on a transient network error.
+            try {
+              const payload = JSON.parse(atob(storedToken.split('.')[1]));
+              const basicUser = {
+                id:      payload.id,
+                name:    payload.name  || 'User',
+                email:   payload.email || '',
+                isGuest: false,
+              };
+              persistAuth(storedToken, basicUser);
+            } catch {
+              // JWT decode failed — token is malformed, clear everything.
+              clearAuth();
+            }
           }
         }
       }
