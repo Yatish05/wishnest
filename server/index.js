@@ -35,7 +35,23 @@ app.use(helmet({
 }));
 
 app.use(cors({
-  origin: isProduction ? frontendUrl : true,
+  origin: function (origin, callback) {
+    if (!isProduction) {
+      return callback(null, true);
+    }
+    // Allow if no origin (e.g. from curl), or if origin matches frontendUrl exactly
+    if (!origin || origin === frontendUrl) {
+      return callback(null, origin);
+    }
+    // Also allow WWW subdomain if frontendUrl is the apex domain
+    const urlObj = new URL(frontendUrl);
+    const wwwUrl = `${urlObj.protocol}//www.${urlObj.hostname}`;
+    if (origin === wwwUrl) {
+      return callback(null, origin);
+    }
+    // If it's something else, reject
+    return callback(new Error('Not allowed by CORS'));
+  },
   credentials: true,
 }));
 
