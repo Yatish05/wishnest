@@ -1,0 +1,269 @@
+.pw-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--color-bg);
+}
+
+.pw-topbar,
+.pw-hero,
+.pw-items-wrap {
+  width: min(100%, 920px);
+}
+
+.pw-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 12px;
+}
+
+.pw-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-brand);
+  font-weight: 800;
+}
+
+.pw-copy-btn,
+.pw-home-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 20px;
+  border-radius: 50px;
+  background: var(--color-brand-gradient);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.pw-hero {
+  position: relative;
+  overflow: hidden;
+  margin: 0 24px;
+  padding: 36px 24px;
+  border-radius: 20px;
+  text-align: center;
+  background: linear-gradient(135deg, #ff6b35 0%, #f7c59f 60%, #fdebd0 100%);
+}
+
+.pw-hero-emoji {
+  font-size: 64px;
+  line-height: 1;
+}
+
+.pw-title {
+  margin-top: 14px;
+  color: #fff;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(28px, 4vw, 32px);
+}
+
+.pw-occasion-badge {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 8px 18px;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.pw-stats {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 14px;
+}
+
+.pw-stat-num {
+  color: #fff;
+  font-weight: 800;
+}
+
+.pw-stat-dot {
+  width: 5px;
+  height: 5px;
+  margin-top: 9px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.65);
+}
+
+.pw-items-wrap {
+  padding: 20px 24px 56px;
+}
+
+.pw-items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.pw-item-card,
+.pw-empty,
+.pw-error-box {
+  background: #fff;
+  border: var(--border);
+  border-radius: 18px;
+}
+
+.pw-item-card {
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.pw-item-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
+}
+
+.pw-item--purchased {
+  opacity: 0.7;
+}
+
+.pw-item-img-wrap,
+.pw-item-img-placeholder {
+  height: 180px;
+}
+
+.pw-item-img-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #fff1eb, #ffe4d6);
+  color: var(--color-brand);
+}
+
+.pw-item-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pw-item-body {
+  padding: 18px;
+}
+
+.pw-item-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.pw-item-name {
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.pw-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 50px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.pw-badge--available {
+  background: var(--color-success-bg);
+  color: var(--color-success-text);
+}
+
+.pw-badge--purchased {
+  background: #f5f4f0;
+  color: var(--color-text-secondary);
+}
+
+.pw-item-notes {
+  margin-top: 8px;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+}
+
+.pw-item-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 14px;
+  color: var(--color-brand);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.pw-empty,
+.pw-loading,
+.pw-error-box {
+  text-align: center;
+  padding: 48px 24px;
+}
+
+.pw-spinner {
+  width: 32px;
+  height: 32px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-brand);
+  animation: spin 0.8s linear infinite;
+}
+
+.pw-error-icon {
+  font-size: 48px;
+}
+
+.pw-error-title {
+  margin-top: 8px;
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.pw-error-msg {
+  max-width: 360px;
+  margin: 6px auto 0;
+  color: var(--color-text-secondary);
+}
+
+.pw-home-btn {
+  margin-top: 18px;
+}
+
+.pw-footer {
+  width: 100%;
+  padding: 24px;
+  margin-top: auto;
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.pw-footer a {
+  color: var(--color-brand);
+  font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .pw-topbar {
+    padding: 16px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .pw-hero,
+  .pw-items-wrap {
+    width: calc(100% - 32px);
+    margin: 0 16px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}

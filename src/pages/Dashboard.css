@@ -1,0 +1,590 @@
+.dashboard-page--wishnest {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  padding-bottom: 80px;
+}
+
+.dashboard-hero,
+.dashboard-empty-card,
+.dashboard-guest-banner,
+.dashboard-share-nudge,
+.dashboard-feed-card,
+.dashboard-wishlist-card,
+.dashboard-create-card,
+.dashboard-state-card {
+  border: var(--border);
+}
+
+.dashboard-hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  padding: 36px 40px;
+  background: linear-gradient(135deg, #ff6b35 0%, #f7c59f 60%, #fdebd0 100%);
+}
+
+.dashboard-hero::after {
+  content: '🎁✨';
+  position: absolute;
+  right: 24px;
+  top: 18px;
+  font-size: 92px;
+  line-height: 1;
+  opacity: 0.12;
+}
+
+.dashboard-hero__glow {
+  display: none;
+}
+
+.dashboard-hero__content {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.6fr);
+  gap: 20px;
+  align-items: center;
+}
+
+.dashboard-hero__kicker,
+.dashboard-section__eyebrow,
+.dashboard-hero__chips span,
+.dashboard-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: var(--radius-pill);
+  font-weight: 700;
+}
+
+.dashboard-hero__kicker {
+  padding: 5px 16px;
+  background: rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  color: #7c2d12;
+  font-size: 12px;
+  margin-bottom: 16px;
+}
+
+.dashboard-hero h1 {
+  max-width: 740px;
+  color: #fff;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: clamp(28px, 4vw, 32px);
+  line-height: 1.2;
+}
+
+.dashboard-hero__lead {
+  max-width: 480px;
+  margin-top: 12px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 14px;
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+.dashboard-hero__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.dashboard-hero__chips span {
+  padding: 8px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+  font-size: 13px;
+}
+
+.dashboard-hero__panel {
+  justify-self: end;
+  width: 100%;
+  max-width: 300px;
+  padding: 22px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.dashboard-hero__emoji {
+  font-size: 30px;
+}
+
+.dashboard-hero__panel p {
+  margin-top: 10px;
+  color: #7c2d12;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.dashboard-hero__stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.dashboard-hero-stat {
+  padding: 14px;
+  border-radius: 16px;
+  background: #fff1eb;
+  border: 1.5px solid #fbd5bf;
+}
+
+.dashboard-hero-stat span {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #7c2d12;
+  font-weight: 700;
+}
+
+.dashboard-hero-stat strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 26px;
+  color: var(--color-brand);
+}
+
+.dashboard-hero__cta {
+  width: 100%;
+  margin-top: 14px;
+  background: #fff;
+  color: var(--color-brand);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.dashboard-section {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.dashboard-section__header,
+.dashboard-feed-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.dashboard-section__eyebrow {
+  padding: 5px 14px;
+  background: #fff1eb;
+  color: var(--color-brand);
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+.dashboard-section__header h2,
+.dashboard-feed-header h2 {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--color-text-primary);
+}
+
+.dashboard-section__header p,
+.dashboard-feed-header p,
+.dashboard-feed-header__detail {
+  max-width: 680px;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.7;
+}
+
+.dashboard-primary-link,
+.dashboard-dark-button,
+.dashboard-soft-button {
+  background: var(--color-brand-gradient);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(249, 115, 22, 0.3);
+}
+
+.dashboard-primary-link,
+.dashboard-dark-button,
+.dashboard-light-button,
+.dashboard-soft-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 20px;
+  border-radius: 50px;
+  font-size: 14px;
+  transition: var(--transition);
+}
+
+.dashboard-light-button {
+  background: #faf6f2;
+  color: var(--color-text-secondary);
+}
+
+.dashboard-light-button:hover {
+  background: var(--color-border);
+}
+
+.dashboard-primary-link:hover,
+.dashboard-dark-button:hover,
+.dashboard-soft-button:hover,
+.dashboard-create-card:hover,
+.dashboard-wishlist-card:hover,
+.dashboard-feed-card:hover {
+  transform: translateY(-3px);
+}
+
+.dashboard-state-card,
+.dashboard-empty-card,
+.dashboard-guest-banner {
+  background: #fff;
+  border-radius: 18px;
+  padding: 24px;
+}
+
+.dashboard-wishlist-grid,
+.dashboard-feed {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.dashboard-wishlist-card,
+.dashboard-feed-card {
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: var(--shadow-soft);
+  transition: var(--transition);
+}
+
+.dashboard-wishlist-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+}
+
+.dashboard-wishlist-card--birthday::before {
+  background: linear-gradient(90deg, #f97316, #fdba74);
+}
+
+.dashboard-wishlist-card--wedding::before {
+  background: linear-gradient(90deg, #3b82f6, #93c5fd);
+}
+
+.dashboard-wishlist-card--diwali::before {
+  background: linear-gradient(90deg, #10b981, #6ee7b7);
+}
+
+.dashboard-wishlist-card--rakhi::before,
+.dashboard-wishlist-card--default::before {
+  background: linear-gradient(90deg, #8b5cf6, #c4b5fd);
+}
+
+.dashboard-wishlist-card__shine {
+  display: none;
+}
+
+.dashboard-wishlist-card__header {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.dashboard-tag {
+  padding: 6px 12px;
+  font-size: 11px;
+  margin-bottom: 12px;
+}
+
+.dashboard-tag--birthday {
+  background: #fff1eb;
+  color: #9a3412;
+}
+
+.dashboard-tag--wedding {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.dashboard-tag--diwali {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.dashboard-tag--rakhi {
+  background: #f5f3ff;
+  color: #7c3aed;
+}
+
+.dashboard-wishlist-card__header h3,
+.dashboard-feed-card h3 {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--color-text-primary);
+}
+
+.dashboard-wishlist-card__header p,
+.dashboard-wishlist-card__sub,
+.dashboard-feed-card p,
+.dashboard-wishlist-card__note {
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+.dashboard-wishlist-card__sub {
+  margin-top: 4px;
+}
+
+
+.dashboard-wishlist-card__count {
+  text-align: right;
+}
+
+.dashboard-wishlist-card__count span {
+  display: block;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.dashboard-wishlist-card__count strong {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--color-brand);
+}
+
+.dashboard-wishlist-card__note {
+  padding: 0 20px 16px;
+}
+
+.dashboard-wishlist-card__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 20px 20px;
+}
+
+.dashboard-wishlist-card__actions-top {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.dashboard-dark-button,
+.dashboard-light-button {
+  flex: 1;
+}
+
+.dashboard-view-button {
+  flex: none;
+  width: 100%;
+}
+
+
+.dashboard-create-card {
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+  border: 2px dashed #fbd5bf;
+  border-radius: 18px;
+  padding: 32px 24px;
+  background: #fff;
+}
+
+.dashboard-create-card:hover {
+  border-color: var(--color-brand);
+  background: #fffaf6;
+  box-shadow: var(--shadow-hover);
+}
+
+.dashboard-create-card__icon,
+.dashboard-empty-card__icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff1eb;
+  color: var(--color-brand);
+}
+
+.dashboard-create-card h3,
+.dashboard-empty-card h3 {
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.dashboard-create-card p,
+.dashboard-empty-card p,
+.dashboard-guest-banner__copy {
+  color: var(--color-text-muted);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.dashboard-create-card__cta,
+.dashboard-guest-banner__title {
+  color: var(--color-brand);
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.dashboard-empty-card {
+  text-align: center;
+}
+
+.dashboard-feed-card {
+  padding: 20px;
+}
+
+.dashboard-feed-card__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.dashboard-feed-card__items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.dashboard-feed-thumb {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dashboard-feed-thumb__box {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+.dashboard-feed-thumb--indigo {
+  background: linear-gradient(135deg, #f97316, #ef4444);
+}
+
+.dashboard-feed-thumb--sky {
+  background: linear-gradient(135deg, #3b82f6, #93c5fd);
+}
+
+.dashboard-feed-thumb--blue {
+  background: linear-gradient(135deg, #10b981, #6ee7b7);
+}
+
+.dashboard-feed-thumb p,
+.dashboard-feed-card__copy {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.dashboard-soft-button {
+  margin-top: 12px;
+  width: fit-content;
+}
+
+.dashboard-share-nudge {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 999;
+  max-width: 290px;
+  padding: 18px 20px;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: var(--shadow-nudge);
+  border-color: #fbd5bf;
+}
+
+.dashboard-share-nudge__inner {
+  position: relative;
+  padding-right: 28px;
+}
+
+.dashboard-share-nudge__emoji {
+  font-size: 24px;
+  margin-bottom: 6px;
+}
+
+.dashboard-share-nudge p {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+.dashboard-share-nudge strong {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--color-text-primary);
+  font-size: 14px;
+}
+
+.dashboard-share-nudge__dismiss {
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: #c4b5ad;
+}
+
+@media (max-width: 900px) {
+  .dashboard-hero__content {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-hero__panel {
+    justify-self: stretch;
+    max-width: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .dashboard-hero {
+    padding: 28px 22px;
+  }
+
+  .dashboard-section__header,
+  .dashboard-feed-header,
+  .dashboard-wishlist-card__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .dashboard-wishlist-card__actions {
+    flex-direction: column;
+  }
+
+  .dashboard-share-nudge {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    max-width: none;
+  }
+}
