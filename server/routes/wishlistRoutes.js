@@ -11,7 +11,8 @@ import {
   saveSharedWishlist,
   purchaseItem,
   deleteWishlistItem,
-  deleteWishlist
+  deleteWishlist,
+  updateWishlist
 } from '../controllers/wishlistController.js';
 
 import { protect } from '../middleware/authMiddleware.js';
@@ -39,6 +40,9 @@ router.post('/', protect, createWishlist);
 
 // POST /api/wishlists/:id/items - Add item to wishlist
 router.post('/:id/items', protect, addItemToWishlist);
+
+// PUT /api/wishlists/:id - Update wishlist details
+router.put('/:id', protect, updateWishlist);
 
 // POST /api/wishlists/:id/share - Share wishlist
 router.post('/:id/share', protect, shareWishlist);

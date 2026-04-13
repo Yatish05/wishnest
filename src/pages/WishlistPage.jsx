@@ -18,8 +18,10 @@ export default function WishlistPage() {
   const [loading, setLoading] = useState(!!wishlistId);
   const [showAddItem, setShowAddItem] = useState(false);
   const [showCreateWishlist, setShowCreateWishlist] = useState(false);
+  const [showEditWishlist, setShowEditWishlist] = useState(false);
 
   const [newItem, setNewItem] = useState({ name: '', link: '', notes: '', img: '' });
+  const [editWishlistData, setEditWishlistData] = useState({ name: '', occasion: 'Birthday', visibility: 'public', gender: 'unisex' });
   const [imgPreview, setImgPreview] = useState(null);
   const [newWishlist, setNewWishlist] = useState({ name: '', occasion: 'Birthday', visibility: 'public', gender: 'unisex' });
   const [saving, setSaving] = useState(false);
@@ -170,6 +172,32 @@ export default function WishlistPage() {
     }
   };
 
+  const handleUpdateWishlist = async () => {
+    setSaving(true);
+    try {
+      const response = await api.put(`/wishlists/${wishlistId}`, editWishlistData);
+      if (response.data && response.data.success) {
+        setWishlist(response.data.wishlist);
+        setWishlists(prev => prev.map(w => w._id === wishlistId ? {
+          ...w,
+          name: editWishlistData.name,
+          occasion: editWishlistData.occasion,
+          visibility: editWishlistData.visibility,
+          gender: editWishlistData.gender
+        } : w));
+        toast.success("Wishlist updated!");
+      } else {
+        throw new Error("Invalid response from server");
+      }
+    } catch (error) {
+      console.error("Update wishlist failed:", error);
+      toast.error("Failed to update wishlist");
+    } finally {
+      setSaving(false);
+      setShowEditWishlist(false);
+    }
+  };
+
   const handleAddItem = async () => {
     setSaving(true);
     try {
@@ -284,7 +312,15 @@ export default function WishlistPage() {
 
                 <div className="wishlist-header-actions">
                   {isOwner && (
-                    <button className="btn btn-secondary">
+                    <button className="btn btn-secondary" onClick={() => {
+                        setEditWishlistData({
+                           name: wishlist.name,
+                           occasion: wishlist.occasion || 'Other',
+                           visibility: wishlist.visibility || (wishlist.isPublic ? 'public' : 'private'),
+                           gender: wishlist.gender || 'unisex'
+                        });
+                        setShowEditWishlist(true);
+                    }}>
                       <Edit3 size={18} /> Edit
                     </button>
                   )}
@@ -796,6 +832,79 @@ export default function WishlistPage() {
                     onClick={handleCreateWishlist}
                   >
                     {saving ? 'Creating...' : 'Create'}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Edit Wishlist Modal */}
+      {showEditWishlist && !isGuest && (
+        <div className="modal-overlay">
+          <div className="modal card animate-fade-in">
+            <div className="modal-header flex-between">
+              <h3 className="font-bold text-lg">Edit Wishlist</h3>
+              <button className="btn-text" onClick={() => setShowEditWishlist(false)}><X size={20} /></button>
+            </div>
+            <div className="modal-body">
+              <form className="modal-form">
+                <div className="form-group">
+                  <label>Wishlist Name</label>
+                  <input
+                    type="text"
+                    className="input-field"
+                    placeholder="e.g. Wedding Registry"
+                    value={editWishlistData.name}
+                    onChange={(e) => setEditWishlistData({ ...editWishlistData, name: e.target.value })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Occasion</label>
+                  <select
+                    className="input-field"
+                    value={editWishlistData.occasion}
+                    onChange={(e) => setEditWishlistData({ ...editWishlistData, occasion: e.target.value })}
+                  >
+                    <option>Birthday</option>
+                    <option>Wedding</option>
+                    <option>Festival</option>
+                    <option>Baby Shower</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Visibility</label>
+                  <select
+                    className="input-field"
+                    value={editWishlistData.visibility}
+                    onChange={(e) => setEditWishlistData({ ...editWishlistData, visibility: e.target.value })}
+                  >
+                    <option value="public">🌍 Public (Anyone with link)</option>
+                    <option value="private">🔒 Private (Only me)</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label><VenusAndMars size={15} /> Discover Gender</label>
+                  <select
+                    className="input-field"
+                    value={editWishlistData.gender}
+                    onChange={(e) => setEditWishlistData({ ...editWishlistData, gender: e.target.value })}
+                  >
+                    <option value="unisex">Unisex</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                  </select>
+                </div>
+                <div className="modal-footer mt-4">
+                  <button type="button" className="btn btn-secondary" onClick={() => setShowEditWishlist(false)}>Cancel</button>
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    disabled={saving || !editWishlistData.name}
+                    onClick={handleUpdateWishlist}
+                  >
+                    {saving ? 'Saving...' : 'Save Changes'}
                   </button>
                 </div>
               </form>

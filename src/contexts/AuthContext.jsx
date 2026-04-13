@@ -6,9 +6,9 @@ const AuthContext = createContext();
 const normalizeUser = (nextUser, authType) => (
   nextUser
     ? {
-        ...nextUser,
-        isGuest: authType === 'guest' || nextUser.isGuest || nextUser.role === 'guest',
-      }
+      ...nextUser,
+      isGuest: authType === 'guest' || nextUser.isGuest || nextUser.role === 'guest',
+    }
     : nextUser
 );
 
@@ -99,35 +99,34 @@ export function AuthProvider({ children }) {
         }
       } catch (error) {
         console.error('Fetch profile error:', error);
-
+        // Only clear auth on explicit 401 Unauthorized.
+        // Network errors, CORS issues, or server-down scenarios on production
+        // should NOT wipe a valid token — the user is still authenticated locally.
         if (error?.response?.status === 401) {
-          // Explicit rejection from the server — token is invalid/expired.
           clearAuth();
-        } else if (storedUser) {
-          // Server unreachable but we have a cached user — keep them logged in.
-          setToken(storedToken);
-          setUser(JSON.parse(storedUser));
         } else {
-          // No cached user — try to decode the JWT as a last resort.
-          // IMPORTANT: check expiry so stale tokens don't create phantom sessions.
-          try {
-            const payload = JSON.parse(atob(storedToken.split('.')[1]));
-            const nowSec = Math.floor(Date.now() / 1000);
-            if (payload.exp && payload.exp < nowSec) {
-              // Token is expired — clear everything so the user can log in again.
-              clearAuth();
-            } else {
+          // Keep the locally stored token/user so the app remains usable.
+          // Re-sync state from localStorage in case it wasn't set yet.
+          if (storedUser) {
+            setToken(storedToken);
+            setUser(JSON.parse(storedUser));
+          } else {
+            // No cached user but we have a token (e.g. fresh Google OAuth).
+            // Decode the JWT to extract a basic user object so ProtectedRoute
+            // doesn't kick the user back to /login on a transient network error.
+            try {
+              const payload = JSON.parse(atob(storedToken.split('.')[1]));
               const basicUser = {
-                id:      payload.id,
-                name:    payload.name  || 'User',
-                email:   payload.email || '',
+                id: payload.id,
+                name: payload.name || 'User',
+                email: payload.email || '',
                 isGuest: false,
               };
               persistAuth(storedToken, basicUser);
+            } catch {
+              // JWT decode failed — token is malformed, clear everything.
+              clearAuth();
             }
-          } catch {
-            // JWT decode failed — token is malformed, clear everything.
-            clearAuth();
           }
         }
       }
@@ -179,9 +178,9 @@ export function AuthProvider({ children }) {
       // JWT payload is the middle base64 segment
       const payload = JSON.parse(atob(jwtToken.split('.')[1]));
       const oauthUser = {
-        id:      payload.id,
-        name:    payload.name  || 'User',
-        email:   payload.email || '',
+        id: payload.id,
+        name: payload.name || 'User',
+        email: payload.email || '',
         isGuest: false,
       };
       persistAuth(jwtToken, oauthUser);

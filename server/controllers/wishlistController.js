@@ -207,6 +207,60 @@ export const createWishlist = async (req, res) => {
 };
 
 /* ────────────────────────────────────────────────────────────
+   PUT /api/wishlists/:id
+   Logic: Update an existing wishlist.
+──────────────────────────────────────────────────────────── */
+export const updateWishlist = async (req, res) => {
+  try {
+    const wishlist = await Wishlist.findById(req.params.id);
+    if (!wishlist) {
+      return res.status(404).json({ error: 'Wishlist not found' });
+    }
+
+    if (wishlist.userId.toString() !== req.user.id) {
+      return res.status(403).json({ error: 'Unauthorized to edit this wishlist' });
+    }
+
+    const { name, occasion, visibility, isPublic, gender } = req.body;
+    
+    if (name) wishlist.name = name;
+    if (occasion) wishlist.occasion = occasion;
+    if (gender) wishlist.gender = gender;
+    
+    if (visibility) {
+      wishlist.visibility = visibility;
+      wishlist.isPublic = visibility === 'public';
+    } else if (isPublic !== undefined) {
+      wishlist.isPublic = isPublic;
+      wishlist.visibility = isPublic ? 'public' : 'private';
+    }
+
+    await wishlist.save();
+    
+    // Privacy Masking matching getWishlistById
+    const wishlistObj = wishlist.toObject();
+    wishlistObj.items = wishlistObj.items.map(item => {
+      // Since owner is requesting, we apply owner masking logic
+      if (item.hiddenFromOwner) {
+        return {
+          ...item,
+          isPurchased: false,
+          status: "Available"
+        };
+      }
+      return {
+        ...item,
+        status: item.isPurchased ? "Purchased" : "Available"
+      };
+    });
+
+    res.json({ success: true, wishlist: wishlistObj });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+/* ────────────────────────────────────────────────────────────
    POST /api/wishlists/:id/items
    Logic: Add a new item to a wishlist (sub-document).
 ──────────────────────────────────────────────────────────── */
