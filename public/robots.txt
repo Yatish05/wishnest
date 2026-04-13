@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://wishnest.co.in/sitemap.xml

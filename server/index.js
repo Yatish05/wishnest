@@ -16,6 +16,7 @@ import helmet from 'helmet';
 import authRoutes from './routes/authRoutes.js';
 import wishlistRoutes from './routes/wishlistRoutes.js';
 import discoverRoutes from './routes/discoverRoutes.js';
+import sitemapRoutes from './routes/sitemapRoutes.js';
 import { initPassport } from './config/passport.js';
 import { protect } from './middleware/authMiddleware.js';
 import Notification from './models/Notification.js';
@@ -82,6 +83,7 @@ app.get('/api/health', (_req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/wishlists', wishlistRoutes);
 app.use('/api/discover', discoverRoutes);
+app.use('/api', sitemapRoutes);
 
 app.get('/api/notifications', protect, async (req, res) => {
   try {

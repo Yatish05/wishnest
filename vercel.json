@@ -5,6 +5,10 @@
       "destination": "https://wishnest-api.onrender.com/api/:path*"
     },
     {
+      "source": "/sitemap.xml",
+      "destination": "https://wishnest-api.onrender.com/api/sitemap.xml"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
