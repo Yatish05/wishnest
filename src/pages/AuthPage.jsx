@@ -17,10 +17,6 @@ export default function AuthPage({ type }) {
   const [name, setName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const apiBaseUrl = (import.meta.env.VITE_API_URL || 'http://localhost:5001')
-    .replace(/\/$/, '')
-    .replace(/\/api$/, '');
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -57,7 +53,7 @@ export default function AuthPage({ type }) {
 
   const handleGoogleLogin = () => {
     console.log("Redirecting to Google...");
-    window.location.href = `${apiBaseUrl}/api/auth/google`;
+    window.location.href = `/api/auth/google`;
   };
 
   return (

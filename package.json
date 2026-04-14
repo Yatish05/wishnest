@@ -4,13 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently --kill-others-on-fail --names \"API,WEB\" \"npm run dev:api\" \"npm run dev:web\"",
-    "dev:api": "node --watch server/index.js",
-    "dev:web": "vite",
+    "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "start:api": "node server/index.js"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",

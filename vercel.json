@@ -1,15 +1,11 @@
 {
   "rewrites": [
     {
-      "source": "/api/:path*",
-      "destination": "https://wishnest-api.onrender.com/api/:path*"
-    },
-    {
       "source": "/sitemap.xml",
       "destination": "/api/sitemap"
     },
     {
-      "source": "/(.*)",
+      "source": "/((?!api/).*)",
       "destination": "/index.html"
     }
   ]
