@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Gift } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import logoImg from '../assets/logo.png';
 import './AuthPage.css';
 
 export default function AuthPage({ type }) {
@@ -60,9 +61,8 @@ export default function AuthPage({ type }) {
     <div className="auth-container animate-fade-in">
       <div className="auth-card card">
         <div className="auth-header">
-          <Link to="/" className="logo auth-logo">
-            <Gift className="logo-icon" size={32} />
-            WishNest
+          <Link to="/" className="logo auth-logo" style={{ justifyContent: 'center' }}>
+            <img src={logoImg} alt="WishNest" style={{ height: '40px', width: 'auto' }} />
           </Link>
           <h2>{isLogin ? 'Welcome back' : 'Create an account'}</h2>
           <p>{isLogin ? 'Enter your details to access your account.' : 'Join WishNest to start creating and sharing.'}</p>
