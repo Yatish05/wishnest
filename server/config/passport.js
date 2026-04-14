@@ -1,19 +1,9 @@
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
-import User from '../models/User.js';
+import { supabase } from './supabase.js';
 
 /**
  * initPassport()
- *
- * WHY THIS PATTERN:
- * In ES modules every `import` statement is hoisted and evaluated
- * before any executable code runs. That means even though index.js
- * calls dotenv.config() at the top, ALL imports — including this
- * file — have already been evaluated with an empty process.env.
- *
- * Wrapping the strategy registration in a plain function and calling
- * it explicitly from index.js (after dotenv.config()) is the only
- * safe way to read env vars inside a passport config with ESM.
  */
 export function initPassport() {
   const clientID     = process.env.GOOGLE_CLIENT_ID;
@@ -32,10 +22,10 @@ export function initPassport() {
       '   in server/.env with real values from Google Cloud Console.\n' +
       '   The rest of the server (JWT login, register, etc.) will work normally.'
     );
-    return; // ← no crash; /api/auth/google simply won't be usable yet
+    return;
   }
 
-  // ── Register the strategy (env vars are now guaranteed to be real) ──
+  // ── Register the strategy ──
   passport.use(
     new GoogleStrategy(
       { clientID, clientSecret, callbackURL },
@@ -47,23 +37,33 @@ export function initPassport() {
             return done(new Error('No email returned from Google'), null);
           }
 
-          // Find an existing user or create a new one
-          let user = await User.findOne({ email });
+          const { data: user } = await supabase
+            .from('users')
+            .select('*')
+            .eq('email', email)
+            .single();
 
           if (user) {
             console.log(`✅ Google OAuth — existing user signed in: ${email}`);
+            user._id = user.id; // backward compat
             return done(null, user);
           }
 
-          // New user — placeholder password (OAuth users never log in with a password)
-          user = await User.create({
-            name:     profile.displayName || email.split('@')[0],
-            email,
-            password: `google_oauth_${profile.id}_${Date.now()}`,
-          });
+          const { data: newUser, error } = await supabase
+            .from('users')
+            .insert({
+              name:     profile.displayName || email.split('@')[0],
+              email,
+              password: `google_oauth_${profile.id}_${Date.now()}`,
+            })
+            .select()
+            .single();
+
+          if (error) throw error;
 
           console.log(`✅ Google OAuth — new user created: ${email}`);
-          return done(null, user);
+          newUser._id = newUser.id;
+          return done(null, newUser);
         } catch (err) {
           console.error('❌ Google OAuth strategy error:', err.message);
           return done(err, null);
@@ -74,12 +74,19 @@ export function initPassport() {
 
   console.log('✅ Passport — Google OAuth strategy registered');
 
-  // Serialise / deserialise (only used when express-session is active)
-  passport.serializeUser((user, done) => done(null, user._id));
+  passport.serializeUser((user, done) => done(null, user.id || user._id));
 
   passport.deserializeUser(async (id, done) => {
     try {
-      const user = await User.findById(id).select('-password');
+      const { data: user, error } = await supabase
+        .from('users')
+        .select('id, name, email, role, preferences, created_at')
+        .eq('id', id)
+        .single();
+
+      if (error) throw error;
+      if (user) user._id = user.id;
+
       done(null, user);
     } catch (err) {
       done(err, null);

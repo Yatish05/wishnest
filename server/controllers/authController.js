@@ -1,13 +1,14 @@
-import User from '../models/User.js';
+import bcrypt from 'bcryptjs';
 import generateToken from '../utils/generateToken.js';
+import { supabase } from '../config/supabase.js';
 
 const serializeUser = (user) => ({
-  id: user._id,
+  id: user.id || user._id,
   name: user.name,
   email: user.role === 'guest' ? '' : user.email,
   role: user.role,
   isGuest: user.role === 'guest',
-  createdAt: user.createdAt,
+  createdAt: user.created_at || user.createdAt,
   preferences: {
     theme: user.preferences?.theme || 'light',
     notificationsEnabled: user.preferences?.notificationsEnabled ?? true,
@@ -15,35 +16,47 @@ const serializeUser = (user) => ({
   },
 });
 
-/* ────────────────────────────────────────────────────────────
-   POST /api/auth/register
-   Body: { name, email, password }
-──────────────────────────────────────────────────────────── */
 export const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    // 1. Validate required fields
     if (!name || !email || !password) {
-      return res.status(400).json({
-        success: false,
-        message: 'Name, email, and password are all required',
-      });
+      return res.status(400).json({ success: false, message: 'Name, email, and password are all required' });
     }
 
-    // 2. Check for duplicate email
-    const existingUser = await User.findOne({ email: email.toLowerCase() });
+    const { data: existingUser } = await supabase
+      .from('users')
+      .select('id')
+      .eq('email', email.toLowerCase())
+      .single();
+
     if (existingUser) {
-      return res.status(400).json({
-        success: false,
-        message: 'An account with that email already exists',
-      });
+      return res.status(400).json({ success: false, message: 'An account with that email already exists' });
     }
 
-    // 3. Create user (pre-save hook handles bcrypt hashing)
-    const user = await User.create({ name, email, password });
-    const token = generateToken(user._id);
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
+    const { data: user, error } = await supabase
+      .from('users')
+      .insert({
+        name,
+        email: email.toLowerCase(),
+        password: hashedPassword,
+        role: 'user',
+        preferences: { theme: 'light', notificationsEnabled: true, defaultVisibility: 'public' }
+      })
+      .select()
+      .single();
+
+    if (error) {
+      if (error.code === '23505') { // unique_violation
+        return res.status(400).json({ success: false, message: 'An account with that email already exists' });
+      }
+      throw error;
+    }
+
+    const token = generateToken(user.id);
     console.log(`✅ User registered: ${user.email}`);
 
     return res.status(201).json({
@@ -54,58 +67,34 @@ export const registerUser = async (req, res) => {
     });
   } catch (err) {
     console.error('❌ Register error:', err.message);
-
-    // Mongoose duplicate-key error
-    if (err.code === 11000) {
-      return res.status(400).json({
-        success: false,
-        message: 'An account with that email already exists',
-      });
-    }
-
-    return res.status(500).json({
-      success: false,
-      message: 'Server error during registration',
-      error: err.message,
-    });
+    return res.status(500).json({ success: false, message: 'Server error during registration', error: err.message });
   }
 };
 
-/* ────────────────────────────────────────────────────────────
-   POST /api/auth/login
-   Body: { email, password }
-──────────────────────────────────────────────────────────── */
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // 1. Validate required fields
     if (!email || !password) {
-      return res.status(400).json({
-        success: false,
-        message: 'Email and password are required',
-      });
+      return res.status(400).json({ success: false, message: 'Email and password are required' });
     }
 
-    // 2. Find user (select password explicitly — it's excluded by default in protect middleware)
-    const user = await User.findOne({ email: email.toLowerCase() }).select('+password');
-    if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid email or password',
-      });
+    const { data: user, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('email', email.toLowerCase())
+      .single();
+
+    if (error || !user) {
+      return res.status(401).json({ success: false, message: 'Invalid email or password' });
     }
 
-    // 3. Compare password
-    const isMatch = await user.matchPassword(password);
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({
-        success: false,
-        message: 'Invalid email or password',
-      });
+      return res.status(401).json({ success: false, message: 'Invalid email or password' });
     }
 
-    const token = generateToken(user._id);
+    const token = generateToken(user.id);
     console.log(`✅ User logged in: ${user.email}`);
 
     return res.status(200).json({
@@ -116,23 +105,13 @@ export const loginUser = async (req, res) => {
     });
   } catch (err) {
     console.error('❌ Login error:', err.message);
-    return res.status(500).json({
-      success: false,
-      message: 'Server error during login',
-      error: err.message,
-    });
+    return res.status(500).json({ success: false, message: 'Server error during login', error: err.message });
   }
 };
 
-/* ────────────────────────────────────────────────────────────
-   GET /api/auth/profile   (protected)
-   Returns the logged-in user's public profile.
-──────────────────────────────────────────────────────────── */
 export const getProfile = async (req, res) => {
   try {
-    // req.user is already populated by the protect middleware
     const user = req.user;
-
     return res.status(200).json({
       success: true,
       message: 'Profile fetched successfully',
@@ -140,18 +119,10 @@ export const getProfile = async (req, res) => {
     });
   } catch (err) {
     console.error('❌ Get profile error:', err.message);
-    return res.status(500).json({
-      success: false,
-      message: 'Server error fetching profile',
-      error: err.message,
-    });
+    return res.status(500).json({ success: false, message: 'Server error fetching profile', error: err.message });
   }
 };
 
-/* ────────────────────────────────────────────────────────────
-   POST /api/auth/guest
-   Creates a temporary guest user in MongoDB.
-──────────────────────────────────────────────────────────── */
 export const guestLogin = async (req, res) => {
   try {
     const timestamp = Date.now();
@@ -159,11 +130,18 @@ export const guestLogin = async (req, res) => {
       name: 'Guest User',
       email: `guest_${timestamp}@guest.local`,
       role: 'guest',
+      preferences: { theme: 'light', notificationsEnabled: true, defaultVisibility: 'public' }
     };
 
-    const user = await User.create(guestData);
-    const token = generateToken(user._id);
+    const { data: user, error } = await supabase
+      .from('users')
+      .insert(guestData)
+      .select()
+      .single();
 
+    if (error) throw error;
+
+    const token = generateToken(user.id);
     console.log(`✅ Guest user created: ${user.email}`);
 
     return res.status(201).json({
@@ -174,92 +152,87 @@ export const guestLogin = async (req, res) => {
     });
   } catch (err) {
     console.error('❌ Guest login error:', err.message);
-    return res.status(500).json({
-      success: false,
-      message: 'Server error during guest login',
-      error: err.message,
-    });
+    return res.status(500).json({ success: false, message: 'Server error during guest login', error: err.message });
   }
 };
 
 export const updateProfile = async (req, res) => {
   try {
     if (req.user.role === 'guest') {
-      return res.status(403).json({
-        success: false,
-        message: 'Guest accounts cannot update profile details',
-      });
+      return res.status(403).json({ success: false, message: 'Guest accounts cannot update profile details' });
     }
 
     const { name, email } = req.body;
-
     if (!name?.trim() || !email?.trim()) {
-      return res.status(400).json({
-        success: false,
-        message: 'Name and email are required',
-      });
+      return res.status(400).json({ success: false, message: 'Name and email are required' });
     }
 
     const normalizedEmail = email.trim().toLowerCase();
-    const existingUser = await User.findOne({
-      email: normalizedEmail,
-      _id: { $ne: req.user._id },
-    });
+
+    const { data: existingUser } = await supabase
+      .from('users')
+      .select('id')
+      .eq('email', normalizedEmail)
+      .neq('id', req.user.id)
+      .single();
 
     if (existingUser) {
-      return res.status(400).json({
-        success: false,
-        message: 'An account with that email already exists',
-      });
+      return res.status(400).json({ success: false, message: 'An account with that email already exists' });
     }
 
-    req.user.name = name.trim();
-    req.user.email = normalizedEmail;
-    await req.user.save();
+    const { data: updatedUser, error } = await supabase
+      .from('users')
+      .update({ name: name.trim(), email: normalizedEmail })
+      .eq('id', req.user.id)
+      .select('id, name, email, role, preferences, created_at')
+      .single();
+
+    if (error) {
+       if (error.code === '23505') {
+         return res.status(400).json({ success: false, message: 'An account with that email already exists' });
+       }
+       throw error;
+    }
 
     return res.status(200).json({
       success: true,
       message: 'Profile updated successfully',
-      user: serializeUser(req.user),
+      user: serializeUser(updatedUser),
     });
   } catch (err) {
     console.error('❌ Update profile error:', err.message);
-    return res.status(500).json({
-      success: false,
-      message: 'Server error updating profile',
-      error: err.message,
-    });
+    return res.status(500).json({ success: false, message: 'Server error updating profile', error: err.message });
   }
 };
 
 export const updatePreferences = async (req, res) => {
   try {
-    const {
-      theme,
-      notificationsEnabled,
-      defaultVisibility,
-    } = req.body;
-
-    req.user.preferences = {
+    const { theme, notificationsEnabled, defaultVisibility } = req.body;
+    
+    // Merge new preferences with existing ones
+    const newPreferences = {
       ...req.user.preferences,
       ...(theme ? { theme } : {}),
       ...(typeof notificationsEnabled === 'boolean' ? { notificationsEnabled } : {}),
       ...(defaultVisibility ? { defaultVisibility } : {}),
     };
 
-    await req.user.save();
+    const { data: updatedUser, error } = await supabase
+      .from('users')
+      .update({ preferences: newPreferences })
+      .eq('id', req.user.id)
+      .select('id, name, email, role, preferences, created_at')
+      .single();
+
+    if (error) throw error;
 
     return res.status(200).json({
       success: true,
       message: 'Preferences updated successfully',
-      user: serializeUser(req.user),
+      user: serializeUser(updatedUser),
     });
   } catch (err) {
     console.error('❌ Update preferences error:', err.message);
-    return res.status(500).json({
-      success: false,
-      message: 'Server error updating preferences',
-      error: err.message,
-    });
+    return res.status(500).json({ success: false, message: 'Server error updating preferences', error: err.message });
   }
 };
