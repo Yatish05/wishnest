@@ -5,7 +5,6 @@ import { Home, CheckSquare, Settings as SettingsIcon, LogOut, Bell, Menu, X, Spa
 import SearchBar from './components/SearchBar';
 import ProtectedRoute from './components/ProtectedRoute';
 import { useAuth } from './contexts/AuthContext';
-import logoImg from './assets/logo.png';
 import './App.css';
 
 function MainLayout({ children }) {
@@ -26,7 +25,8 @@ function MainLayout({ children }) {
       <header className="navbar">
         <div className="container">
           <Link to="/" className="logo" onClick={closeMobileMenu}>
-            <img src={logoImg} alt="WishNest" style={{ height: '40px', width: 'auto' }} />
+            <span className="logo-mark" aria-hidden="true">🎁</span>
+            <span className="logo-wordmark">WishNest</span>
           </Link>
 
           <button className="mobile-menu-toggle" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
@@ -83,8 +83,9 @@ function MainLayout({ children }) {
       <footer style={{ backgroundColor: '#0F172A', color: 'white', padding: '4rem 0', marginTop: 'auto' }}>
         <div className="container" style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '3rem' }}>
           <div style={{ flex: '1 1 300px' }}>
-            <div className="logo" style={{ marginBottom: '1.25rem' }}>
-              <img src={logoImg} alt="WishNest" style={{ height: '40px', width: 'auto' }} />
+            <div className="logo" style={{ color: 'white', marginBottom: '1.25rem' }}>
+              <span className="logo-mark" aria-hidden="true">🎁</span>
+              <span className="logo-wordmark">WishNest</span>
             </div>
             <p style={{ color: '#94A3B8', maxWidth: '300px', fontSize: '0.95rem' }}>
               Create and Share Your Wishlist in Seconds. Never receive duplicate gifts again. Build your premium registry today.
@@ -140,7 +141,8 @@ function DashboardLayout({ children }) {
       <aside className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header flex-between">
           <Link to="/" className="logo" onClick={closeSidebar}>
-            <img src={logoImg} alt="WishNest" style={{ height: '40px', width: 'auto' }} />
+            <span className="logo-mark" aria-hidden="true">🎁</span>
+            <span className="logo-wordmark">WishNest</span>
           </Link>
           <button className="mobile-close-btn" onClick={closeSidebar}>
             <X size={24} />
