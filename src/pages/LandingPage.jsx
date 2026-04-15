@@ -132,10 +132,13 @@ export default function LandingPage() {
                 </div>
 
                 <h1 className="landing-title">
-                  Create a free wishlist to get the gifts you'll actually love.
+                  Create a Free Wishlist Online and Share Your Gift List
                 </h1>
                 <p className="landing-subtitle">
                   WishNest helps you organise what you&apos;d love to receive, so friends and family can gift with confidence.
+                </p>
+                <p className="landing-seo-description">
+                  WishNest is a simple platform to create a gift wishlist online for birthdays, weddings, festivals, and special occasions. Share your wishlist with friends and family and receive the gifts you truly want.
                 </p>
 
                 <div className="landing-actions">
@@ -417,6 +420,41 @@ export default function LandingPage() {
               <h3>Your data</h3>
               <p>
                 Account details, preferences, and wishlist content stay tied to your account and app permissions.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="occasions" className="landing-section">
+        <div className="container">
+          <div className="landing-section__header">
+            <h2>Gifts for Every Special Moment</h2>
+            <p>WishNest is your universal wishlist maker for all of life&apos;s celebrations.</p>
+          </div>
+          <div className="landing-info-grid">
+            <article className="landing-info-card card">
+              <h3>Birthday Wishlist</h3>
+              <p>
+                Create your birthday wishlist and share it with friends and family to receive the perfect gifts.
+              </p>
+            </article>
+            <article className="landing-info-card card">
+              <h3>Wedding Wishlist</h3>
+              <p>
+                Plan your wedding registry easily and share it with guests to help them find gifts you truly need.
+              </p>
+            </article>
+            <article className="landing-info-card card">
+              <h3>Festival Gift List</h3>
+              <p>
+                Organize your gift lists for festivals like Diwali, Rakhi, and Christmas and share the joy with loved ones.
+              </p>
+            </article>
+            <article className="landing-info-card card">
+              <h3>Gift Ideas for Every Occasion</h3>
+              <p>
+                Find inspiration for every special moment and browse curated gift ideas for your next celebration.
               </p>
             </article>
           </div>
