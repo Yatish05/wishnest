@@ -26,5 +26,6 @@ export default function handler(req, res) {
 </urlset>`;
 
   res.setHeader('Content-Type', 'application/xml');
+  res.setHeader('Cache-Control', 's-maxage=86400, stale-while-revalidate');
   res.status(200).send(xml);
 }
