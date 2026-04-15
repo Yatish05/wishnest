@@ -1,36 +1,7 @@
-import mongoose from 'mongoose';
+export default function handler(req, res) {
+  const baseUrl = 'https://www.wishnest.co.in';
 
-const MONGODB_URI = process.env.MONGO_URI;
-
-if (!MONGODB_URI) {
-  throw new Error('Please define the MONGO_URI environment variable inside .env');
-}
-
-let cachedClient = null;
-
-async function connectToDatabase() {
-  if (cachedClient) {
-    return cachedClient;
-  }
-  const client = await mongoose.connect(MONGODB_URI, {
-    serverSelectionTimeoutMS: 5000,
-  });
-  cachedClient = client;
-  return client;
-}
-
-export default async function handler(req, res) {
-  try {
-    await connectToDatabase();
-    const db = mongoose.connection.db;
-
-    const wishlists = await db.collection('wishlists').find({
-      $or: [{ isPublic: true }, { visibility: 'public' }],
-    }).project({ _id: 1, updatedAt: 1 }).toArray();
-
-    const baseUrl = 'https://wishnest.co.in';
-
-    let xml = `<?xml version="1.0" encoding="UTF-8"?>
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>${baseUrl}/</loc>
@@ -51,28 +22,9 @@ export default async function handler(req, res) {
     <loc>${baseUrl}/wishnest-preview</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
-  </url>`;
-
-    wishlists.forEach((w) => {
-      const lastModDate = w.updatedAt ? new Date(w.updatedAt) : new Date();
-      const lastMod = lastModDate.toISOString().split('T')[0];
-
-      xml += `
-  <url>
-    <loc>${baseUrl}/wishlist/${w._id}</loc>
-    <lastmod>${lastMod}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>`;
-    });
-
-    xml += `
+  </url>
 </urlset>`;
 
-    res.setHeader('Content-Type', 'text/xml');
-    res.status(200).send(xml);
-  } catch (error) {
-    console.error('Sitemap API Error:', error);
-    res.status(500).send('Internal Server Error');
-  }
+  res.setHeader('Content-Type', 'text/xml');
+  res.status(200).send(xml);
 }
