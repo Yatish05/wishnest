@@ -25,6 +25,6 @@ export default function handler(req, res) {
   </url>
 </urlset>`;
 
-  res.setHeader('Content-Type', 'text/xml');
+  res.setHeader('Content-Type', 'application/xml');
   res.status(200).send(xml);
 }
