@@ -1,5 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { Analytics } from '@vercel/analytics/react'
 import './styles/theme.css'
 import './index.css'
 import App from './App.jsx'
@@ -15,6 +16,7 @@ createRoot(document.getElementById('root')).render(
     <ErrorBoundary>
       <AuthProvider>
         <App />
+        <Analytics />
       </AuthProvider>
     </ErrorBoundary>
   </StrictMode>,
