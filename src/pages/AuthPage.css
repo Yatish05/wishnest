@@ -44,7 +44,7 @@
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
 .social-btn,
@@ -60,7 +60,7 @@
 .auth-divider {
   display: flex;
   align-items: center;
-  margin: 22px 0;
+  margin: 16px 0;
   color: var(--color-text-muted);
 }
 
