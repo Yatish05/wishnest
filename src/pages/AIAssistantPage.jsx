@@ -42,8 +42,13 @@ export default function AIAssistantPage() {
             <span className="ai-coming-soon-kicker">Feature Coming Soon</span>
             <h2>AI-powered gift suggestions are being polished.</h2>
             <p>
-              We are still refining this experience for production, so the assistant is
-              temporarily hidden instead of showing an unstable tool.
+              Soon, our AI will help you find the perfect gifts from top retailers like 
+              <strong> Amazon</strong>, <strong>Target</strong>, <strong>Walmart</strong>, 
+              <strong> Etsy</strong>, and <strong>Best Buy</strong>.
+            </p>
+            <p className="mt-2">
+              We are refining the assistant to ensure it works perfectly across all 
+              regions before rollout.
             </p>
           </div>
           <div className="ai-coming-soon-actions">

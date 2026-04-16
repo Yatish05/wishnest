@@ -29,19 +29,19 @@ const sampleWishlists = [
   },
   {
     id: 3,
-    name: 'Diwali Home Picks',
-    occasion: 'Diwali',
+    name: 'Home Essentials',
+    occasion: 'Moving In',
     items: 9,
-    note: 'Festive decor and useful upgrades that make celebrations feel personal and easy to buy for.',
+    note: 'Practical upgrades and decor that make a new house feel like home.',
   },
 ];
 
 const inspirationWishlists = [
   {
     id: 1,
-    username: 'Aarohi S.',
-    occasion: 'Rakhi',
-    items: ['Fragrance Set', 'Silk Stole', 'Coffee Press'],
+    username: 'Sarah J.',
+    occasion: 'Birthday',
+    items: ['Kindle Paperwhite', 'Leather Journal', 'Coffee Press'],
   },
   {
     id: 2,
@@ -102,10 +102,8 @@ function getOccasionClass(label) {
       return 'landing-tag landing-tag--birthday';
     case 'Wedding':
       return 'landing-tag landing-tag--wedding';
-    case 'Diwali':
-      return 'landing-tag landing-tag--diwali';
-    case 'Rakhi':
-      return 'landing-tag landing-tag--rakhi';
+    case 'Moving In':
+      return 'landing-tag landing-tag--moving';
     default:
       return 'landing-tag';
   }
@@ -389,8 +387,8 @@ export default function LandingPage() {
                 Need help, want to report a bug, or want to share feedback? Reach out and we&apos;ll get back to you.
               </p>
             </div>
-            <a className="btn btn-primary" href="mailto:getwishnest@gmail.in">
-              Email:- getwishnest@gmail.in
+            <a className="btn btn-primary" href="mailto:getwishnest@gmail.com">
+              Email:- getwishnest@gmail.com
             </a>
           </div>
         </div>
@@ -437,7 +435,7 @@ export default function LandingPage() {
             </article>
             <article className="landing-info-card card">
               <h3>Is WishNest free to use?</h3>
-              <p>Yes, absolutely! Creating, managing, and sharing your wishlists with friends and family across India is 100% free.</p>
+              <p>Yes, absolutely! Creating, managing, and sharing your wishlists with friends and family is 100% free.</p>
             </article>
             <article className="landing-info-card card">
               <h3>How do I share my wishlist?</h3>
@@ -445,7 +443,7 @@ export default function LandingPage() {
             </article>
             <article className="landing-info-card card">
               <h3>Can I use WishNest for wedding registry?</h3>
-              <p>Yes! It is perfect for weddings, birthdays, baby showers, Diwali, and Rakhi. Add items from anywhere to build your ultimate gift registry.</p>
+              <p>Yes! It is perfect for weddings, birthdays, baby showers, and holidays. Add items from anywhere to build your ultimate gift registry.</p>
             </article>
           </div>
         </div>

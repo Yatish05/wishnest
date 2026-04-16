@@ -84,10 +84,6 @@ export default function AuthPage({ type }) {
             <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="social-icon" />
             Continue with Google
           </button>
-          <button type="button" className="btn btn-secondary social-btn">
-            <img src="https://www.svgrepo.com/show/511330/apple-173.svg" alt="Apple" className="social-icon" />
-            {isLogin ? 'Log in with Apple' : 'Sign up with Apple'}
-          </button>
         </div>
 
         <div className="auth-divider">

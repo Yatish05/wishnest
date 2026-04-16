@@ -4,6 +4,7 @@ import api from '../utils/api';
 import toast from 'react-hot-toast';
 import { Plus, Edit3, Share2, ExternalLink, X, Image as ImageIcon, Lock, Globe, Eye, Check, Gift, Sparkles, Users, Package2, VenusAndMars } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { formatCurrency, getCurrencySymbol } from '../utils/currency';
 import './WishlistPage.css';
 
 export default function WishlistPage() {
@@ -637,8 +638,27 @@ export default function WishlistPage() {
             )}
           </div>
         ) : (
-          <div className="text-center py-20 card mb-8">
-            <p className="text-secondary">Loading wishlist...</p>
+          <div className="wishlist-detail-skeleton">
+            <div className="wishlist-header-main skeleton">
+              <div className="skeleton-line skeleton-titleLarge"></div>
+              <div className="skeleton-line skeleton-meta"></div>
+              <div className="wishlist-stats-row">
+                <div className="skeleton-pill"></div>
+                <div className="skeleton-pill"></div>
+                <div className="skeleton-pill"></div>
+              </div>
+            </div>
+            <div className="items-grid">
+              {[1, 2, 3].map(i => (
+                <div key={i} className="item-card skeleton">
+                  <div className="skeleton-img"></div>
+                  <div className="item-content">
+                    <div className="skeleton-line skeleton-title"></div>
+                    <div className="skeleton-line skeleton-text"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
@@ -795,7 +815,8 @@ export default function WishlistPage() {
                   >
                     <option>Birthday</option>
                     <option>Wedding</option>
-                    <option>Festival</option>
+                    <option>Holiday</option>
+                    <option>Moving In</option>
                     <option>Baby Shower</option>
                     <option>Other</option>
                   </select>
@@ -868,7 +889,8 @@ export default function WishlistPage() {
                   >
                     <option>Birthday</option>
                     <option>Wedding</option>
-                    <option>Festival</option>
+                    <option>Holiday</option>
+                    <option>Moving In</option>
                     <option>Baby Shower</option>
                     <option>Other</option>
                   </select>

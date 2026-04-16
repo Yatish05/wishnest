@@ -19,9 +19,9 @@ import './Dashboard.css';
 const inspirationWishlists = [
   {
     id: 1,
-    username: 'Aarohi S.',
-    occasion: 'Rakhi',
-    items: ['Fragrance Set', 'Silk Stole', 'Coffee Press'],
+    username: 'Sarah J.',
+    occasion: 'Birthday',
+    items: ['Kindle Paperwhite', 'Leather Journal', 'Coffee Press'],
   },
   {
     id: 2,
@@ -31,15 +31,15 @@ const inspirationWishlists = [
   },
   {
     id: 3,
-    username: 'Naina R.',
-    occasion: 'Birthday',
-    items: ['Kindle', 'Journal', 'Pendant'],
+    username: 'Michael R.',
+    occasion: 'Moving In',
+    items: ['Smart Lamp', 'Tool Kit', 'Wall Art'],
   },
   {
     id: 4,
-    username: 'The Malhotras',
-    occasion: 'Diwali',
-    items: ['Table Lamp', 'Serveware', 'Wall Art'],
+    username: 'The Millers',
+    occasion: 'Holiday',
+    items: ['Ornaments', 'Baking Set', 'Board Games'],
   },
 ];
 
@@ -54,8 +54,8 @@ function inferOccasion(list) {
 
   if (raw.includes('birthday')) return 'Birthday';
   if (raw.includes('wedding')) return 'Wedding';
-  if (raw.includes('diwali')) return 'Diwali';
-  if (raw.includes('rakhi')) return 'Rakhi';
+  if (raw.includes('moving')) return 'Moving In';
+  if (raw.includes('holiday')) return 'Holiday';
 
   return 'Wishlist';
 }
@@ -66,10 +66,10 @@ function getOccasionClass(label) {
       return 'dashboard-tag dashboard-tag--birthday';
     case 'Wedding':
       return 'dashboard-tag dashboard-tag--wedding';
-    case 'Diwali':
-      return 'dashboard-tag dashboard-tag--diwali';
-    case 'Rakhi':
-      return 'dashboard-tag dashboard-tag--rakhi';
+    case 'Moving In':
+      return 'dashboard-tag dashboard-tag--moving';
+    case 'Holiday':
+      return 'dashboard-tag dashboard-tag--holiday';
     default:
       return 'dashboard-tag';
   }
@@ -81,10 +81,10 @@ function getWishlistAccent(occasion) {
       return 'dashboard-wishlist-card--birthday';
     case 'Wedding':
       return 'dashboard-wishlist-card--wedding';
-    case 'Diwali':
-      return 'dashboard-wishlist-card--diwali';
-    case 'Rakhi':
-      return 'dashboard-wishlist-card--rakhi';
+    case 'Moving In':
+      return 'dashboard-wishlist-card--moving';
+    case 'Holiday':
+      return 'dashboard-wishlist-card--holiday';
     default:
       return 'dashboard-wishlist-card--default';
   }
@@ -147,8 +147,8 @@ export default function Dashboard() {
             </p>
 
             <div className="dashboard-hero__chips">
-              <span>Easy for birthdays, weddings, Diwali, Rakhi and more</span>
-              <span>Affiliate links simply help you organise what you&apos;d love to receive</span>
+              <span>Easy for birthdays, weddings, holidays and more</span>
+              <span>Organise everything you&apos;d love to receive in one place</span>
             </div>
           </div>
 
@@ -203,7 +203,19 @@ export default function Dashboard() {
         </div>
 
         {loading ? (
-          <div className="dashboard-state-card">Loading your wishlists...</div>
+          <div className="dashboard-wishlist-grid">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="dashboard-wishlist-card dashboard-wishlist-card--skeleton">
+                <div className="skeleton-line skeleton-tag"></div>
+                <div className="skeleton-line skeleton-title"></div>
+                <div className="skeleton-line skeleton-text"></div>
+                <div className="skeleton-actions">
+                  <div className="skeleton-btn"></div>
+                  <div className="skeleton-btn"></div>
+                </div>
+              </div>
+            ))}
+          </div>
         ) : (
           <>
             <div className="dashboard-wishlist-grid">
@@ -269,7 +281,7 @@ export default function Dashboard() {
                 <h3>{isGuest ? 'Unlock Your Own Wishlist' : 'Create New Wishlist'}</h3>
                 <p>
                   {isGuest
-                    ? 'Sign in to create lists for birthdays, weddings, Diwali, Rakhi, and every celebration in between.'
+                    ? 'Sign in to create lists for birthdays, weddings, holidays, and every celebration in between.'
                     : 'Make a new list for an upcoming celebration and give loved ones a warm, helpful starting point.'}
                 </p>
                 <span className="dashboard-create-card__cta">
