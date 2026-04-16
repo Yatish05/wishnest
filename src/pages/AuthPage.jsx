@@ -69,6 +69,12 @@ export default function AuthPage({ type }) {
         </div>
 
         <div className="auth-social">
+          <button className="btn btn-secondary social-btn" type="button" onClick={handleGuestLogin}>
+             Continue as Guest
+          </button>
+          <div className="auth-divider">
+            <span>or use social</span>
+          </div>
           <button
             type="button"
             className="btn btn-secondary social-btn"
@@ -77,9 +83,6 @@ export default function AuthPage({ type }) {
           >
             <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="social-icon" />
             Continue with Google
-          </button>
-          <button className="btn btn-secondary social-btn" type="button" onClick={handleGuestLogin}>
-             Continue as Guest
           </button>
         </div>
 
