@@ -1,9 +1,10 @@
 .auth-container {
   min-height: calc(100vh - 88px);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 48px 24px;
+  padding: 40px 24px;
   background:
     radial-gradient(circle at top right, rgba(249, 115, 22, 0.1), transparent 24rem),
     linear-gradient(180deg, #fff8f5 0%, #fffdfb 100%);
@@ -44,12 +45,14 @@
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 }
 
 .social-btn,
 .auth-submit {
   width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .social-icon {
@@ -60,7 +63,7 @@
 .auth-divider {
   display: flex;
   align-items: center;
-  margin: 16px 0;
+  margin: 12px 0;
   color: var(--color-text-muted);
 }
 
