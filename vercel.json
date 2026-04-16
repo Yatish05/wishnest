@@ -1,5 +1,5 @@
 {
-  "regions": ["iad1", "sfo1"],
+  "regions": ["iad1"],
   "rewrites": [
     { "source": "/api/discover", "destination": "/api/discover" },
     { "source": "/api/wishlists/public/:id", "destination": "/api/public-wishlist?id=:id" },
