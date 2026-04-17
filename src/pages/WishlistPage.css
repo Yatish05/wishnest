@@ -631,13 +631,17 @@
 
 .modal-overlay {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 24px;
   background: rgba(0, 0, 0, 0.45);
+  -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
 }
 
@@ -676,9 +680,11 @@
 }
 
 .modal-form {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 24px !important;
+  display: block !important;
+}
+
+.modal-form .form-group:not(:last-child) {
+  margin-bottom: 24px !important;
 }
 
 .premium-label {
