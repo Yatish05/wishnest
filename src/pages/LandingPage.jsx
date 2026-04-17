@@ -128,29 +128,19 @@ export default function LandingPage() {
                 </div>
 
                 <h1 className="landing-title">
-                  Create a free wishlist to get the gifts you'll actually love.
+                  Discover the perfect gift in seconds.
                 </h1>
                 <p className="landing-subtitle">
-                  WishNest helps you organise what you&apos;d love to receive, so friends and family can gift with confidence.
+                  Browse gift ideas by occasion, relationship, or budget — then save what you love.
                 </p>
 
                 <div className="landing-actions">
-                  {user ? (
-                    <>
-                      <Link to="/dashboard" className="btn btn-primary btn-lg">
-                        Go to Dashboard <ArrowRight size={18} />
-                      </Link>
-                    </>
-                  ) : (
-                    <>
-                      <Link to="/signup" className="btn btn-primary btn-lg">
-                        Create Your Wishlist <ArrowRight size={18} />
-                      </Link>
-                      <Link to="/discover" className="btn btn-outline btn-lg">
-                        Discover Gift Ideas
-                      </Link>
-                    </>
-                  )}
+                  <Link to="/discover" className="btn btn-primary btn-lg">
+                    Discover Gift Ideas <ArrowRight size={18} />
+                  </Link>
+                  <Link to={user ? "/dashboard" : "/signup"} className="btn btn-outline btn-lg">
+                    Create Your Wishlist
+                  </Link>
                 </div>
 
                 <div className="landing-chip-row">
