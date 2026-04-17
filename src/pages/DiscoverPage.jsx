@@ -159,7 +159,7 @@ export default function DiscoverPage() {
           const apiGifts = (Array.isArray(res.data) ? res.data : []).map(item => ({
             id: item.id || item._id,
             title: item.name || item.title,
-            image: item.image_url || item.image || '/images/default-gift.png',
+            image: item.image_url || item.image || item.img || '/images/default-gift.png',
             category: item.category || 'Other',
             occasion: item.wishlistOccasion || item.occasion || 'Personal',
             relationship: item.relationship || 'Everyone'
