@@ -1,3 +1,4 @@
+// Trigger redeployment to sync stable state
 import { useState } from 'react';
 import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
