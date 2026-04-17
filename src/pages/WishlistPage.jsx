@@ -622,9 +622,9 @@ export default function WishlistPage() {
               </div>
             ) : (
              {/* Guest / Empty Banners Group */}
-              <div className="flex flex-col gap-6 w-full">
+              <div className="flex flex-col gap-10 w-full mb-12">
                 <div className="empty-state-centered">
-                  <div className="text-center card" style={{ padding: '3.5rem 4rem' }}>
+                  <div className="text-center card" style={{ padding: '4rem 5rem' }}>
                     <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🎁</div>
                     <h2 className="text-xl font-bold mb-2">No wishlists yet</h2>
                     <p className="text-secondary" style={{ marginBottom: '1.5rem' }}>
@@ -652,6 +652,7 @@ export default function WishlistPage() {
                   </div>
                 )}
               </div>
+            )}
           </div>
         ) : (
           <div className="wishlist-detail-skeleton">
