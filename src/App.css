@@ -53,7 +53,12 @@
   color: var(--color-brand);
 }
 
-.nav-links,
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
 .nav-actions,
 .topbar-actions {
   display: flex;
