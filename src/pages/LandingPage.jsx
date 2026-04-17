@@ -78,23 +78,6 @@ const assistantHighlights = [
   },
 ];
 
-const howItWorksSteps = [
-  {
-    id: '01',
-    title: 'Create a wishlist',
-    description: 'Add your favourite items and personal notes.',
-  },
-  {
-    id: '02',
-    title: 'Share one link',
-    description: 'Keep everyone on the same page with an up-to-date link.',
-  },
-  {
-    id: '03',
-    title: 'Gift with confidence',
-    description: 'Help them avoid duplicates and find something you’ll love.',
-  },
-];
 
 function getOccasionClass(label) {
   switch (label) {
@@ -328,27 +311,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section id="how-it-works" className="landing-section">
-        <div className="container">
-          <div className="landing-section__header">
-
-            <h2>How it works.</h2>
-            <p>
-              Three simple steps from wishlist to shared happiness.
-            </p>
-          </div>
-
-          <div className="landing-steps-grid">
-            {howItWorksSteps.map((step) => (
-              <article key={step.id} className="landing-step-card card">
-                <span className="landing-step-card__number">{step.id}</span>
-                <h3>{step.title}</h3>
-                <p>{step.description}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
 
       <section id="faq" className="landing-section landing-section--soft">
         <div className="container">

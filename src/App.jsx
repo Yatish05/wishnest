@@ -39,7 +39,6 @@ function MainLayout({ children }) {
               <>
                 <a href="#ai-assistant" className="nav-link" onClick={closeMobileMenu}>AI Assistant</a>
                 <a href="#features" className="nav-link" onClick={closeMobileMenu}>Features</a>
-                <a href="#how-it-works" className="nav-link" onClick={closeMobileMenu}>How It Works</a>
               </>
             )}
             <div className="nav-actions-mobile">
@@ -97,7 +96,6 @@ function MainLayout({ children }) {
               <h4 style={{ color: 'white', marginBottom: '1.25rem', fontSize: '1.1rem' }}>Product</h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 <a href="/#features" style={{ color: '#94A3B8', transition: 'var(--transition)' }}>Features</a>
-                <a href="/#how-it-works" style={{ color: '#94A3B8', transition: 'var(--transition)' }}>Guides</a>
               </div>
             </div>
             <div>
