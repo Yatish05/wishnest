@@ -19,10 +19,93 @@ const DEFAULT_IMAGES = {
   'General': '/images/default-gift.png'
 };
 
+const STATIC_GIFTS = [
+  {
+    id: 'g1',
+    title: 'Nike Air Max Sneaker',
+    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80',
+    category: 'Fashion',
+    occasion: 'Birthday',
+    relationship: 'Unisex'
+  },
+  {
+    id: 'g2',
+    title: 'Apple Watch Series 9',
+    image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80',
+    category: 'Electronics',
+    occasion: 'Anniversary',
+    relationship: 'Unisex'
+  },
+  {
+    id: 'g3',
+    title: 'Coach Leather Handbag',
+    image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80',
+    category: 'Fashion',
+    occasion: 'Birthday',
+    relationship: 'Female'
+  },
+  {
+    id: 'g4',
+    title: 'Sony Noise Canceling Headphones',
+    image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80',
+    category: 'Electronics',
+    occasion: 'Other',
+    relationship: 'Unisex'
+  },
+  {
+    id: 'g5',
+    title: 'Ray-Ban Wayfarer Sunglasses',
+    image: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=800&q=80',
+    category: 'Fashion',
+    occasion: 'Birthday',
+    relationship: 'Unisex'
+  },
+  {
+    id: 'g6',
+    title: 'Instax Mini 12 Camera',
+    image: 'https://images.unsplash.com/photo-1526170315870-ef6846055c9d?w=800&q=80',
+    category: 'Electronics',
+    occasion: 'Birthday',
+    relationship: 'Unisex'
+  },
+  {
+    id: 'g7',
+    title: 'Luxury Scented Candle',
+    image: 'https://images.unsplash.com/photo-1603006905003-be475563bc59?w=800&q=80',
+    category: 'Home',
+    occasion: 'Anniversary',
+    relationship: 'Female'
+  },
+  {
+    id: 'g8',
+    title: 'Gold Link Bracelet',
+    image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=80',
+    category: 'Fashion',
+    occasion: 'Wedding',
+    relationship: 'Female'
+  },
+  {
+    id: 'g9',
+    title: 'Slim Leather Wallet',
+    image: 'https://images.unsplash.com/photo-1627123424574-724758594e93?w=800&q=80',
+    category: 'Fashion',
+    occasion: 'Birthday',
+    relationship: 'Male'
+  },
+  {
+    id: 'g10',
+    title: 'Indoor Potted Olive Tree',
+    image: 'https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=800&q=80',
+    category: 'Home',
+    occasion: 'Other',
+    relationship: 'Unisex'
+  }
+];
+
 export default function DiscoverPage() {
   const { user } = useAuth();
-  const [gifts, setGifts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [gifts, setGifts] = useState(STATIC_GIFTS);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
@@ -32,58 +115,19 @@ export default function DiscoverPage() {
     relationship: 'All'
   });
 
+  const fetchInitialGifts = async () => {
+    // We already have our top 10 static gifts, so we can just ensure they're loaded
+    setGifts(STATIC_GIFTS);
+    setLoading(false);
+  };
+
   useEffect(() => {
     fetchInitialGifts();
   }, []);
 
-  const fetchInitialGifts = async () => {
-    try {
-      setLoading(true);
-      setError('');
-      
-      const res = await api.get('/discover?limit=10');
-
-      const getBestImage = (title = '') => {
-        const lower = title.toLowerCase();
-        if (lower.includes('watch')) return 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80';
-        if (lower.includes('shoe') || lower.includes('nike')) return 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80';
-        if (lower.includes('headphone') || lower.includes('speaker')) return 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80';
-        if (lower.includes('glass') || lower.includes('sunglass')) return 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=800&q=80';
-        if (lower.includes('handbag') || lower.includes('bag') || lower.includes('coach')) return 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80';
-        if (lower.includes('jewelry') || lower.includes('shagun') || lower.includes('gold')) return 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=80';
-        if (lower.includes('camera') || lower.includes('photo')) return 'https://images.unsplash.com/photo-1526170315870-ef6846055c9d?w=800&q=80';
-        if (lower.includes('ipad') || lower.includes('tablet') || lower.includes('tech')) return 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=800&q=80';
-        if (lower.includes('plant') || lower.includes('home')) return 'https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=800&q=80';
-        
-        // Default cyclical fallback if no keywords match
-        const premiumImages = [
-          'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80',
-          'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80',
-          'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80'
-        ];
-        return premiumImages[Math.floor(Math.random() * premiumImages.length)];
-      };
-
-      const enriched = (Array.isArray(res.data) ? res.data : []).map((item, idx) => ({
-        ...item,
-        img: getBestImage(item.title),
-        category: CATEGORIES[1 + (idx % (CATEGORIES.length - 1))],
-        relationship: RELATIONSHIPS[idx % RELATIONSHIPS.length],
-        priceValue: [400, 1500, 3000, 6000][idx % 4]
-      }));
-      
-      setGifts(enriched);
-    } catch (err) {
-      console.error('Discover fetch error:', err);
-      setError('Unable to load gift ideas. Please try again later.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const filteredGifts = useMemo(() => {
     return gifts.filter(gift => {
-      const matchOccasion = activeFilters.occasion === 'All Occasions' || gift.wishlistOccasion === activeFilters.occasion;
+      const matchOccasion = activeFilters.occasion === 'All Occasions' || gift.occasion === activeFilters.occasion;
       const matchRelationship = activeFilters.relationship === 'All' || gift.relationship === activeFilters.relationship;
       
       return matchOccasion && matchRelationship;
@@ -159,11 +203,11 @@ export default function DiscoverPage() {
           <div className="discovery-grid">
             {filteredGifts.length > 0 ? (
               filteredGifts.map((gift) => (
-                <article key={gift._id} className="discovery-card">
+                <article key={gift.id} className="discovery-card">
                   <div className="discovery-card-media">
                     <img 
-                      src={gift.img || '/images/default-gift.png'} 
-                      alt={gift.name} 
+                      src={gift.image || '/images/default-gift.png'} 
+                      alt={gift.title} 
                       loading="lazy"
                       onError={(e) => {
                         e.target.onerror = null;
@@ -172,11 +216,11 @@ export default function DiscoverPage() {
                     />
                   </div>
                   <div className="discovery-card-content">
-                    <h3>{gift.name}</h3>
+                    <h3>{gift.title}</h3>
                     <p className="discovery-card-subtitle">Popular gift idea</p>
                     <div className="discovery-card-tags">
                       <span className="tag tag--category">{gift.category}</span>
-                      <span className="tag tag--occasion">{gift.wishlistOccasion || 'Personal'}</span>
+                      <span className="tag tag--occasion">{gift.occasion || 'Personal'}</span>
                     </div>
                   </div>
                 </article>
