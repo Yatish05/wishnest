@@ -64,17 +64,17 @@ function MainLayout({ children }) {
 
           <div className="nav-actions">
             {user ? (
-              <>
-                <div className="nav-user-pill">
+              <div className="flex-center gap-4">
+                <button className="nav-user-pill" onClick={() => navigate('/settings')}>
                     {user?.avatar ? (
                       <img src={user.avatar} alt={displayName} />
                     ) : (
                       <div className="nav-user-avatar-placeholder" aria-hidden="true">{initials}</div>
                     )}
-                  <span>{displayName}</span>
-                </div>
-                <Link to="/dashboard" className="btn btn-primary">Dashboard</Link>
-              </>
+                  <span className="nav-user-name">{displayName}</span>
+                </button>
+                <Link to="/dashboard" className="btn btn-primary header-dashboard-btn">Dashboard</Link>
+              </div>
             ) : (
               <>
                 <Link to="/login" className="btn btn-text">Login</Link>
