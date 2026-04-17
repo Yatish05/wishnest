@@ -279,7 +279,7 @@
 .landing-feed-card:hover,
 .landing-create-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.12);
   border-color: var(--color-brand);
 }
 
@@ -288,8 +288,54 @@
 .landing-wishlist-card__footer {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   gap: 12px;
+}
+
+.landing-feed-card__user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.landing-feed-card__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-brand-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 800;
+  font-size: 13px;
+  box-shadow: 0 4px 10px rgba(249, 115, 22, 0.15);
+}
+
+.landing-feed-card__meta h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.landing-feed-card__engagement {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.landing-feed-card__engagement span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.landing-feed-card__engagement span svg {
+  color: #94a3b8;
 }
 
 .landing-tag {
@@ -298,6 +344,7 @@
   padding: 6px 12px;
   font-size: 11px;
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .landing-tag--birthday { background: #fff1f2; color: #be123c; border-radius: 99px; }

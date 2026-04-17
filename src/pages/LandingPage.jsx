@@ -40,19 +40,31 @@ const inspirationWishlists = [
   {
     id: 1,
     username: 'Sarah J.',
+    initials: 'SJ',
     occasion: 'Birthday',
+    emoji: '🎂',
+    likes: 24,
+    views: '1.2k',
     items: ['Kindle Paperwhite', 'Leather Journal', 'Coffee Press'],
   },
   {
     id: 2,
     username: 'Kunal & Meera',
+    initials: 'KM',
     occasion: 'Wedding',
+    emoji: '💍',
+    likes: 42,
+    views: '2.5k',
     items: ['Dinnerware', 'Linen Set', 'Air Fryer'],
   },
   {
     id: 3,
     username: 'Naina R.',
+    initials: 'NR',
     occasion: 'Birthday',
+    emoji: '🎉',
+    likes: 18,
+    views: '800',
     items: ['Kindle', 'Journal', 'Pendant'],
   },
 ];
@@ -239,18 +251,26 @@ export default function LandingPage() {
             {inspirationWishlists.map((wishlist) => (
               <article key={wishlist.id} className="landing-feed-card card">
                 <div className="landing-feed-card__top">
-                  <div className="landing-feed-card__meta">
-                    <h3>{wishlist.username}</h3>
-                    <p>A wishlist that feels easy to gift from</p>
+                  <div className="landing-feed-card__user">
+                    <div className="landing-feed-card__avatar">{wishlist.initials}</div>
+                    <div className="landing-feed-card__meta">
+                      <h3>{wishlist.username}</h3>
+                      <div className="landing-feed-card__engagement">
+                        <span><Heart size={12} fill="currentColor" /> {wishlist.likes}</span>
+                        <span><Eye size={12} /> {wishlist.views}</span>
+                      </div>
+                    </div>
                   </div>
-                  <span className={getOccasionClass(wishlist.occasion)}>{wishlist.occasion}</span>
+                  <span className={getOccasionClass(wishlist.occasion)}>
+                    {wishlist.emoji} {wishlist.occasion}
+                  </span>
                 </div>
 
                 <div className="landing-feed-card__items">
                   {wishlist.items.map((item, index) => (
                     <div key={item} className="landing-feed-item">
                       <div className={`landing-feed-item__thumb landing-feed-item__thumb--${index + 1}`}>
-                        <Gift size={16} />
+                        <Gift size={14} />
                       </div>
                       <span>{item}</span>
                     </div>
@@ -258,8 +278,8 @@ export default function LandingPage() {
                 </div>
 
                 <Link to={user ? '/discover' : '/signup'} className="landing-soft-link">
-                  <Eye size={16} />
-                  <span>Inspired by this</span>
+                  <span>View Wishlist</span>
+                  <ArrowRight size={16} />
                 </Link>
               </article>
             ))}
