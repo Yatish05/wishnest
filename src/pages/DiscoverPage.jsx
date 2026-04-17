@@ -42,6 +42,9 @@ export default function DiscoverPage() {
     try {
       setLoading(true);
       setError('');
+      
+      const res = await api.get('/discover?limit=10');
+
       // Use the newly generated premium images for the discovery list
       const premiumImages = [
         '/brain/4db9e1ad-6429-44dd-bb48-73fb2286e55f/discover_product_1_watch_1776454698119.png',
