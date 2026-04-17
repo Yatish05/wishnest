@@ -103,9 +103,10 @@ function MainLayout({ children }) {
             <div>
               <h4 style={{ color: 'white', marginBottom: '1.25rem', fontSize: '1.1rem' }}>Company</h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                <a href="/#about" style={{ color: '#94A3B8', transition: 'var(--transition)' }}>About</a>
-                <a href="/#contact" style={{ color: '#94A3B8', transition: 'var(--transition)' }}>Contact</a>
-                <a href="/#privacy" style={{ color: '#94A3B8', transition: 'var(--transition)' }}>Privacy</a>
+                <Link to="/about" style={{ color: '#94A3B8', transition: 'var(--transition)' }}>About</Link>
+                <Link to="/contact" style={{ color: '#94A3B8', transition: 'var(--transition)' }}>Contact</Link>
+                <Link to="/privacy-policy" style={{ color: '#94A3B8', transition: 'var(--transition)' }}>Privacy Policy</Link>
+                <Link to="/terms" style={{ color: '#94A3B8', transition: 'var(--transition)' }}>Terms</Link>
               </div>
             </div>
           </div>
@@ -237,6 +238,10 @@ import AIAssistantPage from './pages/AIAssistantPage';
 import AuthCallback from './pages/AuthCallback';
 import DiscoverPage from './pages/DiscoverPage';
 import WishNestDashboardMockup from './components/WishNestDashboardMockup';
+import About from './pages/About';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import Terms from './pages/Terms';
+import Contact from './pages/Contact';
 
 function App() {
   return (
@@ -278,6 +283,12 @@ function App() {
         {/* Public — no login required */}
         <Route path="/wishlist/:id" element={<PublicWishlist />} />
         <Route path="/w/:wishlistId" element={<PublicWishlist />} />
+
+        {/* Legal and About Pages */}
+        <Route path="/about" element={<MainLayout><About /></MainLayout>} />
+        <Route path="/privacy-policy" element={<MainLayout><PrivacyPolicy /></MainLayout>} />
+        <Route path="/terms" element={<MainLayout><Terms /></MainLayout>} />
+        <Route path="/contact" element={<MainLayout><Contact /></MainLayout>} />
 
         {/* Google OAuth callback landing — stores token then redirects */}
         <Route path="/auth/callback" element={<AuthCallback />} />
