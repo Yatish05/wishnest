@@ -144,15 +144,28 @@
   transform: translateY(-2px);
 }
 
-/* Secondary btn inside banner */
-.landing-hero__banner .btn-secondary {
-  background: rgba(255, 255, 255, 0.35);
-  border: 2px solid rgba(255, 255, 255, 0.45);
+/* Outline btn inside banner */
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  border-radius: 12px;
+  background: transparent;
+  border: 1px solid #E5E7EB;
+  color: #374151; /* Default for white background */
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.landing-hero__banner .btn-outline {
+  background: rgba(255, 255, 255, 0.4);
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
   color: #fff;
 }
 
-.landing-hero__banner .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.32);
+.landing-hero__banner .btn-outline:hover {
+  background: rgba(255, 255, 255, 0.55);
 }
 
 .landing-user-note strong {

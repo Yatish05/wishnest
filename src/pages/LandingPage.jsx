@@ -146,9 +146,9 @@ export default function LandingPage() {
                       <Link to="/signup" className="btn btn-primary btn-lg">
                         Create Your Wishlist <ArrowRight size={18} />
                       </Link>
-                      <button className="btn btn-secondary btn-lg" onClick={handleGuestLogin}>
-                        Explore without signup
-                      </button>
+                      <Link to="/discover" className="btn btn-outline btn-lg">
+                        Discover Gift Ideas
+                      </Link>
                     </>
                   )}
                 </div>
