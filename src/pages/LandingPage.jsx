@@ -128,10 +128,10 @@ export default function LandingPage() {
                 </div>
 
                 <h1 className="landing-title">
-                  Discover the perfect gift in seconds.
+                  Discover the perfect gift and build your wishlist effortlessly.
                 </h1>
                 <p className="landing-subtitle">
-                  Browse gift ideas by occasion, relationship, or budget — then save what you love.
+                  Browse gift ideas by occasion, relationship, or budget — then save them to your wishlist and share with friends and family.
                 </p>
 
                 <div className="landing-actions">
