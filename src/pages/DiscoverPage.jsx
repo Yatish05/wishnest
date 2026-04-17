@@ -29,9 +29,7 @@ export default function DiscoverPage() {
   // Filter state
   const [activeFilters, setActiveFilters] = useState({
     occasion: 'All Occasions',
-    category: 'All Categories',
-    relationship: 'All Relationships',
-    budget: 'All Budgets'
+    relationship: 'All Relationships'
   });
 
   useEffect(() => {
@@ -79,19 +77,9 @@ export default function DiscoverPage() {
   const filteredGifts = useMemo(() => {
     return gifts.filter(gift => {
       const matchOccasion = activeFilters.occasion === 'All Occasions' || gift.wishlistOccasion === activeFilters.occasion;
-      const matchCategory = activeFilters.category === 'All Categories' || gift.category === activeFilters.category;
       const matchRelationship = activeFilters.relationship === 'All Relationships' || gift.relationship === activeFilters.relationship;
       
-      let matchBudget = true;
-      if (activeFilters.budget !== 'All Budgets') {
-        const val = gift.priceValue;
-        if (activeFilters.budget === '< ₹500') matchBudget = val < 500;
-        else if (activeFilters.budget === '₹500 - ₹2000') matchBudget = val >= 500 && val <= 2000;
-        else if (activeFilters.budget === '₹2000 - ₹5000') matchBudget = val >= 2000 && val <= 5000;
-        else if (activeFilters.budget === '> ₹5000') matchBudget = val > 5000;
-      }
-
-      return matchOccasion && matchCategory && matchRelationship && matchBudget;
+      return matchOccasion && matchRelationship;
     });
   }, [gifts, activeFilters]);
 
@@ -135,30 +123,12 @@ export default function DiscoverPage() {
           </select>
         </div>
         <div className="filter-group">
-          <label>Category</label>
-          <select 
-            value={activeFilters.category} 
-            onChange={(e) => handleFilterChange('category', e.target.value)}
-          >
-            {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-          </select>
-        </div>
-        <div className="filter-group">
-          <label>Relationship</label>
+          <label>Whom to gift</label>
           <select 
             value={activeFilters.relationship} 
             onChange={(e) => handleFilterChange('relationship', e.target.value)}
           >
             {RELATIONSHIPS.map(r => <option key={r} value={r}>{r}</option>)}
-          </select>
-        </div>
-        <div className="filter-group">
-          <label>Budget</label>
-          <select 
-            value={activeFilters.budget} 
-            onChange={(e) => handleFilterChange('budget', e.target.value)}
-          >
-            {BUDGETS.map(b => <option key={b} value={b}>{b}</option>)}
           </select>
         </div>
       </section>
