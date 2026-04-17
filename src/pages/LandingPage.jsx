@@ -293,13 +293,16 @@ export default function LandingPage() {
 
       <section className="landing-nudge">
         <div className="container landing-nudge__container">
-          <div>
-            <h2>Your birthday or occasion is coming up?</h2>
-            <p>Share your wishlist. Your people will thank you for making gifting simpler and more personal.</p>
+          <div className="landing-nudge__copy">
+            <h2>Got a birthday, wedding, or celebration coming up?</h2>
+            <p>Create your wishlist in seconds and make gifting simple for everyone.</p>
           </div>
-          <Link to={user ? '/dashboard' : '/signup'} className="btn btn-primary btn-lg">
-            {user ? 'Open Dashboard' : 'Start for Free'}
-          </Link>
+          <div className="landing-nudge__actions">
+            <Link to={user ? '/dashboard' : '/signup'} className="btn btn-primary landing-nudge-btn">
+              {user ? 'Open Dashboard' : 'Create Your Wishlist'}
+            </Link>
+            <span className="landing-nudge__trust">Free forever • No spam • Takes 30 seconds</span>
+          </div>
         </div>
       </section>
 
