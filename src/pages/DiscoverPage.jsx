@@ -185,12 +185,12 @@ export default function DiscoverPage() {
                 <article key={gift._id} className="discovery-card">
                   <div className="discovery-card-media">
                     <img 
-                      src={gift.img || DEFAULT_IMAGES[gift.category] || DEFAULT_IMAGES.General} 
+                      src={gift.img || '/images/default-gift.png'} 
                       alt={gift.name} 
                       loading="lazy"
                       onError={(e) => {
                         e.target.onerror = null;
-                        e.target.src = DEFAULT_IMAGES[gift.category] || DEFAULT_IMAGES.General;
+                        e.target.src = '/images/default-gift.png';
                       }}
                     />
                   </div>
