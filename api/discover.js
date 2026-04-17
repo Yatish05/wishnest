@@ -1,23 +1,15 @@
 import { supabase } from './_utils/supabase.js';
 import { formatWishlist } from './_utils/formatters.js';
 
-export const config = {
-  runtime: 'edge',
-};
-
-export default async function handler(req) {
+export default async function handler(req, res) {
   if (req.method !== 'GET') {
-    return new Response(JSON.stringify({ message: 'Method Not Allowed' }), {
-      status: 405,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return res.status(405).json({ message: 'Method Not Allowed' });
   }
 
   try {
-    const url = new URL(req.url);
-    const limit = parseInt(url.searchParams.get('limit')) || 10;
-    const offset = parseInt(url.searchParams.get('offset')) || 0;
-    const q = url.searchParams.get('q')?.toLowerCase().trim() || '';
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = parseInt(req.query.offset) || 0;
+    const q = (req.query.q || '').toLowerCase().trim();
     
     let query = supabase
       .from('wishlists')
@@ -35,10 +27,16 @@ export default async function handler(req) {
 
     const { data: wishlists, error } = await query.range(offset, offset + limit - 1);
 
-    if (error) throw error;
+    if (error) {
+      console.error('Discover API Supabase error:', error);
+      throw error;
+    }
+
+    if (!wishlists) return res.status(200).json([]);
 
     const items = wishlists.flatMap(w => {
       const formatted = formatWishlist(w, false);
+      if (!formatted || !formatted.items) return [];
       return formatted.items.map(item => ({
         ...item,
         wishlistId: w.id,
@@ -46,24 +44,18 @@ export default async function handler(req) {
         wishlistOccasion: w.occasion,
         wishlistGender: w.gender,
         wishlistOwnerId: w.user_id,
-        // Mocking fields for Discovery filter requirements since they aren't in DB yet
+        // Mocking for frontend filter needs
         category: 'Gift', 
         relationship: 'Someone special',
         price: 999 
       }));
     });
 
-    return new Response(JSON.stringify(items.slice(0, limit)), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 's-maxage=60, stale-while-revalidate=300',
-      },
-    });
+    res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=300');
+    return res.status(200).json(items.slice(0, limit));
+    
   } catch (err) {
-    return new Response(JSON.stringify({ message: err.message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    console.error('Discover API Error:', err.message);
+    return res.status(500).json({ message: err.message });
   }
 }
