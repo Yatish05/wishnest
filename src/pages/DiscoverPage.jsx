@@ -6,99 +6,129 @@ import { useAuth } from '../contexts/AuthContext';
 import './DiscoverPage.css';
 
 const OCCASIONS = ['All Occasions', 'Birthday', 'Wedding', 'Baby Shower', 'Anniversary', 'Other'];
-const CATEGORIES = ['All Categories', 'Electronics', 'Home', 'Fashion', 'Experiences', 'Books'];
-const RELATIONSHIPS = ['All', 'Male', 'Female', 'Unisex'];
-const BUDGETS = ['All Budgets', '< ₹500', '₹500 - ₹2000', '₹2000 - ₹5000', '> ₹5000'];
-
-const DEFAULT_IMAGES = {
-  'Electronics': 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=800&q=80',
-  'Fashion': 'https://images.unsplash.com/photo-1445205170230-053b830c6050?w=800&q=80',
-  'Home': 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=800&q=80',
-  'Books': 'https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=800&q=80',
-  'Experiences': 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800&q=80',
-  'General': '/images/default-gift.png'
-};
+const CATEGORIES = ['All Categories', 'Home', 'Experiences', 'Books', 'Other'];
+const RELATIONSHIPS = ['All', 'Family', 'Friends', 'Partner', 'Colleagues', 'Self'];
 
 const STATIC_GIFTS = [
   {
     id: 1,
-    title: 'Nike Air Max Sneaker',
-    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff',
-    category: 'Fashion',
-    occasion: 'Birthday',
-    relationship: 'Unisex'
+    title: 'Luxury Scented Candle',
+    image: 'https://images.unsplash.com/photo-1603006905003-be475563bc59',
+    category: 'Home',
+    occasion: 'Anniversary',
+    relationship: 'Partner'
   },
   {
     id: 2,
     title: 'Apple Watch Series 9',
     image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30',
-    category: 'Electronics',
+    category: 'Home', // Adjusted since Electronics is removed
     occasion: 'Anniversary',
-    relationship: 'Unisex'
+    relationship: 'Partner'
   },
   {
     id: 3,
     title: 'Coach Leather Handbag',
     image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3',
-    category: 'Fashion',
+    category: 'Other',
     occasion: 'Birthday',
-    relationship: 'Female'
+    relationship: 'Family'
   },
   {
     id: 4,
     title: 'Sony Noise Canceling Headphones',
     image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e',
-    category: 'Electronics',
+    category: 'Experiences',
     occasion: 'Other',
-    relationship: 'Unisex'
+    relationship: 'Self'
   },
   {
     id: 5,
-    title: 'Ray-Ban Wayfarer Sunglasses',
-    image: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f',
-    category: 'Fashion',
+    title: 'Instax Mini 12 Camera',
+    image: 'https://images.unsplash.com/photo-1526170315870-ef6846055c9d',
+    category: 'Experiences',
     occasion: 'Birthday',
-    relationship: 'Unisex'
+    relationship: 'Friends'
   },
   {
     id: 6,
-    title: 'Instax Mini 12 Camera',
-    image: 'https://images.unsplash.com/photo-1526170315870-ef6846055c9d',
-    category: 'Electronics',
-    occasion: 'Birthday',
-    relationship: 'Unisex'
+    title: 'Gold Link Bracelet',
+    image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338',
+    category: 'Other',
+    occasion: 'Wedding',
+    relationship: 'Family'
   },
   {
     id: 7,
-    title: 'Luxury Scented Candle',
-    image: 'https://images.unsplash.com/photo-1603006905003-be475563bc59',
-    category: 'Home',
-    occasion: 'Anniversary',
-    relationship: 'Female'
-  },
-  {
-    id: 8,
-    title: 'Gold Link Bracelet',
-    image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338',
-    category: 'Fashion',
-    occasion: 'Wedding',
-    relationship: 'Female'
-  },
-  {
-    id: 9,
-    title: 'Slim Leather Wallet',
-    image: 'https://images.unsplash.com/photo-1627123424574-724758594e93',
-    category: 'Fashion',
-    occasion: 'Birthday',
-    relationship: 'Male'
-  },
-  {
-    id: 10,
     title: 'Indoor Potted Olive Tree',
     image: 'https://images.unsplash.com/photo-1485955900006-10f4d324d411',
     category: 'Home',
     occasion: 'Other',
-    relationship: 'Unisex'
+    relationship: 'Family'
+  },
+  {
+    id: 8,
+    title: 'Premium Coffee Maker',
+    image: 'https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6',
+    category: 'Home',
+    occasion: 'Wedding',
+    relationship: 'Family'
+  },
+  {
+    id: 9,
+    title: 'Weekend Spa Retreat',
+    image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874',
+    category: 'Experiences',
+    occasion: 'Anniversary',
+    relationship: 'Partner'
+  },
+  {
+    id: 10,
+    title: 'The Great Gatsby - Collector Edition',
+    image: 'https://images.unsplash.com/photo-1543005128-d1b210a56d95',
+    category: 'Books',
+    occasion: 'Birthday',
+    relationship: 'Friends'
+  },
+  {
+    id: 11,
+    title: 'Wireless Earpods Pro',
+    image: 'https://images.unsplash.com/photo-1588423770674-f2855ee82639',
+    category: 'Other',
+    occasion: 'Birthday',
+    relationship: 'Self'
+  },
+  {
+    id: 12,
+    title: 'Artisan Pottery Set',
+    image: 'https://images.unsplash.com/photo-1565193998248-d500a72183b1',
+    category: 'Home',
+    occasion: 'Birthday',
+    relationship: 'Family'
+  },
+  {
+    id: 13,
+    title: 'Smart Home Hub',
+    image: 'https://images.unsplash.com/photo-1558227691-41ea78a1f631',
+    category: 'Home',
+    occasion: 'Other',
+    relationship: 'Colleagues'
+  },
+  {
+    id: 14,
+    title: 'Mountain Hiking Experience',
+    image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b',
+    category: 'Experiences',
+    occasion: 'Birthday',
+    relationship: 'Friends'
+  },
+  {
+    id: 15,
+    title: 'Gourmet Chocolate Box',
+    image: 'https://images.unsplash.com/photo-1548907040-4baa42d10919',
+    category: 'Other',
+    occasion: 'Other',
+    relationship: 'Colleagues'
   }
 ];
 
@@ -116,9 +146,40 @@ export default function DiscoverPage() {
   });
 
   const fetchInitialGifts = async () => {
-    // We already have our top 10 static gifts, so we can just ensure they're loaded
-    setGifts(STATIC_GIFTS);
-    setLoading(false);
+    try {
+      setLoading(true);
+      setError('');
+      
+      let allGifts = [...STATIC_GIFTS];
+      
+      // If user is logged in, fetch data added by other users
+      if (user) {
+        try {
+          const res = await api.get('/discover?limit=20');
+          const apiGifts = (Array.isArray(res.data) ? res.data : []).map(item => ({
+            id: item.id || item._id,
+            title: item.name || item.title,
+            image: item.image_url || item.image || '/images/default-gift.png',
+            category: item.category || 'Other',
+            occasion: item.wishlistOccasion || item.occasion || 'Personal',
+            relationship: item.relationship || 'Everyone'
+          }));
+          
+          // Show dummy first, then real ones
+          allGifts = [...allGifts, ...apiGifts];
+        } catch (apiErr) {
+          console.error('[Discover] Failed to fetch real user data:', apiErr);
+          // Still show dummy data if API fails
+        }
+      }
+      
+      setGifts(allGifts);
+    } catch (err) {
+      console.error('Discover fetch error:', err);
+      setError('Error loading the discovery feed.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -185,7 +246,7 @@ export default function DiscoverPage() {
       </section>
 
       <div className="discovery-results-meta">
-        Showing 10 popular gift ideas
+        Showing {filteredGifts.length} gift ideas
       </div>
 
       {loading ? (
@@ -243,30 +304,32 @@ export default function DiscoverPage() {
             )}
           </div>
 
-          <div className="discovery-footer">
-            {!showLoginPrompt ? (
-              <button className="btn btn-primary btn-lg" onClick={handleSeeMore}>
-                See more gift ideas
-              </button>
-            ) : (
-              <div className="discovery-login-prompt animate-slide-up">
-                <div className="prompt-content">
-                  <div className="prompt-icon">
-                    <Lock size={24} />
-                  </div>
-                  <h2>Unlock more gift ideas</h2>
-                  <p>Create your free account to continue exploring personalized suggestions.</p>
-                  <div className="prompt-actions">
-                    <button className="btn btn-google" onClick={handleGoogleLogin}>
-                      <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" />
-                      Continue with Google
-                    </button>
-                    <Link to="/signup" className="btn btn-primary">Create account</Link>
+          {!user && (
+            <div className="discovery-footer">
+              {!showLoginPrompt ? (
+                <button className="btn btn-primary btn-lg" onClick={handleSeeMore}>
+                  See more gift ideas
+                </button>
+              ) : (
+                <div className="discovery-login-prompt animate-slide-up">
+                  <div className="prompt-content">
+                    <div className="prompt-icon">
+                      <Lock size={24} />
+                    </div>
+                    <h2>Unlock more gift ideas</h2>
+                    <p>Create your free account to continue exploring personalized suggestions.</p>
+                    <div className="prompt-actions">
+                      <button className="btn btn-google" onClick={handleGoogleLogin}>
+                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" />
+                        Continue with Google
+                      </button>
+                      <Link to="/signup" className="btn btn-primary">Create account</Link>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
         </>
       )}
     </div>
