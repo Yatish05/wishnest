@@ -33,13 +33,23 @@ export default function DiscoverPage() {
     try {
       setLoading(true);
       setError('');
-      // Fetch exactly first 10
-      const res = await api.get('/discover?limit=10');
-      
-      // Since it's exactly the first 10, we don't shuffle.
-      // We also enrich with mock data for fields missing in DB for demonstration
+      // Use the newly generated premium images for the discovery list
+      const premiumImages = [
+        '/brain/4db9e1ad-6429-44dd-bb48-73fb2286e55f/discover_product_1_watch_1776454698119.png',
+        '/brain/4db9e1ad-6429-44dd-bb48-73fb2286e55f/discover_product_2_speaker_1776454712743.png',
+        '/brain/4db9e1ad-6429-44dd-bb48-73fb2286e55f/discover_product_3_candle_1776454728035.png',
+        'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80', // Watch
+        'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80', // Red Shoe
+        'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80', // Headphones
+        'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=800&q=80', // Glasses
+        'https://images.unsplash.com/photo-1526170315870-ef6846055c9d?w=800&q=80', // Camera
+        'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=800&q=80', // iPad
+        'https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=800&q=80', // Plant
+      ];
+
       const enriched = (Array.isArray(res.data) ? res.data : []).map((item, idx) => ({
         ...item,
+        img: premiumImages[idx % premiumImages.length],
         category: CATEGORIES[1 + (idx % (CATEGORIES.length - 1))],
         relationship: RELATIONSHIPS[idx % RELATIONSHIPS.length],
         priceValue: [400, 1500, 3000, 6000][idx % 4]
@@ -141,6 +151,10 @@ export default function DiscoverPage() {
         </div>
       </section>
 
+      <div className="discovery-results-meta">
+        Showing 10 popular gift ideas
+      </div>
+
       {loading ? (
         <div className="discovery-loading">
           <div className="spinner"></div>
@@ -168,6 +182,7 @@ export default function DiscoverPage() {
                   </div>
                   <div className="discovery-card-content">
                     <h3>{gift.name}</h3>
+                    <p className="discovery-card-subtitle">Popular gift idea</p>
                     <div className="discovery-card-tags">
                       <span className="tag tag--category">{gift.category}</span>
                       <span className="tag tag--occasion">{gift.wishlistOccasion || 'Personal'}</span>

@@ -72,7 +72,8 @@
 }
 
 .filter-group select {
-  padding: 10px 14px;
+  height: 44px;
+  padding: 0 14px;
   border-radius: 10px;
   border: 1px solid #E5E7EB;
   background: #F9FAFB;
@@ -83,9 +84,21 @@
   outline: none;
 }
 
+.filter-group select:hover {
+  border-color: var(--color-brand);
+}
+
 .filter-group select:focus {
   border-color: var(--color-brand);
   background: #fff;
+}
+
+.discovery-results-meta {
+  font-size: 14px;
+  font-weight: 600;
+  color: #6B7280;
+  margin-bottom: 24px;
+  padding: 0 4px;
 }
 
 /* Grid & Cards */
@@ -101,14 +114,14 @@
   border: 1px solid #F1F1F1;
   border-radius: 14px;
   overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s ease;
   display: flex;
   flex-direction: column;
 }
 
 .discovery-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.05);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
   border-color: #E5E7EB;
 }
 
@@ -150,21 +163,27 @@
   font-size: 15px;
   font-weight: 600;
   color: #111111;
-  margin-bottom: 12px;
+  margin-bottom: 2px;
   line-height: 1.4;
+}
+
+.discovery-card-subtitle {
+  font-size: 13px;
+  color: #6B7280;
+  margin-bottom: 14px;
 }
 
 .discovery-card-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
   margin-top: auto;
 }
 
 .tag {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
-  padding: 4px 10px;
+  padding: 3px 10px;
   border-radius: 50px;
   text-transform: capitalize;
 }
