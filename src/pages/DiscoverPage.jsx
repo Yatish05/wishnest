@@ -7,7 +7,7 @@ import './DiscoverPage.css';
 
 const OCCASIONS = ['All Occasions', 'Birthday', 'Wedding', 'Baby Shower', 'Anniversary', 'Other'];
 const CATEGORIES = ['All Categories', 'Electronics', 'Home', 'Fashion', 'Experiences', 'Books'];
-const RELATIONSHIPS = ['All Relationships', 'Family', 'Friends', 'Partner', 'Colleagues'];
+const RELATIONSHIPS = ['All', 'Male', 'Female', 'Unisex'];
 const BUDGETS = ['All Budgets', '< ₹500', '₹500 - ₹2000', '₹2000 - ₹5000', '> ₹5000'];
 
 const DEFAULT_IMAGES = {
@@ -29,7 +29,7 @@ export default function DiscoverPage() {
   // Filter state
   const [activeFilters, setActiveFilters] = useState({
     occasion: 'All Occasions',
-    relationship: 'All Relationships'
+    relationship: 'All'
   });
 
   useEffect(() => {
@@ -77,7 +77,7 @@ export default function DiscoverPage() {
   const filteredGifts = useMemo(() => {
     return gifts.filter(gift => {
       const matchOccasion = activeFilters.occasion === 'All Occasions' || gift.wishlistOccasion === activeFilters.occasion;
-      const matchRelationship = activeFilters.relationship === 'All Relationships' || gift.relationship === activeFilters.relationship;
+      const matchRelationship = activeFilters.relationship === 'All' || gift.relationship === activeFilters.relationship;
       
       return matchOccasion && matchRelationship;
     });
