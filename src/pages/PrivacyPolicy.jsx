@@ -32,31 +32,21 @@ export default function PrivacyPolicy() {
 
           <div className="landing-info-grid">
             <article className="landing-info-card card">
-              <h3>Your control</h3>
+              <h3>Information We Collect</h3>
               <p>
-                You can keep lists private, share selectively, or make them public only when you choose. You have full control over who sees your wishlists.
+                We collect information you provide directly to us when you create an account, create a wishlist, or communicate with us. This may include your name, email address, and the contents of your wishlists.
               </p>
             </article>
             <article className="landing-info-card card">
-              <h3>Your data</h3>
+              <h3>How We Use Information</h3>
               <p>
-                Account details, preferences, and wishlist content stay tied to your account and app permissions. We do not sell your personal information to third parties.
+                We use the information we collect to provide, maintain, and improve our services, to communicate with you, and to protect WishNest and our users.
               </p>
             </article>
           </div>
 
           <div className="landing-section__header" style={{ marginTop: '3rem' }}>
-            <h2>Information We Collect</h2>
-            <p>
-              We collect information you provide directly to us when you create an account, create a wishlist, or communicate with us. This may include your name, email address, and the contents of your wishlists.
-            </p>
-            
-            <h2 style={{ marginTop: '2rem' }}>How We Use Information</h2>
-            <p>
-              We use the information we collect to provide, maintain, and improve our services, to communicate with you, and to protect WishNest and our users.
-            </p>
-
-            <h2 style={{ marginTop: '2rem' }}>Cookies and Tracking Technologies</h2>
+            <h2>Cookies and Tracking Technologies</h2>
             <p>
               We use cookies and similar technologies to improve user experience, analyze website traffic, and personalize content. Cookies help us understand how users interact with our platform.
             </p>
@@ -66,10 +56,10 @@ export default function PrivacyPolicy() {
 
             <h2 style={{ marginTop: '2rem' }}>Third-Party Advertising (Google AdSense)</h2>
             <p>
-              We may display advertisements from third-party vendors, including Google AdSense. These vendors may use cookies to serve ads based on a user's prior visits to this website or other websites.
+              We may display advertisements from third-party vendors, including Google AdSense.
             </p>
             <p style={{ marginTop: '1rem' }}>
-              Google's use of advertising cookies enables it and its partners to serve ads based on users' visits to this site and/or other sites on the Internet.
+              Google uses cookies to serve ads based on a user's prior visits to this website or other websites.
             </p>
             <p style={{ marginTop: '1rem' }}>
               Users may opt out of personalized advertising by visiting: <br />
@@ -91,7 +81,7 @@ export default function PrivacyPolicy() {
               WishNest does not knowingly collect any Personal Identifiable Information from children under the age of 13.
             </p>
             <p style={{ marginTop: '1rem' }}>
-              If you believe that your child has provided this kind of information on our website, please contact us immediately, and we will promptly remove such information from our records.
+              If you believe that your child has provided personal information on our website, please contact us immediately, and we will promptly remove such information.
             </p>
 
             <h2 style={{ marginTop: '2rem' }}>Changes to This Policy</h2>

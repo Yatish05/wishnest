@@ -31,62 +31,59 @@ export default function Terms() {
 
           <div className="landing-info-grid">
             <article className="landing-info-card card">
-              <h3>1. Acceptance of Terms</h3>
+              <h3>User Accounts</h3>
               <p>
-                By accessing or using WishNest, you agree to be bound by these Terms and Conditions and all applicable laws and regulations.
+                Users are responsible for maintaining the confidentiality of their account credentials.
+              </p>
+              <p style={{ marginTop: '1rem' }}>
+                You agree to provide accurate and complete information when creating an account on WishNest.
               </p>
             </article>
             <article className="landing-info-card card">
-              <h3>2. User Accounts</h3>
+              <h3>Prohibited Activities</h3>
               <p>
-                Users are responsible for maintaining the confidentiality of their account credentials. You agree to provide accurate, current, and complete information when creating an account on WishNest.
+                Users may not use WishNest for unlawful purposes, spam, fraud, or to distribute harmful content.
+              </p>
+              <p style={{ marginTop: '1rem' }}>
+                We reserve the right to suspend or terminate accounts that violate these rules.
               </p>
             </article>
           </div>
 
           <div className="landing-section__header" style={{ marginTop: '3rem' }}>
-            <h2>3. Prohibited Activities</h2>
+            <h2>Intellectual Property</h2>
             <p>
-              Users may not use WishNest for any unlawful purposes, spam, fraud, or the distribution of harmful content. This includes, but is not limited to, the transmission of malicious code, harassment of other users, or attempting to gain unauthorized access to our systems.
+              All content, branding, logos, and design elements on WishNest are the property of WishNest unless otherwise stated.
             </p>
             <p style={{ marginTop: '1rem' }}>
-              We reserve the right to suspend or terminate accounts that violate these rules without prior notice.
+              Users may not copy, reproduce, or distribute content without permission.
             </p>
 
-            <h2 style={{ marginTop: '2rem' }}>4. Intellectual Property</h2>
+            <h2 style={{ marginTop: '2rem' }}>Limitation of Liability</h2>
             <p>
-              All content, branding, design elements, and functionality on WishNest (including but not limited to the logo, wordmark, and UI design) are owned by WishNest or its licensors and are protected by intellectual property laws.
+              WishNest is provided on an "as is" basis without warranties of any kind.
+            </p>
+            <p style={{ marginTop: '1rem' }}>
+              We are not responsible for any damages or losses resulting from the use of the platform.
             </p>
 
-            <h2 style={{ marginTop: '2rem' }}>5. Limitation of Liability</h2>
+            <h2 style={{ marginTop: '2rem' }}>Termination</h2>
             <p>
-              WishNest is provided on an "as is" and "as available" basis without any warranties of any kind. We are not responsible for any damages resulting from the use of the platform, including but not limited to direct, indirect, incidental, or consequential damages.
+              We reserve the right to suspend or terminate user access if these Terms are violated.
             </p>
 
-            <h2 style={{ marginTop: '2rem' }}>6. Termination</h2>
+            <h2 style={{ marginTop: '2rem' }}>Governing Law</h2>
             <p>
-              We reserve the right to suspend or terminate your access to WishNest at any time, with or without cause, especially if you violate these Terms and Conditions.
+              These Terms shall be governed by and interpreted in accordance with the laws of India.
             </p>
 
-            <h2 style={{ marginTop: '2rem' }}>7. Governing Law</h2>
+            <h2 style={{ marginTop: '2rem' }}>Contact Information</h2>
             <p>
-              These Terms and Conditions are governed by and construed in accordance with the laws of India. Any disputes relating to these terms will be subject to the exclusive jurisdiction of the courts of India.
+              If you have any questions about these Terms and Conditions, please contact us at: <br />
+              <a href="mailto:getwishnest@gmail.com" style={{ color: 'var(--color-brand)', fontWeight: '600' }}>
+                getwishnest@gmail.com
+              </a>
             </p>
-
-            <h2 style={{ marginTop: '2rem' }}>8. Changes to Terms</h2>
-            <p>
-              We reserve the right to modify these terms at any time. Your continued use of the platform after changes are posted constitutes your acceptance of the new terms.
-            </p>
-
-            <div style={{ marginTop: '4rem', padding: '2rem', background: '#f8fafc', borderRadius: '18px', border: '1px solid #e2e8f0' }}>
-              <h3 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>Contact Information</h3>
-              <p>
-                If you have any questions about these Terms and Conditions, please contact us at: <br />
-                <a href="mailto:getwishnest@gmail.com" style={{ color: 'var(--color-brand)', fontWeight: '600' }}>
-                  getwishnest@gmail.com
-                </a>
-              </p>
-            </div>
 
             <p style={{ marginTop: '2rem', fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>
               Last updated: April 17, 2026
