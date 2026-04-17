@@ -68,7 +68,6 @@ function MainLayout({ children }) {
                 <div className="nav-user-pill">
                   <div className="nav-user-avatar" aria-hidden="true">{initials}</div>
                   <span style={{ fontWeight: 700, fontSize: '15px' }}>{displayName}</span>
-                  <ChevronRight size={16} style={{ color: 'var(--color-text-muted)', marginLeft: '4px' }} />
                 </div>
                 <Link to="/dashboard" className="btn btn-primary">Dashboard</Link>
               </>
