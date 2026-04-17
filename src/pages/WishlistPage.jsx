@@ -143,11 +143,20 @@ export default function WishlistPage() {
       return;
     }
 
+    // Smart Default Name logic
+    let finalName = name.trim();
+    if (!finalName) {
+      if (occasion === 'Birthday') finalName = 'Birthday Wishlist';
+      else if (occasion === 'Wedding') finalName = 'Wedding Registry';
+      else if (occasion === 'Anniversary') finalName = 'Anniversary Wishlist';
+      else finalName = 'My Wishlist';
+    }
+
     setSaving(true);
     try {
       // Use the new modular POST endpoint
       const response = await api.post('/wishlists', {
-        name,
+        name: finalName,
         occasion,
         visibility,
         isPublic: visibility === 'public',
@@ -157,6 +166,11 @@ export default function WishlistPage() {
       if (response.data && response.data.success) {
         setWishlists(prev => [...prev, response.data.wishlist]);
         toast.success("Wishlist created! 🎁");
+        
+        // Auto-close modal after success
+        setShowCreateWishlist(false);
+        // Reset form
+        setNewWishlist({ name: '', occasion: 'Birthday', visibility: 'public', gender: 'Myself' });
 
         if (response.data.wishlist?._id) {
           navigate(`/wishlists?id=${response.data.wishlist._id}`);
@@ -789,30 +803,29 @@ export default function WishlistPage() {
       {/* Create Wishlist Modal */}
       {showCreateWishlist && !isGuest && (
         <div className="modal-overlay">
-          <div className="modal card animate-fade-in premium-modal">
+          <div className="modal card premium-modal">
             <div className="modal-header flex-between">
-              <div className="flex-center gap-3">
-                <div className="modal-icon-badge">
-                  <Gift size={20} />
-                </div>
-                <h3 className="premium-modal-title">Create Wishlist</h3>
+              <div>
+                <h3 className="premium-modal-title">🎁 Create your wishlist</h3>
+                <p className="modal-subtitle">Takes less than 10 seconds.</p>
               </div>
               <button className="btn-text" onClick={() => setShowCreateWishlist(false)}><X size={20} /></button>
             </div>
             <div className="modal-body">
               <form className="modal-form">
                 <div className="form-group">
-                  <label className="premium-label"><Sparkles size={13} /> Wishlist Name</label>
+                  <label className="premium-label">Wishlist Name</label>
                   <input
                     type="text"
                     className="input-field premium-input"
                     placeholder="e.g. Wedding Registry"
                     value={newWishlist.name}
+                    autoFocus
                     onChange={(e) => setNewWishlist({ ...newWishlist, name: e.target.value })}
                   />
                 </div>
                 <div className="form-group">
-                  <label className="premium-label"><Plus size={13} /> Occasion</label>
+                  <label className="premium-label">Occasion</label>
                   <select
                     className="input-field premium-input"
                     value={newWishlist.occasion}
@@ -820,6 +833,7 @@ export default function WishlistPage() {
                   >
                     <option>Birthday</option>
                     <option>Wedding</option>
+                    <option>Anniversary</option>
                     <option>Holiday</option>
                     <option>Moving In</option>
                     <option>Baby Shower</option>
@@ -827,7 +841,7 @@ export default function WishlistPage() {
                   </select>
                 </div>
                 <div className="form-group">
-                  <label className="premium-label"><Globe size={13} /> Visibility</label>
+                  <label className="premium-label">Visibility</label>
                   <select
                     className="input-field premium-input"
                     value={newWishlist.visibility}
@@ -838,23 +852,24 @@ export default function WishlistPage() {
                   </select>
                 </div>
                 <div className="form-group">
-                  <label className="premium-label"><VenusAndMars size={13} /> Discover Gender</label>
+                  <label className="premium-label">Who is this for?</label>
                   <select
                     className="input-field premium-input"
                     value={newWishlist.gender}
                     onChange={(e) => setNewWishlist({ ...newWishlist, gender: e.target.value })}
                   >
-                    <option value="unisex">Unisex</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
+                    <option value="Myself">Myself</option>
+                    <option value="Him">Him</option>
+                    <option value="Her">Her</option>
+                    <option value="Kids">Kids</option>
+                    <option value="Anyone">Anyone</option>
                   </select>
                 </div>
-                <div className="modal-footer mt-5">
-                  <button type="button" className="btn btn-secondary w-full" onClick={() => setShowCreateWishlist(false)}>Cancel</button>
+                <div className="modal-footer">
                   <button
                     type="button"
-                    className="btn btn-primary w-full premium-create-btn"
-                    disabled={saving || !newWishlist.name}
+                    className="btn btn-primary premium-create-btn"
+                    disabled={saving}
                     onClick={handleCreateWishlist}
                   >
                     {saving ? 'Creating...' : 'Create Wishlist'}
