@@ -149,12 +149,10 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 24px;
   border-radius: var(--radius-btn);
   background: transparent;
   border: 1px solid #E5E7EB;
   color: #374151; /* Default for white background */
-  font-weight: 600;
   transition: all 0.2s ease;
 }
 

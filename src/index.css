@@ -87,6 +87,12 @@ p {
   white-space: nowrap;
 }
 
+.btn-lg {
+  padding: 14px 32px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
 .btn:hover:not(:disabled) {
   transform: translateY(-2px);
 }
