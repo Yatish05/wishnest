@@ -234,7 +234,7 @@ import Notifications from './pages/Notifications';
 import Settings from './pages/Settings';
 import AuthPage from './pages/AuthPage';
 import AIAssistantPage from './pages/AIAssistantPage';
-import AuthSuccess from './pages/AuthSuccess';
+import AuthCallback from './pages/AuthCallback';
 import DiscoverPage from './pages/DiscoverPage';
 import WishNestDashboardMockup from './components/WishNestDashboardMockup';
 
@@ -280,7 +280,7 @@ function App() {
         <Route path="/w/:wishlistId" element={<PublicWishlist />} />
 
         {/* Google OAuth callback landing — stores token then redirects */}
-        <Route path="/auth-success" element={<AuthSuccess />} />
+        <Route path="/auth/callback" element={<AuthCallback />} />
       </Routes>
     </BrowserRouter>
   );

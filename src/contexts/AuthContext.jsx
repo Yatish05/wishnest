@@ -50,92 +50,76 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      // 1. Check URL for token (Google OAuth redirect)
-      const params = new URLSearchParams(window.location.search);
-      const urlToken = params.get('token');
-
-      if (urlToken) {
-        console.log('AuthContext — token detected in URL, persisting...');
-        localStorage.setItem('token', urlToken);
-        // Clean URL to prevent re-processing
-        window.history.replaceState({}, document.title, window.location.pathname);
-      }
-
       const storedToken = localStorage.getItem('token');
       const storedUser = localStorage.getItem('user');
       const storedAuthType = localStorage.getItem('authType');
 
-      console.log('Token:', storedToken);
-      console.log('User:', storedUser ? JSON.parse(storedUser) : null);
+      console.log('[AuthContext] Syncing auth state. Token exists:', !!storedToken);
 
       if (!storedToken) {
+        console.log('[AuthContext] No token. Clearing state.');
         clearAuth();
         setLoading(false);
         return;
       }
 
-      if (storedUser) {
-        setToken(storedToken);
-        setUser(JSON.parse(storedUser));
-      } else {
-        setToken(storedToken);
+      // Initial local hydration
+      if (storedUser && !user) {
+        try {
+          const parsed = JSON.parse(storedUser);
+          console.log('[AuthContext] Hydrating from localStorage:', parsed.name);
+          setUser(parsed);
+        } catch (e) {
+          console.error('[AuthContext] Local storage parse failed', e);
+        }
       }
 
       try {
+        console.log('[AuthContext] Fetching latest profile from server...');
         const response = await api.get('/auth/profile', {
-          headers: {
-            Authorization: `Bearer ${storedToken}`,
-          },
+          headers: { Authorization: `Bearer ${storedToken}` },
         });
 
-        if (!response.data?.user) {
-          clearAuth();
-        } else {
+        if (response.data?.user) {
+          console.log('[AuthContext] Profile fetch success:', response.data.user.name);
           persistAuth(
             storedToken,
             response.data.user,
             storedAuthType || (response.data.user.role === 'guest' ? 'guest' : undefined)
           );
+        } else {
+          console.warn('[AuthContext] Profile fetch returned no user.');
+          clearAuth();
         }
       } catch (error) {
-        console.error('Fetch profile error:', error);
-        // Only clear auth on explicit 401 Unauthorized.
-        // Network errors, CORS issues, or server-down scenarios on production
-        // should NOT wipe a valid token — the user is still authenticated locally.
+        console.error('[AuthContext] Profile fetch failed:', error.response?.status || error.message);
+        
         if (error?.response?.status === 401) {
           clearAuth();
-        } else {
-          // Keep the locally stored token/user so the app remains usable.
-          // Re-sync state from localStorage in case it wasn't set yet.
-          if (storedUser) {
-            setToken(storedToken);
-            setUser(JSON.parse(storedUser));
-          } else {
-            // No cached user but we have a token (e.g. fresh Google OAuth).
-            // Decode the JWT to extract a basic user object so ProtectedRoute
-            // doesn't kick the user back to /login on a transient network error.
-            try {
-              const payload = JSON.parse(atob(storedToken.split('.')[1]));
-              const basicUser = {
-                id: payload.id,
-                name: payload.name || 'User',
-                email: payload.email || '',
-                isGuest: false,
-              };
-              persistAuth(storedToken, basicUser);
-            } catch {
-              // JWT decode failed — token is malformed, clear everything.
-              clearAuth();
-            }
+        } else if (storedToken) {
+          // Robust fallback for legacy or malformed tokens when server is unreachable or errored
+          try {
+            const payload = JSON.parse(atob(storedToken.split('.')[1]));
+            console.log('[AuthContext] Falling back to JWT decode for:', payload.name || 'User');
+            const basicUser = {
+              id: payload.id,
+              name: payload.name || 'User',
+              email: payload.email || '',
+              isGuest: false,
+            };
+            persistAuth(storedToken, basicUser);
+          } catch (jwtErr) {
+            console.error('[AuthContext] JWT fallback decode failed:', jwtErr.message);
+            clearAuth();
           }
         }
+      } finally {
+        setLoading(false);
       }
-
-      setLoading(false);
     };
 
     fetchProfile();
-  }, [clearAuth, persistAuth]);
+  }, [clearAuth, persistAuth, token]);
 
   const login = async (email, password) => {
     try {
@@ -169,7 +153,7 @@ export function AuthProvider({ children }) {
   };
 
   /**
-   * loginWithToken — called by the OAuth callback page (/auth-success).
+   * loginWithToken — called by the OAuth callback page (/auth/callback).
    * Accepts a real JWT issued by the backend, decodes the payload to
    * extract basic user info, then stores everything in state + localStorage.
    */
@@ -186,6 +170,9 @@ export function AuthProvider({ children }) {
       persistAuth(jwtToken, oauthUser);
     } catch (err) {
       console.error('loginWithToken — failed to decode JWT:', err.message);
+      // Fallback: Just trigger a profile fetch by setting the token
+      setToken(jwtToken);
+      localStorage.setItem('token', jwtToken);
     }
   };
 

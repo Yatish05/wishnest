@@ -136,7 +136,7 @@ export default async function handler(req, res) {
         if (error) throw error;
         user = newUser;
       }
-      return res.redirect(`/auth-success?token=${generateToken(user.id)}`);
+      return res.redirect(`/auth/callback?token=${generateToken(user.id)}`);
     } catch (err) { return res.redirect('/login?error=auth_failed'); }
   }
 
