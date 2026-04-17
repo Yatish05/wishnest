@@ -21,81 +21,81 @@ const DEFAULT_IMAGES = {
 
 const STATIC_GIFTS = [
   {
-    id: 'g1',
+    id: 1,
     title: 'Nike Air Max Sneaker',
-    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff',
     category: 'Fashion',
     occasion: 'Birthday',
     relationship: 'Unisex'
   },
   {
-    id: 'g2',
+    id: 2,
     title: 'Apple Watch Series 9',
-    image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30',
     category: 'Electronics',
     occasion: 'Anniversary',
     relationship: 'Unisex'
   },
   {
-    id: 'g3',
+    id: 3,
     title: 'Coach Leather Handbag',
-    image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3',
     category: 'Fashion',
     occasion: 'Birthday',
     relationship: 'Female'
   },
   {
-    id: 'g4',
+    id: 4,
     title: 'Sony Noise Canceling Headphones',
-    image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e',
     category: 'Electronics',
     occasion: 'Other',
     relationship: 'Unisex'
   },
   {
-    id: 'g5',
+    id: 5,
     title: 'Ray-Ban Wayfarer Sunglasses',
-    image: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f',
     category: 'Fashion',
     occasion: 'Birthday',
     relationship: 'Unisex'
   },
   {
-    id: 'g6',
+    id: 6,
     title: 'Instax Mini 12 Camera',
-    image: 'https://images.unsplash.com/photo-1526170315870-ef6846055c9d?w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1526170315870-ef6846055c9d',
     category: 'Electronics',
     occasion: 'Birthday',
     relationship: 'Unisex'
   },
   {
-    id: 'g7',
+    id: 7,
     title: 'Luxury Scented Candle',
-    image: 'https://images.unsplash.com/photo-1603006905003-be475563bc59?w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1603006905003-be475563bc59',
     category: 'Home',
     occasion: 'Anniversary',
     relationship: 'Female'
   },
   {
-    id: 'g8',
+    id: 8,
     title: 'Gold Link Bracelet',
-    image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338',
     category: 'Fashion',
     occasion: 'Wedding',
     relationship: 'Female'
   },
   {
-    id: 'g9',
+    id: 9,
     title: 'Slim Leather Wallet',
-    image: 'https://images.unsplash.com/photo-1627123424574-724758594e93?w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1627123424574-724758594e93',
     category: 'Fashion',
     occasion: 'Birthday',
     relationship: 'Male'
   },
   {
-    id: 'g10',
+    id: 10,
     title: 'Indoor Potted Olive Tree',
-    image: 'https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1485955900006-10f4d324d411',
     category: 'Home',
     occasion: 'Other',
     relationship: 'Unisex'
