@@ -227,7 +227,11 @@ export default function LandingPage() {
       <section className="landing-section landing-section--soft">
         <div className="container">
           <div className="landing-section__header">
-            <h2>Get inspired by others</h2>
+            <div className="landing-section__eyebrow">
+              <Sparkles size={12} />
+              <span>COMMUNITY TRENDS</span>
+            </div>
+            <h2>See what others are wishing for</h2>
             <p>Browse popular wishlists for gift ideas and see how easy sharing can be.</p>
           </div>
 
@@ -235,7 +239,7 @@ export default function LandingPage() {
             {inspirationWishlists.map((wishlist) => (
               <article key={wishlist.id} className="landing-feed-card card">
                 <div className="landing-feed-card__top">
-                  <div>
+                  <div className="landing-feed-card__meta">
                     <h3>{wishlist.username}</h3>
                     <p>A wishlist that feels easy to gift from</p>
                   </div>
@@ -255,7 +259,7 @@ export default function LandingPage() {
 
                 <Link to={user ? '/discover' : '/signup'} className="landing-soft-link">
                   <Eye size={16} />
-                  <span>Get inspired</span>
+                  <span>Inspired by this</span>
                 </Link>
               </article>
             ))}

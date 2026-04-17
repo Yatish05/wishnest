@@ -278,8 +278,9 @@
 .landing-wishlist-card:hover,
 .landing-feed-card:hover,
 .landing-create-card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-hover);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  border-color: var(--color-brand);
 }
 
 .landing-wishlist-card__top,
@@ -287,6 +288,7 @@
 .landing-wishlist-card__footer {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   gap: 12px;
 }
 
@@ -298,10 +300,10 @@
   font-weight: 700;
 }
 
-.landing-tag--birthday { background: #fff1eb; color: #9a3412; }
-.landing-tag--wedding { background: #eff6ff; color: #1d4ed8; }
-.landing-tag--diwali { background: #fef3c7; color: #92400e; }
-.landing-tag--rakhi { background: #f5f3ff; color: #7c3aed; }
+.landing-tag--birthday { background: #fff1f2; color: #be123c; border-radius: 99px; }
+.landing-tag--wedding { background: #f0f9ff; color: #0369a1; border-radius: 99px; }
+.landing-tag--diwali { background: #fefce8; color: #854d0e; border-radius: 99px; }
+.landing-tag--rakhi { background: #fdf4ff; color: #701a75; border-radius: 99px; }
 
 .landing-wishlist-card__count {
   text-align: right;
@@ -340,10 +342,18 @@
 .landing-create-card__cta {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   color: var(--color-brand);
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 700;
+  margin-top: 16px;
+  transition: gap 0.2s ease;
+}
+
+.landing-inline-link:hover,
+.landing-soft-link:hover,
+.landing-create-card__cta:hover {
+  gap: 12px;
 }
 
 .landing-create-card {
@@ -367,8 +377,15 @@
 .landing-feed-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-top: 10px;
+  gap: 12px;
+  margin-top: 12px;
+  padding: 8px;
+  border-radius: 12px;
+  transition: background 0.2s ease;
+}
+
+.landing-feed-item:hover {
+  background: var(--color-surface-tint);
 }
 
 .landing-feed-item__thumb {
