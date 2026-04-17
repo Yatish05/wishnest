@@ -4,6 +4,7 @@ import {
   CalendarHeart,
   Eye,
   Gift,
+  Heart,
   HeartHandshake,
   Share2,
   Sparkles,
