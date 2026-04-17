@@ -42,7 +42,13 @@ function MainLayout({ children }) {
               {user ? (
                 <>
                   <div className="nav-user-pill" style={{ marginBottom: '1rem', width: '100%', justifyContent: 'center' }}>
-                    <div className="nav-user-avatar">{initials}</div>
+                    <div className="nav-user-avatar">
+                      {user?.avatar ? (
+                        <img src={user.avatar} alt={displayName} />
+                      ) : (
+                        <img src="/brain/4db9e1ad-6429-44dd-bb48-73fb2286e55f/default_avatar_1776455109649.png" alt={displayName} />
+                      )}
+                    </div>
                     <span>{displayName}</span>
                   </div>
                   <Link to="/dashboard" className="btn btn-primary w-full" onClick={closeMobileMenu}>Go to Dashboard</Link>
@@ -60,7 +66,13 @@ function MainLayout({ children }) {
             {user ? (
               <>
                 <div className="nav-user-pill">
-                  <div className="nav-user-avatar">{initials}</div>
+                  <div className="nav-user-avatar">
+                    {user?.avatar ? (
+                      <img src={user.avatar} alt={displayName} />
+                    ) : (
+                      <img src="/brain/4db9e1ad-6429-44dd-bb48-73fb2286e55f/default_avatar_1776455109649.png" alt={displayName} />
+                    )}
+                  </div>
                   <span>{displayName}</span>
                 </div>
                 <Link to="/dashboard" className="btn btn-primary">Dashboard</Link>
@@ -170,7 +182,13 @@ function DashboardLayout({ children }) {
         </nav>
         <div className="sidebar-footer">
           <div className="sidebar-user-card">
-            <div className="sidebar-user-avatar">{initials}</div>
+            <div className="sidebar-user-avatar">
+              {user?.avatar ? (
+                <img src={user.avatar} alt={displayName} />
+              ) : (
+                <img src="/brain/4db9e1ad-6429-44dd-bb48-73fb2286e55f/default_avatar_1776455109649.png" alt={displayName} />
+              )}
+            </div>
             <div className="sidebar-user-copy">
               <strong>{displayName}</strong>
               <span>{email}</span>
@@ -202,7 +220,13 @@ function DashboardLayout({ children }) {
               <Bell size={22} />
             </button>
             <button className="user-chip" onClick={() => navigate('/settings')} title="Open settings">
-              <div className="avatar">{initials}</div>
+              <div className="avatar">
+                {user?.avatar ? (
+                  <img src={user.avatar} alt={displayName} />
+                ) : (
+                  <img src="/brain/4db9e1ad-6429-44dd-bb48-73fb2286e55f/default_avatar_1776455109649.png" alt={displayName} />
+                )}
+              </div>
               <div className="user-chip-copy">
                 <span className="user-chip-name">{displayName}</span>
               </div>

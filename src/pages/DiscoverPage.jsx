@@ -10,6 +10,15 @@ const CATEGORIES = ['All Categories', 'Electronics', 'Home', 'Fashion', 'Experie
 const RELATIONSHIPS = ['All Relationships', 'Family', 'Friends', 'Partner', 'Colleagues'];
 const BUDGETS = ['All Budgets', '< ₹500', '₹500 - ₹2000', '₹2000 - ₹5000', '> ₹5000'];
 
+const DEFAULT_IMAGES = {
+  'Electronics': '/brain/4db9e1ad-6429-44dd-bb48-73fb2286e55f/default_electronics_1776454948084.png',
+  'Fashion': '/brain/4db9e1ad-6429-44dd-bb48-73fb2286e55f/default_fashion_1776454963593.png',
+  'Home': '/brain/4db9e1ad-6429-44dd-bb48-73fb2286e55f/default_home_1776454973700.png',
+  'Books': '/brain/4db9e1ad-6429-44dd-bb48-73fb2286e55f/default_books_1776454986750.png',
+  'Experiences': '/brain/4db9e1ad-6429-44dd-bb48-73fb2286e55f/default_experience_1776455001632.png',
+  'General': '/brain/4db9e1ad-6429-44dd-bb48-73fb2286e55f/default_gift_1776455017192.png'
+};
+
 export default function DiscoverPage() {
   const { user } = useAuth();
   const [gifts, setGifts] = useState([]);
@@ -172,13 +181,15 @@ export default function DiscoverPage() {
               filteredGifts.map((gift) => (
                 <article key={gift._id} className="discovery-card">
                   <div className="discovery-card-media">
-                    {gift.img ? (
-                      <img src={gift.img} alt={gift.name} loading="lazy" />
-                    ) : (
-                      <div className="discovery-card-placeholder">
-                        <Gift size={32} strokeWidth={1.5} />
-                      </div>
-                    )}
+                    <img 
+                      src={gift.img || DEFAULT_IMAGES[gift.category] || DEFAULT_IMAGES.General} 
+                      alt={gift.name} 
+                      loading="lazy"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = DEFAULT_IMAGES[gift.category] || DEFAULT_IMAGES.General;
+                      }}
+                    />
                   </div>
                   <div className="discovery-card-content">
                     <h3>{gift.name}</h3>
