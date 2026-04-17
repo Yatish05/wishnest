@@ -70,7 +70,7 @@ function MainLayout({ children }) {
                   <span style={{ fontWeight: 700, fontSize: '15px' }}>{displayName}</span>
                   <ChevronRight size={16} style={{ color: 'var(--color-text-muted)', marginLeft: '4px' }} />
                 </div>
-                <Link to="/dashboard" className="btn btn-primary">Dashboard</Link>
+                <Link to="/dashboard" className="btn btn-primary header-dashboard-btn">Dashboard</Link>
               </>
             ) : (
               <>

@@ -63,7 +63,15 @@
 .topbar-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
+}
+
+.header-dashboard-btn {
+  height: 40px !important;
+  min-height: 40px !important;
+  padding: 0 20px !important;
+  font-size: 13.5px !important;
+  border-radius: 12px !important;
 }
 
 .nav-link {
@@ -82,12 +90,13 @@
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  padding: 6px 14px 6px 6px;
+  padding: 6px 16px 6px 6px;
   border-radius: 999px;
   border: 1.5px solid rgba(240, 237, 232, 1);
   background: #fff;
   color: var(--color-text-primary);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  height: 40px;
 }
 
 .nav-user-avatar,
