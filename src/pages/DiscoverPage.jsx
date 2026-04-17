@@ -11,12 +11,12 @@ const RELATIONSHIPS = ['All', 'Male', 'Female', 'Unisex'];
 const BUDGETS = ['All Budgets', '< ₹500', '₹500 - ₹2000', '₹2000 - ₹5000', '> ₹5000'];
 
 const DEFAULT_IMAGES = {
-  'Electronics': '/brain/4db9e1ad-6429-44dd-bb48-73fb2286e55f/default_electronics_1776454948084.png',
-  'Fashion': '/brain/4db9e1ad-6429-44dd-bb48-73fb2286e55f/default_fashion_1776454963593.png',
-  'Home': '/brain/4db9e1ad-6429-44dd-bb48-73fb2286e55f/default_home_1776454973700.png',
-  'Books': '/brain/4db9e1ad-6429-44dd-bb48-73fb2286e55f/default_books_1776454986750.png',
-  'Experiences': '/brain/4db9e1ad-6429-44dd-bb48-73fb2286e55f/default_experience_1776455001632.png',
-  'General': '/brain/4db9e1ad-6429-44dd-bb48-73fb2286e55f/default_gift_1776455017192.png'
+  'Electronics': 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=800&q=80',
+  'Fashion': 'https://images.unsplash.com/photo-1445205170230-053b830c6050?w=800&q=80',
+  'Home': 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=800&q=80',
+  'Books': 'https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=800&q=80',
+  'Experiences': 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800&q=80',
+  'General': '/images/default-gift.png'
 };
 
 export default function DiscoverPage() {
@@ -45,9 +45,6 @@ export default function DiscoverPage() {
 
       // Use the newly generated premium images for the discovery list
       const premiumImages = [
-        '/brain/4db9e1ad-6429-44dd-bb48-73fb2286e55f/discover_product_1_watch_1776454698119.png',
-        '/brain/4db9e1ad-6429-44dd-bb48-73fb2286e55f/discover_product_2_speaker_1776454712743.png',
-        '/brain/4db9e1ad-6429-44dd-bb48-73fb2286e55f/discover_product_3_candle_1776454728035.png',
         'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80', // Watch
         'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80', // Red Shoe
         'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80', // Headphones

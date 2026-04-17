@@ -46,7 +46,7 @@ function MainLayout({ children }) {
                       {user?.avatar ? (
                         <img src={user.avatar} alt={displayName} />
                       ) : (
-                        <img src="/brain/4db9e1ad-6429-44dd-bb48-73fb2286e55f/default_avatar_1776455109649.png" alt={displayName} />
+                        <div className="nav-user-avatar-placeholder" aria-hidden="true">{initials}</div>
                       )}
                     </div>
                     <span>{displayName}</span>
@@ -66,13 +66,11 @@ function MainLayout({ children }) {
             {user ? (
               <>
                 <div className="nav-user-pill">
-                  <div className="nav-user-avatar">
                     {user?.avatar ? (
                       <img src={user.avatar} alt={displayName} />
                     ) : (
-                      <img src="/brain/4db9e1ad-6429-44dd-bb48-73fb2286e55f/default_avatar_1776455109649.png" alt={displayName} />
+                      <div className="nav-user-avatar-placeholder" aria-hidden="true">{initials}</div>
                     )}
-                  </div>
                   <span>{displayName}</span>
                 </div>
                 <Link to="/dashboard" className="btn btn-primary">Dashboard</Link>
@@ -186,7 +184,7 @@ function DashboardLayout({ children }) {
               {user?.avatar ? (
                 <img src={user.avatar} alt={displayName} />
               ) : (
-                <img src="/brain/4db9e1ad-6429-44dd-bb48-73fb2286e55f/default_avatar_1776455109649.png" alt={displayName} />
+                <div className="sidebar-user-avatar-placeholder" aria-hidden="true">{initials}</div>
               )}
             </div>
             <div className="sidebar-user-copy">
@@ -224,7 +222,7 @@ function DashboardLayout({ children }) {
                 {user?.avatar ? (
                   <img src={user.avatar} alt={displayName} />
                 ) : (
-                  <img src="/brain/4db9e1ad-6429-44dd-bb48-73fb2286e55f/default_avatar_1776455109649.png" alt={displayName} />
+                  <div className="user-chip-avatar-placeholder" aria-hidden="true">{initials}</div>
                 )}
               </div>
               <div className="user-chip-copy">
