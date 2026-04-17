@@ -35,12 +35,9 @@ function MainLayout({ children }) {
           </button>
 
           <nav className={`nav-links ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
-            {location.pathname === '/' && (
-              <>
                 <a href="#ai-assistant" className="nav-link" onClick={closeMobileMenu}>AI Assistant</a>
+                <Link to="/discover" className="nav-link" onClick={closeMobileMenu}>Discover</Link>
                 <a href="#features" className="nav-link" onClick={closeMobileMenu}>Features</a>
-              </>
-            )}
             <div className="nav-actions-mobile">
               {user ? (
                 <>
@@ -242,6 +239,8 @@ import Terms from './pages/Terms';
 import Contact from './pages/Contact';
 
 function App() {
+  const { user } = useAuth();
+
   return (
     <BrowserRouter>
       <Toaster
@@ -275,10 +274,10 @@ function App() {
         <Route path="/shared" element={<ProtectedRoute><DashboardLayout><SharedWithMe /></DashboardLayout></ProtectedRoute>} />
         <Route path="/notifications" element={<ProtectedRoute><DashboardLayout><Notifications /></DashboardLayout></ProtectedRoute>} />
         <Route path="/ai-assistant" element={<ProtectedRoute><DashboardLayout><AIAssistantPage /></DashboardLayout></ProtectedRoute>} />
-        <Route path="/discover" element={<ProtectedRoute><DashboardLayout><DiscoverPage /></DashboardLayout></ProtectedRoute>} />
         <Route path="/settings" element={<ProtectedRoute><DashboardLayout><Settings /></DashboardLayout></ProtectedRoute>} />
 
         {/* Public — no login required */}
+        <Route path="/discover" element={user ? <DashboardLayout><DiscoverPage /></DashboardLayout> : <MainLayout><DiscoverPage /></MainLayout>} />
         <Route path="/wishlist/:id" element={<PublicWishlist />} />
         <Route path="/w/:wishlistId" element={<PublicWishlist />} />
 
