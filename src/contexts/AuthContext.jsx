@@ -38,7 +38,6 @@ export function AuthProvider({ children }) {
       const storedUser = localStorage.getItem('user');
       return storedUser ? JSON.parse(storedUser) : null;
     } catch (e) {
-      console.error('[AuthContext] Initial user parse failed', e);
       return null;
     }
   });
@@ -173,7 +172,7 @@ export function AuthProvider({ children }) {
 
     fetchProfile();
     return () => { isSubscribed = false; };
-  }, [clearAuth, persistAuth, token, user]); // Added user to deps to trigger re-sync if user is null but token exists
+  }, [clearAuth, persistAuth]); // Removed token and user to prevent infinite sync loop
 
   const login = async (email, password) => {
     try {
