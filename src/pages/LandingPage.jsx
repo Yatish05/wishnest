@@ -1,11 +1,13 @@
 import { Link, useNavigate } from 'react-router-dom';
 import {
   ArrowRight,
-  CalendarHeart,
+  CheckCircle2,
+  Clock,
   Eye,
   Gift,
   Heart,
   HeartHandshake,
+  Mail,
   Share2,
   Sparkles,
   Users,
@@ -145,7 +147,7 @@ export default function LandingPage() {
                         Create Your Wishlist <ArrowRight size={18} />
                       </Link>
                       <button className="btn btn-secondary btn-lg" onClick={handleGuestLogin}>
-                        Continue as Guest
+                        Explore without signup
                       </button>
                     </>
                   )}
@@ -153,16 +155,16 @@ export default function LandingPage() {
 
                 <div className="landing-chip-row">
                   <div className="landing-chip">
-                    <Users size={16} />
-                    <span>Kind to share, easy to gift from</span>
+                    <CheckCircle2 size={16} />
+                    <span>Free forever</span>
                   </div>
                   <div className="landing-chip">
-                    <Share2 size={16} />
-                    <span>One link for friends and family</span>
+                    <Mail size={16} />
+                    <span>No spam</span>
                   </div>
                   <div className="landing-chip">
-                    <Gift size={16} />
-                    <span>Affiliate links only organise what you love</span>
+                    <Clock size={16} />
+                    <span>Takes 30 seconds</span>
                   </div>
                 </div>
               </div>
@@ -177,15 +179,16 @@ export default function LandingPage() {
                     They already want to get you something. You&apos;re simply making it easier for them to get it right.
                   </p>
                   <div className="landing-hero-card__stats">
-                    <div>
-                      <span>Occasions</span>
+                    <div className="landing-stat-box">
+                      <span>OCCASIONS</span>
                       <strong>4+</strong>
                     </div>
-                    <div>
-                      <span>Sample lists</span>
+                    <div className="landing-stat-box">
+                      <span>SAMPLE LISTS</span>
                       <strong>3</strong>
                     </div>
                   </div>
+                  <div className="landing-hero-card__floating-gift" aria-hidden="true">🎁</div>
                 </div>
               </div>
             </div>
