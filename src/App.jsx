@@ -158,6 +158,9 @@ function DashboardLayout({ children }) {
           <Link to="/wishlists" className={`sidebar-link ${path === '/wishlists' ? 'active' : ''}`} onClick={closeSidebar}>
             <CheckSquare size={22} /> My Wishlists
           </Link>
+          <Link to="/discover" className={`sidebar-link ${path === '/discover' ? 'active' : ''}`} onClick={closeSidebar}>
+            <Compass size={22} /> Discover Gifts
+          </Link>
           <Link to="/shared" className={`sidebar-link ${path === '/shared' ? 'active' : ''}`} onClick={closeSidebar}>
             <Share2 size={22} /> Shared With Me
           </Link>
@@ -166,9 +169,6 @@ function DashboardLayout({ children }) {
           </Link>
           <Link to="/ai-assistant" className={`sidebar-link ${path === '/ai-assistant' ? 'active' : ''}`} onClick={closeSidebar}>
             <Sparkles size={22} /> AI Assistant
-          </Link>
-          <Link to="/discover" className={`sidebar-link ${path === '/discover' ? 'active' : ''}`} onClick={closeSidebar}>
-            <Compass size={22} /> Discover Gifts
           </Link>
           <Link to="/settings" className={`sidebar-link ${path === '/settings' ? 'active' : ''}`} onClick={closeSidebar}>
             <SettingsIcon size={22} /> Settings
