@@ -51,6 +51,8 @@ export function AuthProvider({ children }) {
   });
 
   const [loading, setLoading] = useState(true);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [syncKey, setSyncKey] = useState(Date.now());
 
   // Storage helpers to prevent Safari SecurityErrors
   const safeSetItem = (key, val) => {
@@ -123,6 +125,7 @@ export function AuthProvider({ children }) {
       }
 
       try {
+        setIsSyncing(true);
         const response = await api.get('/auth/profile', {
           headers: { Authorization: `Bearer ${storedToken}` },
         });
@@ -134,6 +137,7 @@ export function AuthProvider({ children }) {
               response.data.user,
               storedAuthType || (response.data.user.role === 'guest' ? 'guest' : undefined)
             );
+            setSyncKey(Date.now());
           } else {
             clearAuth();
           }
@@ -157,6 +161,7 @@ export function AuthProvider({ children }) {
                   isGuest: false,
                 };
                 persistAuth(storedToken, basicUser);
+                setSyncKey(Date.now());
               } else {
                 clearAuth();
               }
@@ -166,7 +171,10 @@ export function AuthProvider({ children }) {
           }
         }
       } finally {
-        if (isSubscribed) setLoading(false);
+        if (isSubscribed) {
+          setIsSyncing(false);
+          setLoading(false);
+        }
       }
     };
 
@@ -239,6 +247,8 @@ export function AuthProvider({ children }) {
     user,
     token,
     loading,
+    isSyncing,
+    syncKey,
     login,
     signup,
     loginAsGuest,

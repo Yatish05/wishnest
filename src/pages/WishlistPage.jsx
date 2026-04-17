@@ -8,7 +8,7 @@ import { formatCurrency, getCurrencySymbol } from '../utils/currency';
 import './WishlistPage.css';
 
 export default function WishlistPage() {
-  const { user } = useAuth();
+  const { user, isSyncing, syncKey } = useAuth();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const wishlistId = searchParams.get('id');
@@ -89,7 +89,7 @@ export default function WishlistPage() {
   };
 
   useEffect(() => {
-    if (wishlistId) {
+    if (wishlistId && !isSyncing) {
       setLoading(true);
       const fetchWishlistData = async () => {
         try {
@@ -107,15 +107,15 @@ export default function WishlistPage() {
         }
       };
       fetchWishlistData();
-    } else {
+    } else if (!wishlistId) {
       setWishlist(null);
       setLoading(false);
     }
-  }, [wishlistId]);
+  }, [wishlistId, isSyncing, syncKey]);
 
 
   useEffect(() => {
-    if (!user?.id) return;
+    if (!user?.id || isSyncing) return;
     const fetchAllWishlists = async () => {
       try {
         const res = await api.get('/wishlists');
@@ -127,7 +127,7 @@ export default function WishlistPage() {
       }
     };
     fetchAllWishlists();
-  }, [user?.id]);
+  }, [user?.id, isSyncing, syncKey]);
 
   const handleCreateWishlist = async () => {
     if (isGuest) {

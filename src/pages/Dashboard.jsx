@@ -95,13 +95,16 @@ function OccasionTag({ label }) {
 }
 
 export default function Dashboard() {
-  const { user } = useAuth();
+  const { user, isSyncing, syncKey } = useAuth();
   const [wishlists, setWishlists] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [showShareNudge, setShowShareNudge] = React.useState(true);
   const isGuest = user?.isGuest || user?.role === 'guest';
 
   const fetchData = async () => {
+    // Don't fetch if we're in the middle of a profile sync
+    if (isSyncing) return;
+    
     setLoading(true);
     try {
       const wlRes = await api.get('/wishlists');
@@ -114,8 +117,10 @@ export default function Dashboard() {
   };
 
   React.useEffect(() => {
-    if (user?.id) fetchData();
-  }, [user?.id]);
+    if (user?.id && !isSyncing) {
+      fetchData();
+    }
+  }, [user?.id, isSyncing, syncKey]);
 
   const safeWishlists = Array.isArray(wishlists) ? wishlists : [];
   const visibleWishlists = isGuest ? safeWishlists.slice(0, 3) : safeWishlists;
