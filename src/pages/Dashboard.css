@@ -409,6 +409,11 @@
   border-radius: 18px;
   padding: 32px 24px;
   background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
 }
 
 .dashboard-create-card:hover {
@@ -431,16 +436,20 @@
 
 .dashboard-create-card h3,
 .dashboard-empty-card h3 {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 800;
+  margin: 4px 0;
 }
 
 .dashboard-create-card p,
 .dashboard-empty-card p,
 .dashboard-guest-banner__copy {
   color: var(--color-text-muted);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
+  line-height: 1.6;
+  max-width: 440px;
+  margin: 0 auto;
 }
 
 .dashboard-create-card__cta,
@@ -451,7 +460,16 @@
 }
 
 .dashboard-empty-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
+  gap: 12px;
+}
+
+.dashboard-empty-card .btn {
+  margin-top: 12px;
 }
 
 .dashboard-feed-card {
