@@ -178,11 +178,12 @@
 }
 
 .sidebar-footer {
-  padding: 14px;
+  padding: 24px 20px 20px;
   margin-top: auto;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 16px;
+  border-top: 1px solid var(--color-surface-soft);
 }
 
 .sidebar-user-card {
@@ -232,13 +233,13 @@
   top: 0;
   z-index: 30;
   height: auto;
-  padding: 20px 32px;
+  padding: 14px 32px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
   background: var(--color-bg);
-  border: none;
+  border-bottom: 1.5px solid #fecaca15;
 }
 
 .topbar-actions .btn-text {
@@ -280,7 +281,7 @@
 
 .dashboard-content {
   flex: 1;
-  padding: 0 32px 32px;
+  padding: 20px 32px 32px;
 }
 
 .dashboard-content-inner {

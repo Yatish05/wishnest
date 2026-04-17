@@ -23,7 +23,7 @@
 }
 
 .wishlist-items-surface {
-  margin-top: 12px;
+  margin-top: 48px;
   padding: 12px 0 0;
   background: transparent;
 }
@@ -32,7 +32,7 @@
 .wishlists-overview {
   position: relative;
   overflow: visible;
-  padding: 28px 32px;
+  padding: 40px 48px;
   border-radius: 20px;
   background:
     radial-gradient(circle at top right, rgba(255, 255, 255, 0.72), transparent 34%),

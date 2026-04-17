@@ -621,35 +621,37 @@ export default function WishlistPage() {
                 )}
               </div>
             ) : (
-              <div className="empty-state-centered">
-                <div className="text-center card" style={{ padding: '3rem 4rem' }}>
-                  <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🎁</div>
-                  <h2 className="text-xl font-bold mb-2">No wishlists yet</h2>
-                  <p className="text-secondary" style={{ marginBottom: '1.5rem' }}>
-                    {isGuest
-                      ? 'Guest mode is view-only. Log in to create and manage your own wishlists.'
-                      : 'Create your first wishlist and start adding items!'}
-                  </p>
-                  <button className="btn btn-primary" onClick={() => (isGuest ? navigate('/login') : setShowCreateWishlist(true))}>
-                    {isGuest ? <><Eye size={18} /> Login To Continue</> : <><Plus size={18} /> Create Wishlist</>}
-                  </button>
+             {/* Guest / Empty Banners Group */}
+              <div className="flex flex-col gap-6 w-full">
+                <div className="empty-state-centered">
+                  <div className="text-center card" style={{ padding: '3.5rem 4rem' }}>
+                    <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🎁</div>
+                    <h2 className="text-xl font-bold mb-2">No wishlists yet</h2>
+                    <p className="text-secondary" style={{ marginBottom: '1.5rem' }}>
+                      {isGuest
+                        ? 'Guest mode is view-only. Log in to create and manage your own wishlists.'
+                        : 'Create your first wishlist and start adding items!'}
+                    </p>
+                    <button className="btn btn-primary" onClick={() => (isGuest ? navigate('/login') : setShowCreateWishlist(true))}>
+                      {isGuest ? <><Eye size={18} /> Login To Continue</> : <><Plus size={18} /> Create Wishlist</>}
+                    </button>
+                  </div>
                 </div>
-              </div>
-            )}
 
-            {hiddenWishlistCount > 0 && (
-              <div className="wishlists-guest-banner card">
-                <div>
-                  <p className="wishlists-guest-banner-title">More wishlists are hidden in guest mode</p>
-                  <p className="wishlists-guest-banner-copy">
-                    You can view 3 lists for now. Log in to unlock the remaining {hiddenWishlistCount} wishlist{hiddenWishlistCount > 1 ? 's' : ''}.
-                  </p>
-                </div>
-                <button className="btn btn-primary" onClick={() => navigate('/login')}>
-                  Login To See More
-                </button>
+                {hiddenWishlistCount > 0 && (
+                  <div className="wishlists-guest-banner card" style={{ marginTop: 0 }}>
+                    <div>
+                      <p className="wishlists-guest-banner-title">More wishlists are hidden in guest mode</p>
+                      <p className="wishlists-guest-banner-copy">
+                        You can view 3 lists for now. Log in to unlock the remaining {hiddenWishlistCount} wishlist{hiddenWishlistCount > 1 ? 's' : ''}.
+                      </p>
+                    </div>
+                    <button className="btn btn-primary" onClick={() => navigate('/login')}>
+                      Login To See More
+                    </button>
+                  </div>
+                )}
               </div>
-            )}
           </div>
         ) : (
           <div className="wishlist-detail-skeleton">
