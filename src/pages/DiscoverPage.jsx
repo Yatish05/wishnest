@@ -43,20 +43,30 @@ export default function DiscoverPage() {
       
       const res = await api.get('/discover?limit=10');
 
-      // Use the newly generated premium images for the discovery list
-      const premiumImages = [
-        'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80', // Watch
-        'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80', // Red Shoe
-        'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80', // Headphones
-        'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=800&q=80', // Glasses
-        'https://images.unsplash.com/photo-1526170315870-ef6846055c9d?w=800&q=80', // Camera
-        'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=800&q=80', // iPad
-        'https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=800&q=80', // Plant
-      ];
+      const getBestImage = (title = '') => {
+        const lower = title.toLowerCase();
+        if (lower.includes('watch')) return 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80';
+        if (lower.includes('shoe') || lower.includes('nike')) return 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80';
+        if (lower.includes('headphone') || lower.includes('speaker')) return 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80';
+        if (lower.includes('glass') || lower.includes('sunglass')) return 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=800&q=80';
+        if (lower.includes('handbag') || lower.includes('bag') || lower.includes('coach')) return 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80';
+        if (lower.includes('jewelry') || lower.includes('shagun') || lower.includes('gold')) return 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=80';
+        if (lower.includes('camera') || lower.includes('photo')) return 'https://images.unsplash.com/photo-1526170315870-ef6846055c9d?w=800&q=80';
+        if (lower.includes('ipad') || lower.includes('tablet') || lower.includes('tech')) return 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=800&q=80';
+        if (lower.includes('plant') || lower.includes('home')) return 'https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=800&q=80';
+        
+        // Default cyclical fallback if no keywords match
+        const premiumImages = [
+          'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80',
+          'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80',
+          'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80'
+        ];
+        return premiumImages[Math.floor(Math.random() * premiumImages.length)];
+      };
 
       const enriched = (Array.isArray(res.data) ? res.data : []).map((item, idx) => ({
         ...item,
-        img: premiumImages[idx % premiumImages.length],
+        img: getBestImage(item.title),
         category: CATEGORIES[1 + (idx % (CATEGORIES.length - 1))],
         relationship: RELATIONSHIPS[idx % RELATIONSHIPS.length],
         priceValue: [400, 1500, 3000, 6000][idx % 4]
