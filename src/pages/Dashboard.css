@@ -1,9 +1,9 @@
 .dashboard-page--wishnest {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 64px;
   width: 100%;
-  padding-bottom: 80px;
+  padding-bottom: 100px;
 }
 
 .dashboard-hero,
@@ -165,7 +165,7 @@
 .dashboard-section {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 32px;
 }
 
 .dashboard-section__header,
@@ -247,7 +247,7 @@
 .dashboard-guest-banner {
   background: #fff;
   border-radius: 18px;
-  padding: 24px;
+  padding: 48px 32px;
 }
 
 .dashboard-wishlist-grid,
