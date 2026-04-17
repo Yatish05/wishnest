@@ -66,12 +66,9 @@ function MainLayout({ children }) {
             {user ? (
               <>
                 <div className="nav-user-pill">
-                    {user?.avatar ? (
-                      <img src={user.avatar} alt={displayName} />
-                    ) : (
-                      <div className="nav-user-avatar-placeholder" aria-hidden="true">{initials}</div>
-                    )}
-                  <span>{displayName}</span>
+                  <div className="nav-user-avatar-placeholder" aria-hidden="true" style={{ width: '32px', height: '32px', fontSize: '12px' }}>{initials}</div>
+                  <span style={{ fontWeight: 700, fontSize: '15px' }}>{displayName}</span>
+                  <ChevronRight size={16} style={{ color: 'var(--color-text-muted)', marginLeft: '4px' }} />
                 </div>
                 <Link to="/dashboard" className="btn btn-primary">Dashboard</Link>
               </>

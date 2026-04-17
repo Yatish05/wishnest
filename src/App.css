@@ -81,12 +81,13 @@
 .user-chip {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 6px 12px 6px 6px;
+  gap: 12px;
+  padding: 6px 14px 6px 6px;
   border-radius: 999px;
-  border: var(--border);
+  border: 1.5px solid rgba(240, 237, 232, 1);
   background: #fff;
   color: var(--color-text-primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .nav-user-avatar,
