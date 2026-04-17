@@ -3,6 +3,20 @@ import api from '../utils/api';
 
 const AuthContext = createContext();
 
+const safeBase64Decode = (str) => {
+  try {
+    // Add padding if missing
+    let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
+    while (base64.length % 4) {
+      base64 += '=';
+    }
+    return atob(base64);
+  } catch (e) {
+    console.error('[AuthContext] safeBase64Decode failed', e);
+    return null;
+  }
+};
+
 const normalizeUser = (nextUser, authType) => (
   nextUser
     ? {
@@ -104,7 +118,9 @@ export function AuthProvider({ children }) {
         } else if (storedToken) {
           // Robust fallback for legacy or malformed tokens when server is unreachable or errored
           try {
-            const payload = JSON.parse(atob(storedToken.split('.')[1]));
+            const decoded = safeBase64Decode(storedToken.split('.')[1]);
+            if (!decoded) throw new Error('Decode returned null');
+            const payload = JSON.parse(decoded);
             console.log('[AuthContext] Falling back to JWT decode for:', payload.name || 'User');
             const basicUser = {
               id: payload.id,
@@ -165,7 +181,9 @@ export function AuthProvider({ children }) {
   const loginWithToken = (jwtToken) => {
     try {
       // JWT payload is the middle base64 segment
-      const payload = JSON.parse(atob(jwtToken.split('.')[1]));
+      const decoded = safeBase64Decode(jwtToken.split('.')[1]);
+      if (!decoded) throw new Error('Decode returned null');
+      const payload = JSON.parse(decoded);
       const oauthUser = {
         id: payload.id,
         name: payload.name || 'User',
