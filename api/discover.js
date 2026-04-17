@@ -15,20 +15,25 @@ export default async function handler(req) {
 
   try {
     const url = new URL(req.url);
+    const limit = parseInt(url.searchParams.get('limit')) || 10;
+    const offset = parseInt(url.searchParams.get('offset')) || 0;
     const q = url.searchParams.get('q')?.toLowerCase().trim() || '';
     
-    let gender = 'unisex';
-    if (/(boy|boys|male|men|man)\b/.test(q)) gender = 'male';
-    if (/(girl|girls|female|women|woman)\b/.test(q)) gender = 'female';
-
-    const genderFilter = gender === 'unisex' ? ['unisex', 'male', 'female'] : [gender, 'unisex'];
-    
-    const { data: wishlists, error } = await supabase
+    let query = supabase
       .from('wishlists')
       .select('*, items(*)')
-      .in('gender', genderFilter)
       .or('is_public.eq.true,visibility.eq.public')
       .order('created_at', { ascending: false });
+
+    if (q) {
+      let gender = 'unisex';
+      if (/(boy|boys|male|men|man)\b/.test(q)) gender = 'male';
+      if (/(girl|girls|female|women|woman)\b/.test(q)) gender = 'female';
+      const genderFilter = gender === 'unisex' ? ['unisex', 'male', 'female'] : [gender, 'unisex'];
+      query = query.in('gender', genderFilter);
+    }
+
+    const { data: wishlists, error } = await query.range(offset, offset + limit - 1);
 
     if (error) throw error;
 
@@ -40,11 +45,15 @@ export default async function handler(req) {
         wishlistName: w.name,
         wishlistOccasion: w.occasion,
         wishlistGender: w.gender,
-        wishlistOwnerId: w.user_id
+        wishlistOwnerId: w.user_id,
+        // Mocking fields for Discovery filter requirements since they aren't in DB yet
+        category: 'Gift', 
+        relationship: 'Someone special',
+        price: 999 
       }));
     });
 
-    return new Response(JSON.stringify(items), {
+    return new Response(JSON.stringify(items.slice(0, limit)), {
       status: 200,
       headers: {
         'Content-Type': 'application/json',

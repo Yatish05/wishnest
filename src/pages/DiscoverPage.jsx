@@ -1,174 +1,224 @@
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { Search, Sparkles, Globe, Gift, ArrowUpRight } from 'lucide-react';
+import { useEffect, useState, useMemo } from 'react';
+import { Link } from 'react-router-dom';
+import { Gift, ShieldCheck, Sparkles, Filter, Lock } from 'lucide-react';
 import api from '../utils/api';
+import { useAuth } from '../contexts/AuthContext';
 import './DiscoverPage.css';
 
+const OCCASIONS = ['All Occasions', 'Birthday', 'Wedding', 'Baby Shower', 'Anniversary', 'Other'];
+const CATEGORIES = ['All Categories', 'Electronics', 'Home', 'Fashion', 'Experiences', 'Books'];
+const RELATIONSHIPS = ['All Relationships', 'Family', 'Friends', 'Partner', 'Colleagues'];
+const BUDGETS = ['All Budgets', '< ₹500', '₹500 - ₹2000', '₹2000 - ₹5000', '> ₹5000'];
+
 export default function DiscoverPage() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [search, setSearch] = useState(searchParams.get('q') || '');
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [searched, setSearched] = useState(Boolean(searchParams.get('q')));
+  const { user } = useAuth();
+  const [gifts, setGifts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
-  const handleSearch = async (nextQuery = search, updateUrl = true) => {
-    const trimmed = nextQuery.trim();
-    setSearch(trimmed);
-    if (updateUrl) {
-      setSearchParams(trimmed ? { q: trimmed } : {});
-    }
-    setSearched(Boolean(trimmed));
+  // Filter state
+  const [activeFilters, setActiveFilters] = useState({
+    occasion: 'All Occasions',
+    category: 'All Categories',
+    relationship: 'All Relationships',
+    budget: 'All Budgets'
+  });
 
-    if (!trimmed) {
-      setItems([]);
-      setError('');
-      return;
-    }
+  useEffect(() => {
+    fetchInitialGifts();
+  }, []);
 
+  const fetchInitialGifts = async () => {
     try {
       setLoading(true);
       setError('');
-      const res = await api.get(`/discover?q=${encodeURIComponent(trimmed)}`);
-      setItems(Array.isArray(res.data) ? res.data : []);
+      // Fetch exactly first 10
+      const res = await api.get('/discover?limit=10');
+      
+      // Since it's exactly the first 10, we don't shuffle.
+      // We also enrich with mock data for fields missing in DB for demonstration
+      const enriched = (Array.isArray(res.data) ? res.data : []).map((item, idx) => ({
+        ...item,
+        category: CATEGORIES[1 + (idx % (CATEGORIES.length - 1))],
+        relationship: RELATIONSHIPS[idx % RELATIONSHIPS.length],
+        priceValue: [400, 1500, 3000, 6000][idx % 4]
+      }));
+      
+      setGifts(enriched);
     } catch (err) {
-      console.error('Discover gifts error:', err);
-      setError('Unable to load gift ideas right now.');
-      setItems([]);
+      console.error('Discover fetch error:', err);
+      setError('Unable to load gift ideas. Please try again later.');
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    const nextQuery = searchParams.get('q') || '';
-    setSearch(nextQuery);
+  const filteredGifts = useMemo(() => {
+    return gifts.filter(gift => {
+      const matchOccasion = activeFilters.occasion === 'All Occasions' || gift.wishlistOccasion === activeFilters.occasion;
+      const matchCategory = activeFilters.category === 'All Categories' || gift.category === activeFilters.category;
+      const matchRelationship = activeFilters.relationship === 'All Relationships' || gift.relationship === activeFilters.relationship;
+      
+      let matchBudget = true;
+      if (activeFilters.budget !== 'All Budgets') {
+        const val = gift.priceValue;
+        if (activeFilters.budget === '< ₹500') matchBudget = val < 500;
+        else if (activeFilters.budget === '₹500 - ₹2000') matchBudget = val >= 500 && val <= 2000;
+        else if (activeFilters.budget === '₹2000 - ₹5000') matchBudget = val >= 2000 && val <= 5000;
+        else if (activeFilters.budget === '> ₹5000') matchBudget = val > 5000;
+      }
 
-    if (!nextQuery) {
-      setItems([]);
-      setSearched(false);
-      setError('');
-      return;
+      return matchOccasion && matchCategory && matchRelationship && matchBudget;
+    });
+  }, [gifts, activeFilters]);
+
+  const handleFilterChange = (key, value) => {
+    setActiveFilters(prev => ({ ...prev, [key]: value }));
+  };
+
+  const handleSeeMore = () => {
+    if (!user) {
+      setShowLoginPrompt(true);
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    } else {
+      // Logic for logged in users to load more would go here
+      console.log('Loading more gifts for authenticated user...');
     }
+  };
 
-    handleSearch(nextQuery, false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    handleSearch(search);
+  const handleGoogleLogin = () => {
+    window.location.href = '/api/auth/google';
   };
 
   return (
-    <div className="discover-page animate-fade-in">
-      <section className="discover-hero">
-        <div className="discover-hero-copy">
-          <div className="discover-kicker">
-            <Sparkles size={14} />
-            <span>Public gift discovery</span>
-          </div>
-          <h1>Discover gifts from public wishlists.</h1>
-          <p>
-            Search prompts like <strong>gift for boys</strong> or <strong>gift for girls</strong> to explore ideas
-            shared by the WishNest community.
-          </p>
+    <div className="discovery-container">
+      <header className="discovery-header">
+        <div className="discovery-badge">
+          <Sparkles size={14} />
+          <span>Community Favorites</span>
         </div>
-        <div className="discover-hero-badge">
-          <Globe size={16} />
-          <span>Only public wishlists are included</span>
+        <h1>Find the perfect gift in seconds.</h1>
+        <p>Tell us the person and occasion — we&apos;ll suggest gifts they&apos;ll actually love.</p>
+      </header>
+
+      <section className="discovery-filters">
+        <div className="filter-group">
+          <label><Filter size={14} /> Occasion</label>
+          <select 
+            value={activeFilters.occasion} 
+            onChange={(e) => handleFilterChange('occasion', e.target.value)}
+          >
+            {OCCASIONS.map(o => <option key={o} value={o}>{o}</option>)}
+          </select>
+        </div>
+        <div className="filter-group">
+          <label>Category</label>
+          <select 
+            value={activeFilters.category} 
+            onChange={(e) => handleFilterChange('category', e.target.value)}
+          >
+            {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+          </select>
+        </div>
+        <div className="filter-group">
+          <label>Relationship</label>
+          <select 
+            value={activeFilters.relationship} 
+            onChange={(e) => handleFilterChange('relationship', e.target.value)}
+          >
+            {RELATIONSHIPS.map(r => <option key={r} value={r}>{r}</option>)}
+          </select>
+        </div>
+        <div className="filter-group">
+          <label>Budget</label>
+          <select 
+            value={activeFilters.budget} 
+            onChange={(e) => handleFilterChange('budget', e.target.value)}
+          >
+            {BUDGETS.map(b => <option key={b} value={b}>{b}</option>)}
+          </select>
         </div>
       </section>
 
-      <form className="discover-search-panel" onSubmit={handleSubmit}>
-        <div className="discover-search-input">
-          <Search size={18} />
-          <input
-            type="text"
-            placeholder="Search gift ideas..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+      {loading ? (
+        <div className="discovery-loading">
+          <div className="spinner"></div>
+          <p>Curating the best gift ideas...</p>
         </div>
-        <button className="btn btn-primary" type="submit" disabled={loading}>
-          {loading ? 'Searching...' : 'Discover Gifts'}
-        </button>
-      </form>
-
-      <div className="discover-suggestions">
-        {['gift for boys', 'gift for girls', 'unisex birthday gift'].map((suggestion) => (
-          <button
-            key={suggestion}
-            className="discover-suggestion-chip"
-            onClick={() => handleSearch(suggestion)}
-            type="button"
-          >
-            {suggestion}
-          </button>
-        ))}
-      </div>
-
-      {error && <div className="discover-state discover-error">{error}</div>}
-
-      {!error && !loading && !searched && (
-        <div className="discover-state">
-          Start with a search to explore items from public wishlists.
+      ) : error ? (
+        <div className="discovery-error-state">
+          <p>{error}</p>
+          <button onClick={fetchInitialGifts} className="btn btn-secondary">Retry</button>
         </div>
-      )}
-
-      {!error && !loading && searched && items.length === 0 && (
-        <div className="discover-state">
-          No public wishlist items matched this search yet.
-        </div>
-      )}
-
-      {items.length > 0 && (
-        <div className="discover-results-header">
-          <h2>Gift Ideas</h2>
-          <p>{items.length} public items found</p>
-        </div>
-      )}
-
-      <div className="discover-grid">
-        {items.map((item) => (
-          <article key={item._id} className="discover-card">
-            <div className="discover-card-image">
-              {item.img ? (
-                <img src={item.img} alt={item.name} />
-              ) : (
-                <div className="discover-card-placeholder">
-                  <Gift size={36} />
-                </div>
-              )}
-            </div>
-
-            <div className="discover-card-body">
-              <div className="discover-card-meta">
-                <span className="discover-card-pill">{item.wishlistGender || 'unisex'}</span>
-                <span className="discover-card-pill">{item.wishlistOccasion || 'Other'}</span>
+      ) : (
+        <>
+          <div className="discovery-grid">
+            {filteredGifts.length > 0 ? (
+              filteredGifts.map((gift) => (
+                <article key={gift._id} className="discovery-card">
+                  <div className="discovery-card-media">
+                    {gift.img ? (
+                      <img src={gift.img} alt={gift.name} loading="lazy" />
+                    ) : (
+                      <div className="discovery-card-placeholder">
+                        <Gift size={32} strokeWidth={1.5} />
+                      </div>
+                    )}
+                  </div>
+                  <div className="discovery-card-content">
+                    <h3>{gift.name}</h3>
+                    <div className="discovery-card-tags">
+                      <span className="tag tag--category">{gift.category}</span>
+                      <span className="tag tag--occasion">{gift.wishlistOccasion || 'Personal'}</span>
+                    </div>
+                  </div>
+                </article>
+              ))
+            ) : (
+              <div className="discovery-empty">
+                <p>No gifts match your current filters within the top 10 results.</p>
+                <button 
+                  className="btn-soft" 
+                  onClick={() => setActiveFilters({
+                    occasion: 'All Occasions',
+                    category: 'All Categories',
+                    relationship: 'All Relationships',
+                    budget: 'All Budgets'
+                  })}
+                >
+                  Clear Filters
+                </button>
               </div>
-              <h3>{item.name}</h3>
-              <p>{item.notes || 'Gift idea from a public wishlist.'}</p>
-              <div className="discover-card-footer">
-                <div>
-                  <span className="discover-card-label">From wishlist</span>
-                  <strong>{item.wishlistName}</strong>
+            )}
+          </div>
+
+          <div className="discovery-footer">
+            {!showLoginPrompt ? (
+              <button className="btn btn-primary btn-lg" onClick={handleSeeMore}>
+                See more gift ideas
+              </button>
+            ) : (
+              <div className="discovery-login-prompt animate-slide-up">
+                <div className="prompt-content">
+                  <div className="prompt-icon">
+                    <Lock size={24} />
+                  </div>
+                  <h2>Unlock more gift ideas</h2>
+                  <p>Create your free account to continue exploring personalized suggestions.</p>
+                  <div className="prompt-actions">
+                    <button className="btn btn-google" onClick={handleGoogleLogin}>
+                      <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" />
+                      Continue with Google
+                    </button>
+                    <Link to="/signup" className="btn btn-primary">Create account</Link>
+                  </div>
                 </div>
-                {item.link && (
-                  <a
-                    href={item.link}
-                    className="discover-card-link"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    View <ArrowUpRight size={15} />
-                  </a>
-                )}
               </div>
-            </div>
-          </article>
-        ))}
-      </div>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }
