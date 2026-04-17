@@ -134,6 +134,7 @@ const STATIC_GIFTS = [
 
 export default function DiscoverPage() {
   const { user } = useAuth();
+  const isGuest = !user || user.isGuest || user.role === 'guest';
   const [gifts, setGifts] = useState(STATIC_GIFTS);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -187,20 +188,21 @@ export default function DiscoverPage() {
   }, []);
 
   const filteredGifts = useMemo(() => {
-    return gifts.filter(gift => {
+    const filtered = gifts.filter(gift => {
       const matchOccasion = activeFilters.occasion === 'All Occasions' || gift.occasion === activeFilters.occasion;
       const matchRelationship = activeFilters.relationship === 'All' || gift.relationship === activeFilters.relationship;
-      
       return matchOccasion && matchRelationship;
     });
-  }, [gifts, activeFilters]);
+
+    return isGuest ? filtered.slice(0, 10) : filtered;
+  }, [gifts, activeFilters, isGuest]);
 
   const handleFilterChange = (key, value) => {
     setActiveFilters(prev => ({ ...prev, [key]: value }));
   };
 
   const handleSeeMore = () => {
-    if (!user) {
+    if (isGuest) {
       setShowLoginPrompt(true);
       window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     } else {
@@ -246,7 +248,9 @@ export default function DiscoverPage() {
       </section>
 
       <div className="discovery-results-meta">
-        Showing {filteredGifts.length} gift ideas
+        {isGuest 
+          ? `Showing top 10 gift ideas` 
+          : `Showing all ${filteredGifts.length} gift ideas`}
       </div>
 
       {loading ? (
@@ -304,7 +308,7 @@ export default function DiscoverPage() {
             )}
           </div>
 
-          {!user && (
+          {isGuest && (
             <div className="discovery-footer">
               {!showLoginPrompt ? (
                 <button className="btn btn-primary btn-lg" onClick={handleSeeMore}>
