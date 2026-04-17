@@ -789,27 +789,32 @@ export default function WishlistPage() {
       {/* Create Wishlist Modal */}
       {showCreateWishlist && !isGuest && (
         <div className="modal-overlay">
-          <div className="modal card animate-fade-in">
+          <div className="modal card animate-fade-in premium-modal">
             <div className="modal-header flex-between">
-              <h3 className="font-bold text-lg">Create Wishlist</h3>
+              <div className="flex-center gap-3">
+                <div className="modal-icon-badge">
+                  <Gift size={20} />
+                </div>
+                <h3 className="premium-modal-title">Create Wishlist</h3>
+              </div>
               <button className="btn-text" onClick={() => setShowCreateWishlist(false)}><X size={20} /></button>
             </div>
             <div className="modal-body">
               <form className="modal-form">
                 <div className="form-group">
-                  <label>Wishlist Name</label>
+                  <label className="premium-label"><Sparkles size={13} /> Wishlist Name</label>
                   <input
                     type="text"
-                    className="input-field"
+                    className="input-field premium-input"
                     placeholder="e.g. Wedding Registry"
                     value={newWishlist.name}
                     onChange={(e) => setNewWishlist({ ...newWishlist, name: e.target.value })}
                   />
                 </div>
                 <div className="form-group">
-                  <label>Occasion</label>
+                  <label className="premium-label"><Plus size={13} /> Occasion</label>
                   <select
-                    className="input-field"
+                    className="input-field premium-input"
                     value={newWishlist.occasion}
                     onChange={(e) => setNewWishlist({ ...newWishlist, occasion: e.target.value })}
                   >
@@ -822,9 +827,9 @@ export default function WishlistPage() {
                   </select>
                 </div>
                 <div className="form-group">
-                  <label>Visibility</label>
+                  <label className="premium-label"><Globe size={13} /> Visibility</label>
                   <select
-                    className="input-field"
+                    className="input-field premium-input"
                     value={newWishlist.visibility}
                     onChange={(e) => setNewWishlist({ ...newWishlist, visibility: e.target.value })}
                   >
@@ -833,9 +838,9 @@ export default function WishlistPage() {
                   </select>
                 </div>
                 <div className="form-group">
-                  <label><VenusAndMars size={15} /> Discover Gender</label>
+                  <label className="premium-label"><VenusAndMars size={13} /> Discover Gender</label>
                   <select
-                    className="input-field"
+                    className="input-field premium-input"
                     value={newWishlist.gender}
                     onChange={(e) => setNewWishlist({ ...newWishlist, gender: e.target.value })}
                   >
@@ -844,15 +849,15 @@ export default function WishlistPage() {
                     <option value="female">Female</option>
                   </select>
                 </div>
-                <div className="modal-footer mt-4">
-                  <button type="button" className="btn btn-secondary" onClick={() => setShowCreateWishlist(false)}>Cancel</button>
+                <div className="modal-footer mt-5">
+                  <button type="button" className="btn btn-secondary w-full" onClick={() => setShowCreateWishlist(false)}>Cancel</button>
                   <button
                     type="button"
-                    className="btn btn-primary"
+                    className="btn btn-primary w-full premium-create-btn"
                     disabled={saving || !newWishlist.name}
                     onClick={handleCreateWishlist}
                   >
-                    {saving ? 'Creating...' : 'Create'}
+                    {saving ? 'Creating...' : 'Create Wishlist'}
                   </button>
                 </div>
               </form>
