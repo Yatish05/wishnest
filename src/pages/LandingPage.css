@@ -263,8 +263,10 @@
 }
 
 .landing-section__header h2 {
-  font-size: clamp(28px, 4vw, 34px);
-  font-weight: 800;
+  font-size: clamp(26px, 4vw, 32px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #111111;
 }
 
 .landing-section__header p {
@@ -548,34 +550,29 @@
   gap: 16px;
 }
 
-.landing-assistant-card,
-.landing-step-card {
-  padding: 22px;
+.landing-assistant-card {
+  padding: 24px;
   background: #fff;
-  border: var(--border);
-  border-radius: 18px;
-  transition: var(--transition);
+  border: 1px solid #F1F1F1;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
 }
 
-.landing-assistant-card:hover,
-.landing-step-card:hover {
+.landing-assistant-card:hover {
   transform: translateY(-4px);
-  box-shadow: var(--shadow-hover);
-}
-
-.landing-assistant-card__icon,
-.landing-step-card__number {
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
 .landing-assistant-card__icon {
-  background: #fff1eb;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  background: #F7F7F7;
   color: var(--color-brand);
 }
 

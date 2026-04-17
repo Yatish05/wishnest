@@ -310,9 +310,9 @@ export default function LandingPage() {
         <div className="container">
           <div className="landing-section__header">
 
-            <h2>Gift suggestions made simple.</h2>
+            <h2>Find the perfect gift in seconds.</h2>
             <p>
-              Our assistant turns vague ideas into thoughtful gifts everyone will love.
+              Tell us the person and occasion — we&apos;ll suggest gifts they&apos;ll actually love.
             </p>
           </div>
 
@@ -333,10 +333,10 @@ export default function LandingPage() {
 
           <div className="landing-assistant-actions">
             <Link to="/ai-assistant" className="btn btn-primary">
-              Open AI Assistant <ArrowRight size={18} />
+              Try AI Assistant <ArrowRight size={18} />
             </Link>
             <Link to={user ? '/discover' : '/signup'} className="btn btn-secondary">
-              {user ? 'Browse Gift Ideas' : 'Create an Account'}
+              {user ? 'Browse Gift Ideas' : 'Create Wishlist'}
             </Link>
           </div>
         </div>
