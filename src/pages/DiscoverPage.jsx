@@ -147,12 +147,11 @@ export default function DiscoverPage() {
 
   const fetchInitialGifts = async () => {
     try {
-      setLoading(true);
+      // Clear errors but DONT set loading to true
+      // This allows STATIC_GIFTS (already in state) to show immediately
       setError('');
       
-      let allGifts = [...STATIC_GIFTS];
-      
-      // If user is logged in, fetch data added by other users
+      // If user is logged in, fetch data added by other users in the background
       if (user) {
         try {
           const res = await api.get('/discover?limit=20');
@@ -165,18 +164,19 @@ export default function DiscoverPage() {
             relationship: item.relationship || 'Everyone'
           }));
           
-          // Show dummy first, then real ones
-          allGifts = [...allGifts, ...apiGifts];
+          // Append real ones after curated ones
+          setGifts([...STATIC_GIFTS, ...apiGifts]);
         } catch (apiErr) {
           console.error('[Discover] Failed to fetch real user data:', apiErr);
-          // Still show dummy data if API fails
+          // We already have STATIC_GIFTS in state, so no need to do anything
         }
       }
-      
-      setGifts(allGifts);
     } catch (err) {
       console.error('Discover fetch error:', err);
-      setError('Error loading the discovery feed.');
+      // Only show error if we somehow lost our static gifts
+      if (!gifts || gifts.length === 0) {
+        setError('Error loading the discovery feed.');
+      }
     } finally {
       setLoading(false);
     }
