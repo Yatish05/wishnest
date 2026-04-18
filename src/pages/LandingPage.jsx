@@ -206,7 +206,7 @@ export default function LandingPage() {
             </div>
             <div className="landing-step-card">
               <div className="landing-step-number">03</div>
-              <h3>Share the Link</h3>
+              <h3>Share Your Wishlist</h3>
               <p>Send your private link via WhatsApp, email, or social media. No sign-up required for others to view.</p>
             </div>
           </div>
