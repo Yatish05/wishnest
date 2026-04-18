@@ -124,7 +124,7 @@ export default function LandingPage() {
                 </div>
 
                 <h1 className="landing-title">
-                  Discover gifts you love and build a wishlist for gifts you will actually want.
+                  Discover gifts you love and build a wishlist for gifts you&apos;ll actually want.
                 </h1>
                 <p className="landing-subtitle">
                   Browse gift ideas by occasion, relationship, or budget — then save them to your wishlist and share with friends and family.
