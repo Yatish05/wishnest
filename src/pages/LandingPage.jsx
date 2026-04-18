@@ -21,22 +21,28 @@ const sampleWishlists = [
     id: 1,
     name: 'Birthday Hints',
     occasion: 'Birthday',
+    emoji: '🎂',
     items: 14,
     note: 'A soft mix of books, skincare, and little luxuries people can feel good about gifting.',
+    bg: '/samples/birthday_bg.png'
   },
   {
     id: 2,
     name: 'Wedding Wishlist',
     occasion: 'Wedding',
+    emoji: '💍',
     items: 21,
     note: 'A shared list for building a home together, without endless “what do you need?” messages.',
+    bg: '/samples/wedding_bg.png'
   },
   {
     id: 3,
     name: 'Home Essentials',
     occasion: 'Moving In',
+    emoji: '🏡',
     items: 9,
     note: 'Practical upgrades and decor that make a new house feel like home.',
+    bg: '/samples/moving_bg.png'
   },
 ];
 
@@ -204,19 +210,29 @@ export default function LandingPage() {
 
           <div className="landing-wishlist-grid">
             {sampleWishlists.map((wishlist) => (
-              <article key={wishlist.id} className="landing-wishlist-card card">
+              <article key={wishlist.id} className="landing-wishlist-card">
                 <div className="landing-wishlist-card__top">
-                  <span className={getOccasionClass(wishlist.occasion)}>{wishlist.occasion}</span>
+                  <div className={`landing-pill landing-pill--${wishlist.occasion.toLowerCase().replace(' ', '-')}`}>
+                    <div className="landing-pill__emoji">{wishlist.emoji}</div>
+                    <span>{wishlist.occasion}</span>
+                  </div>
                   <div className="landing-wishlist-card__count">
-                    <span>Items</span>
-                    <strong>{wishlist.items}</strong>
+                    {wishlist.items}
                   </div>
                 </div>
-                <h3>{wishlist.name}</h3>
-                <p>{wishlist.note}</p>
-                <div className="landing-wishlist-card__footer">
-                  <Link to={user ? '/dashboard' : '/signup'} className="landing-inline-link">
-                    Explore Style <ArrowRight size={15} />
+                
+                <div className="landing-wishlist-card__body">
+                  <h3>{wishlist.name}</h3>
+                  <p>{wishlist.note}</p>
+                </div>
+
+                <div className="landing-wishlist-card__deco">
+                  <img src={wishlist.bg} alt="" aria-hidden="true" />
+                </div>
+
+                <div className={`landing-wishlist-card__footer landing-wishlist-card__footer--${wishlist.occasion.toLowerCase().replace(' ', '-')}`}>
+                  <Link to={user ? '/dashboard' : '/signup'} className="landing-wishlist-card__link">
+                    Browse Gifts <ArrowRight size={16} />
                   </Link>
                 </div>
               </article>
