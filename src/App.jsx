@@ -35,9 +35,9 @@ function MainLayout({ children }) {
           </button>
 
           <nav className={`nav-links ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
+                <a href="#how-it-works" className="nav-link" onClick={closeMobileMenu}>How it works</a>
+                <Link to="/discover" className="nav-link" onClick={closeMobileMenu}>Occasions</Link>
                 <a href="#ai-assistant" className="nav-link" onClick={closeMobileMenu}>AI Assistant</a>
-                <Link to="/discover" className="nav-link" onClick={closeMobileMenu}>Discover</Link>
-                <a href="#features" className="nav-link" onClick={closeMobileMenu}>Features</a>
             <div className="nav-actions-mobile">
               {user ? (
                 <>
@@ -98,7 +98,8 @@ function MainLayout({ children }) {
             <div>
               <h4 style={{ color: 'white', marginBottom: '1.25rem', fontSize: '1.1rem' }}>Product</h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                <a href="/#features" style={{ color: '#94A3B8', transition: 'var(--transition)' }}>Features</a>
+                <Link to="/discover" style={{ color: '#94A3B8', transition: 'var(--transition)' }}>Occasions</Link>
+                <a href="/#ai-assistant" style={{ color: '#94A3B8', transition: 'var(--transition)' }}>AI Assistant</a>
               </div>
             </div>
             <div>
