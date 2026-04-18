@@ -133,8 +133,9 @@ const STATIC_GIFTS = [
 ];
 
 export default function DiscoverPage() {
+  const navigate = useNavigate();
   const { user } = useAuth();
-  const isGuest = false;
+  const isGuest = !user;
   const [gifts, setGifts] = useState(STATIC_GIFTS);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -194,7 +195,7 @@ export default function DiscoverPage() {
       return matchOccasion && matchRelationship;
     });
 
-    return isGuest ? filtered.slice(0, 10) : filtered;
+    return isGuest ? filtered.slice(0, 15) : filtered;
   }, [gifts, activeFilters, isGuest]);
 
   const handleFilterChange = (key, value) => {
@@ -203,8 +204,9 @@ export default function DiscoverPage() {
 
   const handleSeeMore = () => {
     if (isGuest) {
-      setShowLoginPrompt(true);
-      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+      // Save redirect location so user comes back here after login
+      localStorage.setItem('postLoginRedirect', '/discover');
+      navigate('/login');
     } else {
       // Logic for logged in users to load more would go here
       console.log('Loading more gifts for authenticated user...');

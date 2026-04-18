@@ -73,10 +73,18 @@ export default function AuthCallback() {
             console.warn('[AuthCallback] Failed to fetch wishlists during callback:', wlErr?.message);
           }
 
-          console.log('[AuthCallback] Login flow complete. Navigating to dashboard...');
+          console.log('[AuthCallback] Login flow complete. Navigating to destination...');
           
           // Final redirection
-          navigate('/dashboard', { replace: true });
+          const redirectTo = localStorage.getItem('postLoginRedirect');
+          if (redirectTo) {
+            localStorage.removeItem('postLoginRedirect');
+            navigate(redirectTo, { replace: true });
+            console.log(`[AuthCallback] Redirecting to saved path: ${redirectTo}`);
+          } else {
+            navigate('/dashboard', { replace: true });
+            console.log('[AuthCallback] No saved path found. Redirecting to dashboard.');
+          }
 
           // Keep transitioning=true for a short bit to allow Dashboard to mount and see the updated state
           setTimeout(() => {

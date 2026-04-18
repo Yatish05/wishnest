@@ -29,7 +29,16 @@ export default function AuthPage({ type }) {
       } else {
         await signup(name, email, password);
       }
-      navigate('/dashboard', { replace: true });
+      
+      // Check for a pending redirect from a 'Show More' action or similar
+      const redirectTo = localStorage.getItem('postLoginRedirect');
+      if (redirectTo) {
+        localStorage.removeItem('postLoginRedirect');
+        navigate(redirectTo, { replace: true });
+      } else {
+        navigate('/dashboard', { replace: true });
+      }
+      
       setTimeout(() => setIsTransitioning(false), 200);
     } catch (err) {
       console.error('Auth error:', err);
