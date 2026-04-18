@@ -96,10 +96,16 @@ function OccasionTag({ label }) {
 
 export default function Dashboard() {
   const { user, isSyncing, syncKey } = useAuth();
-  const [wishlists, setWishlists] = React.useState([]);
+  const [wishlists, setWishlists] = React.useState(() => {
+    try {
+      const raw = localStorage.getItem('wishlists');
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) {
+      return [];
+    }
+  });
   const [loading, setLoading] = React.useState(true);
   const [showShareNudge, setShowShareNudge] = React.useState(true);
-  const isGuest = user?.isGuest || user?.role === 'guest';
 
   const fetchData = async () => {
     // Don't fetch if we're in the middle of a profile sync
@@ -108,7 +114,13 @@ export default function Dashboard() {
     setLoading(true);
     try {
       const wlRes = await api.get('/wishlists');
-      setWishlists(Array.isArray(wlRes.data) ? wlRes.data : []);
+      const lists = Array.isArray(wlRes.data) ? wlRes.data : [];
+      setWishlists(lists);
+      try {
+        localStorage.setItem('wishlists', JSON.stringify(lists));
+      } catch (e) {
+        // ignore storage errors
+      }
     } catch (error) {
       console.error('Dashboard fetch error:', error);
     } finally {
@@ -117,14 +129,20 @@ export default function Dashboard() {
   };
 
   React.useEffect(() => {
-    if (user?.id && !isSyncing) {
+    // Reset local state if user changes or sync is triggered
+    if (!user?.id) {
+      setWishlists([]);
+      setLoading(false);
+      return;
+    }
+
+    if (!isSyncing) {
       fetchData();
     }
   }, [user?.id, isSyncing, syncKey]);
 
   const safeWishlists = Array.isArray(wishlists) ? wishlists : [];
-  const visibleWishlists = isGuest ? safeWishlists.slice(0, 3) : safeWishlists;
-  const hiddenWishlistCount = Math.max(safeWishlists.length - visibleWishlists.length, 0);
+  const visibleWishlists = safeWishlists;
 
   const totalItems = safeWishlists.reduce((acc, curr) => acc + (curr.items?.length || 0), 0);
 
@@ -174,15 +192,9 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {isGuest ? (
-              <Link to="/login" className="btn btn-primary dashboard-hero__cta">
-                <LogIn size={18} /> Login To Unlock More
-              </Link>
-            ) : (
               <Link to="/wishlists" className="btn btn-primary dashboard-hero__cta">
                 <Plus size={18} /> New Wishlist
               </Link>
-            )}
           </aside>
         </div>
       </section>
@@ -201,9 +213,9 @@ export default function Dashboard() {
             </p>
           </div>
 
-          <Link to={isGuest ? '/login' : '/wishlists'} className="dashboard-primary-link">
+          <Link to="/wishlists" className="dashboard-primary-link">
             <Plus size={16} />
-            <span>{isGuest ? 'Login to create a list' : 'Start a fresh list'}</span>
+            <span>Start a fresh list</span>
           </Link>
         </div>
 
@@ -279,18 +291,16 @@ export default function Dashboard() {
                 );
               })}
 
-              <Link to={isGuest ? '/login' : '/wishlists'} className="dashboard-create-card">
+              <Link to="/wishlists" className="dashboard-create-card">
                 <div className="dashboard-create-card__icon">
                   <Plus size={28} />
                 </div>
-                <h3>{isGuest ? 'Unlock Your Own Wishlist' : 'Create New Wishlist'}</h3>
+                <h3>Create New Wishlist</h3>
                 <p>
-                  {isGuest
-                    ? 'Sign in to create lists for birthdays, weddings, holidays, and every celebration in between.'
-                    : 'Make a new list for an upcoming celebration and give loved ones a warm, helpful starting point.'}
+                  Make a new list for an upcoming celebration and give loved ones a warm, helpful starting point.
                 </p>
                 <span className="dashboard-create-card__cta">
-                  {isGuest ? 'Login to Create' : '+ Create New Wishlist'}
+                  + Create New Wishlist
                 </span>
               </Link>
             </div>
@@ -306,26 +316,12 @@ export default function Dashboard() {
                     ? 'Sign in to create and share wishlists with the people who already want to celebrate you well.'
                     : 'Create your first wishlist to make gifting easier, kinder, and more thoughtful for everyone.'}
                 </p>
-                <Link to={isGuest ? '/login' : '/wishlists'} className="btn btn-primary">
-                  {isGuest ? 'Login To Continue' : 'Create Your First Wishlist'}
+                <Link to="/wishlists" className="btn btn-primary">
+                  Create Your First Wishlist
                 </Link>
               </div>
             )}
 
-            {hiddenWishlistCount > 0 && (
-              <div className="dashboard-guest-banner">
-                <div>
-                  <p className="dashboard-guest-banner__title">More wishlists are waiting</p>
-                  <p className="dashboard-guest-banner__copy">
-                    You&apos;re seeing 3 of {safeWishlists.length} wishlists in guest mode. Log in to view the rest and
-                    manage everything in one place.
-                  </p>
-                </div>
-                <Link to="/login" className="btn btn-primary">
-                  <LogIn size={18} /> Login To See More
-                </Link>
-              </div>
-            )}
           </>
         )}
       </section>

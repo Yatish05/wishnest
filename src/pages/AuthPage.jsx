@@ -6,7 +6,7 @@ import './AuthPage.css';
 
 export default function AuthPage({ type }) {
   const isLogin = type === 'login';
-  const { login, signup, loginAsGuest } = useAuth();
+  const { login, signup, loginAsGuest, setIsTransitioning } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -20,6 +20,7 @@ export default function AuthPage({ type }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    setIsTransitioning(true);
     setError('');
     
     try {
@@ -29,27 +30,16 @@ export default function AuthPage({ type }) {
         await signup(name, email, password);
       }
       navigate('/dashboard', { replace: true });
+      setTimeout(() => setIsTransitioning(false), 200);
     } catch (err) {
       console.error('Auth error:', err);
       setError(err.message || 'Authentication failed');
+      setIsTransitioning(false);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleGuestLogin = async () => {
-    setIsLoading(true);
-    setError('');
-    try {
-      await loginAsGuest();
-      navigate('/dashboard', { replace: true });
-    } catch (err) {
-      console.error('Guest login error:', err);
-      setError(err.message || 'Guest login failed');
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleGoogleLogin = () => {
     console.log("Redirecting to Google...");
@@ -69,12 +59,6 @@ export default function AuthPage({ type }) {
         </div>
 
         <div className="auth-social">
-          <button className="btn btn-secondary social-btn" type="button" onClick={handleGuestLogin}>
-             Continue as Guest
-          </button>
-          <div className="auth-divider">
-            <span>or use social</span>
-          </div>
           <button
             type="button"
             className="btn btn-secondary social-btn"

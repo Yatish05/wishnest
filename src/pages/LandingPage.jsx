@@ -108,12 +108,6 @@ function getOccasionClass(label) {
 }
 
 export default function LandingPage() {
-  const { loginAsGuest, user } = useAuth();
-  const navigate = useNavigate();
-  const handleGuestLogin = () => {
-    loginAsGuest();
-    navigate('/dashboard');
-  };
 
   return (
     <div className="landing-page landing-page--wishnest animate-fade-in">

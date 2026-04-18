@@ -20,7 +20,23 @@ api.interceptors.request.use(
     }
     return config;
   },
+  (error) => Promise.reject(error)
+);
+
+// Add a response interceptor to handle session expiry (401)
+api.interceptors.response.use(
+  (response) => response,
   (error) => {
+    if (error.response?.status === 401) {
+      console.warn('[API] Session expired or unauthorized. Clearing local state...');
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('authType');
+      // Force a reload or redirect if we are not on a public page
+      if (window.location.pathname !== '/login' && window.location.pathname !== '/signup' && window.location.pathname !== '/') {
+        window.location.href = '/login?error=session_expired';
+      }
+    }
     return Promise.reject(error);
   }
 );

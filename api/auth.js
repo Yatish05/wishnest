@@ -51,18 +51,6 @@ export default async function handler(req, res) {
     }
   }
 
-  // =============== GUEST ===============
-  if (path === '/guest' && req.method === 'POST') {
-    try {
-      const guestData = { name: 'Guest User', email: `guest_${Date.now()}@guest.local`, role: 'guest', preferences: { theme: 'light', notificationsEnabled: true, defaultVisibility: 'public' }};
-      const { data: user, error } = await supabase.from('users').insert(guestData).select().single();
-      if (error) throw error;
-      return res.status(201).json({ success: true, message: 'Guest login successful', user: serializeUser(user), token: generateToken(user.id) });
-    } catch (err) {
-      return res.status(500).json({ success: false, message: 'Server error', error: err.message });
-    }
-  }
-
   // =============== PROFILE ===============
   if (path === '/profile') {
     let user;
@@ -74,7 +62,6 @@ export default async function handler(req, res) {
     
     if (req.method === 'PUT') {
       try {
-        if (user.role === 'guest') return res.status(403).json({ success: false, message: 'Guest accounts cannot update profile details' });
         const { name, email } = req.body;
         if (!name?.trim() || !email?.trim()) return res.status(400).json({ success: false, message: 'Name and email required' });
 

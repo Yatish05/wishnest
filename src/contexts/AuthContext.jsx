@@ -21,6 +21,8 @@ const safeBase64Decode = (str) => {
 const normalizeUser = (nextUser, authType) => (
   nextUser
     ? {
+      // ensure frontend always has `id` field mapped from common server shapes
+      id: nextUser.id || (nextUser._id ? String(nextUser._id) : undefined),
       ...nextUser,
       isGuest: authType === 'guest' || nextUser.isGuest || nextUser.role === 'guest',
     }
@@ -52,6 +54,7 @@ export function AuthProvider({ children }) {
 
   const [loading, setLoading] = useState(true);
   const [isSyncing, setIsSyncing] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const [syncKey, setSyncKey] = useState(Date.now());
 
   // Storage helpers to prevent Safari SecurityErrors
@@ -76,18 +79,25 @@ export function AuthProvider({ children }) {
   };
 
   const clearAuth = useCallback(() => {
+    console.log('[AuthContext] Performing deep cleanup of auth state and caches...');
     setToken(null);
     setUser(null);
     safeRemoveItem('token');
     safeRemoveItem('user');
     safeRemoveItem('authType');
-  }, []);
+    safeRemoveItem('wishlists');
+    safeRemoveItem('notifications');
+    safeRemoveItem('lastSync');
+    
+    // Increment sync key to force components to re-fetch/reset
+    setSyncKey(Date.now());
+  }, [setSyncKey]);
 
   const persistAuth = useCallback((nextToken, nextUser, authType) => {
+    console.log('[AuthContext] Persisting auth for:', nextUser?.email || 'unknown');
     const normalizedUser = normalizeUser(nextUser, authType);
 
-    setToken(nextToken);
-    setUser(normalizedUser);
+    // Sync localStorage first (atomic for other tabs/interceptors)
     safeSetItem('token', nextToken);
     safeSetItem('user', JSON.stringify(normalizedUser));
 
@@ -96,12 +106,27 @@ export function AuthProvider({ children }) {
     } else {
       safeRemoveItem('authType');
     }
-  }, []);
+
+    // Then update React state
+    setToken(nextToken);
+    setUser(normalizedUser);
+
+    // signal other consumers to sync immediately
+    setSyncKey(Date.now());
+  }, [setSyncKey]);
 
   useEffect(() => {
     let isSubscribed = true;
 
     const fetchProfile = async () => {
+      // RACE CONDITION FIX: If we are on the auth callback page, let THAT page handle the sync.
+      // Doing a profile fetch here while AuthCallback is also setting the token causes state conflicts.
+      if (window.location.pathname === '/auth/callback') {
+        console.log('[AuthContext] Skipping initial sync because we are on callback route.');
+        setLoading(false);
+        return;
+      }
+
       const storedToken = safeGetItem('token');
       const storedUser = safeGetItem('user');
       const storedAuthType = safeGetItem('authType');
@@ -202,19 +227,11 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const loginAsGuest = async () => {
-    try {
-      const response = await api.post('/auth/guest');
-      persistAuth(response.data.token, response.data.user, 'guest');
-      return response.data.user;
-    } catch (error) {
-      console.error('Guest login error:', error);
-      throw new Error(error.response?.data?.message || 'Guest login failed');
-    }
-  };
+  // loginAsGuest removed to eliminate conflicts between guest and authenticated sessions
 
   const loginWithToken = (jwtToken) => {
     try {
+      console.log('[AuthContext] Logging in with explicit token');
       const decoded = safeBase64Decode(jwtToken.split('.')[1]);
       if (!decoded) throw new Error('JWT Decode failed');
       const payload = JSON.parse(decoded);
@@ -224,6 +241,8 @@ export function AuthProvider({ children }) {
         email: payload.email || '',
         isGuest: false,
       };
+      // Explicitly clear any old state before persisting the new one
+      safeRemoveItem('wishlists');
       persistAuth(jwtToken, oauthUser);
     } catch (err) {
       console.error('loginWithToken failed:', err.message);
@@ -248,13 +267,14 @@ export function AuthProvider({ children }) {
     token,
     loading,
     isSyncing,
+    isTransitioning,
     syncKey,
     login,
     signup,
-    loginAsGuest,
     loginWithToken,
     updateUser,
-    logout
+    logout,
+    setIsTransitioning
   };
 
   return (

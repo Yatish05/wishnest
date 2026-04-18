@@ -257,7 +257,17 @@ import Terms from './pages/Terms';
 import Contact from './pages/Contact';
 
 function App() {
-  const { user } = useAuth();
+  const { user, loading, isTransitioning } = useAuth();
+
+  // Global loading state to prevent race conditions during initial auth rehydration
+  if (loading && !isTransitioning) {
+    return (
+      <div className="flex-center" style={{ height: '100vh', background: '#fff', flexDirection: 'column', gap: '1.5rem' }}>
+        <div className="spinner"></div>
+        <p style={{ color: '#666', fontWeight: 500 }} className="animate-pulse">Loading WishNest...</p>
+      </div>
+    );
+  }
 
   return (
     <BrowserRouter>

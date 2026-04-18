@@ -12,7 +12,6 @@ export default function WishlistPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const wishlistId = searchParams.get('id');
-  const isGuest = user?.isGuest || user?.role === 'guest';
 
   const [wishlist, setWishlist] = useState(null);
   const [wishlists, setWishlists] = useState([]);
@@ -115,7 +114,12 @@ export default function WishlistPage() {
 
 
   useEffect(() => {
-    if (!user?.id || isSyncing) return;
+    if (!user?.id) {
+      setWishlists([]);
+      return;
+    }
+    if (isSyncing) return;
+
     const fetchAllWishlists = async () => {
       try {
         const res = await api.get('/wishlists');
@@ -130,11 +134,6 @@ export default function WishlistPage() {
   }, [user?.id, isSyncing, syncKey]);
 
   const handleCreateWishlist = async () => {
-    if (isGuest) {
-      toast.error('Please log in to create more wishlists.');
-      setShowCreateWishlist(false);
-      return;
-    }
 
     const { name, occasion, visibility, gender } = newWishlist;
 
@@ -237,8 +236,7 @@ export default function WishlistPage() {
   const items = Array.isArray(wishlist?.items) ? wishlist.items : [];
   const isOwner = user?.id === wishlist?.userId;
   const sharedCount = wishlist?.sharedWith?.length || 0;
-  const visibleWishlists = isGuest ? wishlists.slice(0, 3) : wishlists;
-  const hiddenWishlistCount = Math.max(wishlists.length - visibleWishlists.length, 0);
+  const visibleWishlists = wishlists;
   const visibilityLabel = wishlist?.visibility
     ? wishlist.visibility.charAt(0).toUpperCase() + wishlist.visibility.slice(1)
     : 'Public';
@@ -535,15 +533,9 @@ export default function WishlistPage() {
                     : 'Keep every occasion in one place, jump back into active lists, and create a new registry in seconds.'}
                 </p>
               </div>
-              {isGuest ? (
-                <button className="btn btn-primary" onClick={() => navigate('/login')}>
-                  <Eye size={18} /> Login To See More
-                </button>
-              ) : (
                 <button className="btn btn-primary" onClick={() => setShowCreateWishlist(true)}>
                   <Plus size={18} /> Create Wishlist
                 </button>
-              )}
             </div>
 
             <div className="wishlists-summary-row">
@@ -598,7 +590,6 @@ export default function WishlistPage() {
                     </div>
                   </div>
                 ))}
-                {!isGuest && (
                   <button
                     className="wishlist-list-card card wishlist-list-card--add"
                     onClick={() => setShowCreateWishlist(true)}
@@ -618,7 +609,6 @@ export default function WishlistPage() {
                       </div>
                     </div>
                   </button>
-                )}
               </div>
             ) : (
               <div className="flex flex-col gap-10 w-full mb-12">
@@ -632,25 +622,12 @@ export default function WishlistPage() {
                         ? 'Guest mode is view-only. Log in to create and manage your own wishlists.'
                         : 'Create your first wishlist and start adding items!'}
                     </p>
-                    <button className="btn btn-primary" onClick={() => (isGuest ? navigate('/login') : setShowCreateWishlist(true))}>
-                      {isGuest ? <><Eye size={18} /> Login To Continue</> : <><Plus size={18} /> Create Wishlist</>}
+                    <button className="btn btn-primary" onClick={() => setShowCreateWishlist(true)}>
+                       <Plus size={18} /> Create Wishlist
                     </button>
                   </div>
                 </div>
 
-                {hiddenWishlistCount > 0 && (
-                  <div className="wishlists-guest-banner card" style={{ marginTop: 0 }}>
-                    <div>
-                      <p className="wishlists-guest-banner-title">More wishlists are hidden in guest mode</p>
-                      <p className="wishlists-guest-banner-copy">
-                        You can view 3 lists for now. Log in to unlock the remaining {hiddenWishlistCount} wishlist{hiddenWishlistCount > 1 ? 's' : ''}.
-                      </p>
-                    </div>
-                    <button className="btn btn-primary" onClick={() => navigate('/login')}>
-                      Login To See More
-                    </button>
-                  </div>
-                )}
               </div>
             )}
           </div>

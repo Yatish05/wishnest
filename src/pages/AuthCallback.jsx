@@ -14,7 +14,7 @@ import api from '../utils/api';
 export default function AuthCallback() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { loginWithToken, updateUser } = useAuth();
+  const { loginWithToken, updateUser, setIsTransitioning } = useAuth();
   const processed = useRef(false);
 
   useEffect(() => {
@@ -30,29 +30,62 @@ export default function AuthCallback() {
 
       if (token) {
         console.log('[AuthCallback] Token detected in URL. Initiating login...');
-
         try {
-          // Save token to state and localStorage
+          // Block navigation transitions across the app
+          setIsTransitioning(true);
+
+          // AGGRESSIVE CLEANUP: Wipe all traces of previous session (Guest or User)
+          console.log('[AuthCallback] Wiping previous session before applying new token...');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          localStorage.removeItem('authType');
+          localStorage.removeItem('wishlists');
+
+          // Save token to state and localStorage (decoded from JWT initially)
           loginWithToken(token);
 
           // Try to fetch authoritative profile from server (helps session/cookie flows)
+          let finalUser = null;
           try {
-            const profileRes = await api.get('/auth/profile');
+            const profileRes = await api.get('/auth/profile', {
+              headers: { Authorization: `Bearer ${token}` },
+            });
             if (profileRes?.data?.user) {
-              updateUser(profileRes.data.user);
+              finalUser = profileRes.data.user;
+              // Persist the authoritative server-side user
+              updateUser(finalUser);
               console.log('[AuthCallback] Profile fetched and applied from API.');
-            } else {
-              console.warn('[AuthCallback] Profile endpoint returned no user.');
             }
           } catch (profileErr) {
-            console.warn('[AuthCallback] Failed to fetch profile after token login:', profileErr?.message || profileErr);
+            console.warn('[AuthCallback] Failed to fetch profile after token login:', profileErr?.message);
           }
 
-          console.log('[AuthCallback] Login flow complete. Redirecting to dashboard...');
+          // Also fetch the user's wishlists so dashboard can show them immediately
+          try {
+            const wlRes = await api.get('/wishlists', {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            if (wlRes?.data) {
+              localStorage.setItem('wishlists', JSON.stringify(wlRes.data));
+              console.log('[AuthCallback] Wishlists fetched and pre-loaded into storage.');
+            }
+          } catch (wlErr) {
+            console.warn('[AuthCallback] Failed to fetch wishlists during callback:', wlErr?.message);
+          }
+
+          console.log('[AuthCallback] Login flow complete. Navigating to dashboard...');
+          
           // Final redirection
           navigate('/dashboard', { replace: true });
+
+          // Keep transitioning=true for a short bit to allow Dashboard to mount and see the updated state
+          setTimeout(() => {
+            setIsTransitioning(false);
+          }, 400);
+
         } catch (err) {
           console.error('[AuthCallback] Failed to process token:', err.message);
+          setIsTransitioning(false);
           navigate('/login?error=token_invalid', { replace: true });
         }
       } else {
@@ -71,7 +104,7 @@ export default function AuthCallback() {
     };
 
     doAuth();
-  }, [location.search, loginWithToken, navigate, updateUser]);
+  }, [location.search, loginWithToken, navigate, updateUser, setIsTransitioning]);
 
   return (
     <div style={{ 

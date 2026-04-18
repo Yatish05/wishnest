@@ -2,9 +2,9 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 function ProtectedRoute({ children }) {
-  const { user, loading, isSyncing } = useAuth();
+  const { user, loading, isSyncing, isTransitioning } = useAuth();
 
-  if (loading || isSyncing) {
+  if (loading || isSyncing || isTransitioning) {
     return (
       <div className="flex-center" style={{ height: '100vh', flexDirection: 'column', gap: '1rem' }}>
         <div className="spinner"></div>
@@ -14,7 +14,8 @@ function ProtectedRoute({ children }) {
   }
 
   if (!user) {
-    return <Navigate to="/login" replace />;
+    // Save the intended destination so they can be redirected back after login
+    return <Navigate to="/login" state={{ from: window.location.pathname }} replace />;
   }
 
   return children;
