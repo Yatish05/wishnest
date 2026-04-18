@@ -74,7 +74,7 @@
   font-size: clamp(26px, 4vw, 36px);
   line-height: 1.2;
   font-weight: 800;
-  color: #fff;
+  color: #1C1917;
   font-family: var(--font-display);
   font-style: italic;
 }
@@ -82,7 +82,7 @@
 .landing-subtitle {
   max-width: 480px;
   margin: 14px 0 18px;
-  color: rgba(255, 255, 255, 0.88);
+  color: #44403C;
   font-size: 14px;
   font-weight: 500;
   line-height: 1.6;
@@ -106,9 +106,9 @@
 
 .landing-user-note {
   padding: 10px 16px;
-  background: rgba(255, 255, 255, 0.28);
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  color: #fff;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid #D6D3D1;
+  color: #1C1917;
 }
 
 .landing-user-label {
@@ -116,7 +116,7 @@
   font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.75);
+  color: #78716C;
 }
 
 .landing-trust-tag {
@@ -158,13 +158,14 @@
 }
 
 .landing-hero__banner .btn-outline {
-  background: rgba(255, 255, 255, 0.4);
-  border: 1.5px solid rgba(255, 255, 255, 0.5);
-  color: #fff;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1.5px solid #D6D3D1;
+  color: #44403C;
 }
 
 .landing-hero__banner .btn-outline:hover {
-  background: rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.8);
+  border-color: #A8A29E;
 }
 
 .landing-user-note strong {
