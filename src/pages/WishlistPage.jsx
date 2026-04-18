@@ -528,9 +528,7 @@ export default function WishlistPage() {
                 </div>
                 <h1 className="wishlists-overview-title">Wishlists that feel organized, shareable, and easy to manage.</h1>
                 <p className="wishlists-overview-subtitle">
-                  {isGuest
-                    ? 'Browse a few saved lists in guest mode. Log in to unlock every wishlist and start creating your own.'
-                    : 'Keep every occasion in one place, jump back into active lists, and create a new registry in seconds.'}
+                  Keep every occasion in one place, jump back into active lists, and create a new registry in seconds.
                 </p>
               </div>
                 <button className="btn btn-primary" onClick={() => setShowCreateWishlist(true)}>
@@ -618,9 +616,7 @@ export default function WishlistPage() {
                     <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🎁</div>
                     <h2 className="text-xl font-bold mb-2">No wishlists yet</h2>
                     <p className="text-secondary" style={{ marginBottom: '1.5rem' }}>
-                      {isGuest
-                        ? 'Guest mode is view-only. Log in to create and manage your own wishlists.'
-                        : 'Create your first wishlist and start adding items!'}
+                      Create your first wishlist and start adding items!
                     </p>
                     <button className="btn btn-primary" onClick={() => setShowCreateWishlist(true)}>
                        <Plus size={18} /> Create Wishlist
@@ -781,7 +777,7 @@ export default function WishlistPage() {
       )}
 
       {/* Create Wishlist Modal */}
-      {showCreateWishlist && !isGuest && (
+      {showCreateWishlist && (
         <div className="modal-overlay">
           <div className="modal card premium-modal">
             <div className="modal-header flex-between">
@@ -861,7 +857,7 @@ export default function WishlistPage() {
         </div>
       )}
       {/* Edit Wishlist Modal */}
-      {showEditWishlist && !isGuest && (
+      {showEditWishlist && (
         <div className="modal-overlay">
           <div className="modal card animate-fade-in">
             <div className="modal-header flex-between">
