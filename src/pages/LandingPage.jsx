@@ -144,25 +144,12 @@ export default function LandingPage() {
               </div>
 
               <div className="landing-hero__panel">
-                <div className="landing-hero-card">
-                  <div className="landing-hero-card__emoji" aria-hidden="true">
-                    🎁✨💙
-                  </div>
-                  <h2>Make gifting feel thoughtful, not awkward.</h2>
-                  <p>
-                    They already want to get you something. You&apos;re simply making it easier for them to get it right.
-                  </p>
-                  <div className="landing-hero-card__stats">
-                    <div className="landing-stat-box">
-                      <span>OCCASIONS</span>
-                      <strong>4+</strong>
-                    </div>
-                    <div className="landing-stat-box">
-                      <span>SAMPLE LISTS</span>
-                      <strong>3</strong>
-                    </div>
-                  </div>
-                  <div className="landing-hero-card__floating-gift" aria-hidden="true">🎁</div>
+                <div className="landing-hero-mockup-container">
+                  <img 
+                    src="/hero-mockup.png" 
+                    alt="WishNest iPhone Mockup" 
+                    className="landing-hero-mockup"
+                  />
                 </div>
               </div>
             </div>
