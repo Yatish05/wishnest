@@ -1,15 +1,14 @@
-import { supabase } from './_utils/supabase';
+import { supabase } from './_utils/supabase.js';
 
 export default async function handler(req, res) {
   try {
     const supabaseUrl = process.env.SUPABASE_URL || 'NOT_SET';
     
     // Mask the PROJECT_REF for security
-    // https://[PROJECT_REF].supabase.co -> https://***.supabase.co
     const maskedUrl = supabaseUrl.replace(/(https?:\/\/)([^.]+)\./, '$1***.');
 
-    // Simple connection check
-    const { data, error } = await supabase.from('users').select('count').limit(1);
+    // Simple connection check - select id instead of count column
+    const { data, error } = await supabase.from('users').select('id').limit(1);
 
     if (error) {
       return res.status(500).json({
