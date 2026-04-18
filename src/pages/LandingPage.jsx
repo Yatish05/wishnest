@@ -117,26 +117,39 @@ export default function LandingPage() {
         <div className="container">
           <div className="landing-hero__banner">
             <div className="landing-hero__container">
-              <div className="landing-hero__center">
-                <div className="landing-hero-card">
-                  <div className="landing-hero-card__emoji" aria-hidden="true">
-                    🎁✨💙
+              <div className="landing-hero__copy">
+
+                <h1 className="landing-title">
+                  Discover gifts you love and build a wishlist for gifts you&apos;ll actually want.
+                </h1>
+                <p className="landing-subtitle">
+                  Browse ideas, add your favorites, and share your wishlist so loved ones always pick the perfect gift.
+                </p>
+
+                <div className="landing-actions">
+                  <Link to="/discover" className="btn btn-primary btn-lg">
+                    Explore Gift Ideas <ArrowRight size={18} />
+                  </Link>
+                  <Link to={user ? "/dashboard" : "/signup"} className="btn btn-outline btn-lg">
+                    Create Your Wishlist <ArrowRight size={18} />
+                  </Link>
+                </div>
+
+                <div className="landing-trust-row">
+                  <div className="landing-trust-tag">
+                    <Sparkles size={16} aria-hidden="true" />
+                    <span>Save anything you like into your personal wishlist and share it with loved ones.</span>
                   </div>
-                  <h2>Make gifting feel thoughtful, not awkward.</h2>
-                  <p>
-                    They already want to get you something. You&apos;re simply making it easier for them to get it right.
-                  </p>
-                  <div className="landing-hero-card__stats">
-                    <div className="landing-stat-box">
-                      <span>OCCASIONS</span>
-                      <strong>4+</strong>
-                    </div>
-                    <div className="landing-stat-box">
-                      <span>SAMPLE LISTS</span>
-                      <strong>3</strong>
-                    </div>
-                  </div>
-                  <div className="landing-hero-card__floating-gift" aria-hidden="true">🎁</div>
+                </div>
+              </div>
+
+              <div className="landing-hero__panel">
+                <div className="landing-hero-mockup-container">
+                  <img 
+                    src="/hero-mockup.png" 
+                    alt="WishNest iPhone Mockup" 
+                    className="landing-hero-mockup"
+                  />
                 </div>
               </div>
             </div>
