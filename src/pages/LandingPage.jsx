@@ -118,10 +118,6 @@ export default function LandingPage() {
           <div className="landing-hero__banner">
             <div className="landing-hero__container">
               <div className="landing-hero__copy">
-                <div className="landing-kicker">
-                  <HeartHandshake size={15} />
-                  <span>Sharing helps your people choose with confidence</span>
-                </div>
 
                 <h1 className="landing-title">
                   Discover gifts you love and build a wishlist for gifts you&apos;ll actually want.
