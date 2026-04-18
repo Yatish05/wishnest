@@ -453,9 +453,9 @@
   flex-shrink: 0;
 }
 
-.landing-feed-item__thumb--1 { background: linear-gradient(135deg, #f97316, #ef4444); }
-.landing-feed-item__thumb--2 { background: linear-gradient(135deg, #3b82f6, #93c5fd); }
-.landing-feed-item__thumb--3 { background: linear-gradient(135deg, #10b981, #6ee7b7); }
+.landing-feed-item__thumb--1 { background: var(--color-brand-gradient); }
+.landing-feed-item__thumb--2 { background: linear-gradient(135deg, #fb923c, #fdba74); }
+.landing-feed-item__thumb--3 { background: linear-gradient(135deg, #f97316, #fb923c); }
 
 .landing-nudge {
   padding: 32px 0 64px;
