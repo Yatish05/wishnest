@@ -409,7 +409,7 @@
 }
 
 .landing-wishlist-card__body {
-  padding: 0 32px;
+  padding: 0 32px 32px; /* Increased bottom padding since deco is gone */
   flex-grow: 1;
 }
 
@@ -425,31 +425,11 @@
   color: #71717A;
   font-size: 15px;
   line-height: 1.6;
-  margin-bottom: 32px;
-}
-
-.landing-wishlist-card__deco {
-  width: calc(100% + 4px);
-  margin-left: -2px;
-  margin-top: auto;
-  line-height: 0;
-  background: none !important;
-}
-
-.landing-wishlist-card__deco img {
-  width: 100%;
-  height: auto;
-  display: block;
-  border: none !important;
-  box-shadow: none !important;
-  background: none !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border-radius: 0 !important;
 }
 
 .landing-wishlist-card__footer {
   padding: 24px 32px;
+  border-top: 1px solid rgba(0,0,0,0.03);
 }
 
 .landing-wishlist-card__footer--birthday { background: #FFF7F8; }

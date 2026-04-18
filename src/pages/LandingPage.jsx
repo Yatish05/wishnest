@@ -226,10 +226,6 @@ export default function LandingPage() {
                   <p>{wishlist.note}</p>
                 </div>
 
-                <div className="landing-wishlist-card__deco">
-                  <img src={wishlist.bg} alt="" aria-hidden="true" />
-                </div>
-
                 <div className={`landing-wishlist-card__footer landing-wishlist-card__footer--${wishlist.occasion.toLowerCase().replace(' ', '-')}`}>
                   <Link to={user ? '/dashboard' : '/signup'} className="landing-wishlist-card__link">
                     Browse Gifts <ArrowRight size={16} />
