@@ -96,7 +96,7 @@
   margin-bottom: 20px;
 }
 
-.landing-chip-row,
+.landing-trust-row,
 .landing-feed,
 .landing-wishlist-grid {
   display: flex;
@@ -119,17 +119,18 @@
   color: rgba(255, 255, 255, 0.75);
 }
 
-.landing-chip {
+.landing-trust-tag {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
+  gap: 10px;
+  padding: 12px 24px;
   background: rgba(255, 255, 255, 0.4);
   border: 1px solid rgba(255, 255, 255, 0.35);
   color: #7c2d12;
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 700;
   border-radius: 50px;
+  backdrop-filter: blur(8px);
 }
 
 /* btn-primary inside hero banner keeps orange gradient */

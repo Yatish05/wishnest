@@ -139,18 +139,10 @@ export default function LandingPage() {
                   </Link>
                 </div>
 
-                <div className="landing-chip-row">
-                  <div className="landing-chip">
-                    <CheckCircle2 size={16} />
-                    <span>Free forever</span>
-                  </div>
-                  <div className="landing-chip">
-                    <Mail size={16} />
-                    <span>No spam</span>
-                  </div>
-                  <div className="landing-chip">
-                    <Clock size={16} />
-                    <span>Takes 30 seconds</span>
+                <div className="landing-trust-row">
+                  <div className="landing-trust-tag">
+                    <Sparkles size={16} aria-hidden="true" />
+                    <span>Save anything you like into your personal wishlist and share it with loved ones.</span>
                   </div>
                 </div>
               </div>
