@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import { Home, CheckSquare, Settings as SettingsIcon, LogOut, Bell, Menu, X, Sparkles, Share2, ChevronRight, Compass, Search, Heart } from 'lucide-react';
+import { Home, CheckSquare, Settings as SettingsIcon, LogOut, Bell, Menu, X, Sparkles, Share2, ChevronRight, Compass } from 'lucide-react';
 import SearchBar from './components/SearchBar';
 import ProtectedRoute from './components/ProtectedRoute';
 import { useAuth } from './contexts/AuthContext';
@@ -36,6 +36,7 @@ function MainLayout({ children }) {
 
           <nav className={`nav-links ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
                 <a href="#how-it-works" className="nav-link" onClick={closeMobileMenu}>How it works</a>
+                <Link to="/discover" className="nav-link" onClick={closeMobileMenu}>Occasions</Link>
                 <a href="#ai-assistant" className="nav-link" onClick={closeMobileMenu}>AI Assistant</a>
             <div className="nav-actions-mobile">
               {user ? (
@@ -64,12 +65,6 @@ function MainLayout({ children }) {
           <div className="nav-actions">
             {user ? (
               <>
-                <Link to="/discover" className="nav-icon-btn" title="Discover">
-                  <Search size={20} />
-                </Link>
-                <Link to="/wishlists" className="nav-icon-btn" title="My Wishlists" style={{ marginRight: '8px' }}>
-                  <Heart size={20} />
-                </Link>
                 <div className="nav-user-pill">
                   <div className="nav-user-avatar" aria-hidden="true">{initials}</div>
                   <span style={{ fontWeight: 700, fontSize: '15px' }}>{displayName}</span>
