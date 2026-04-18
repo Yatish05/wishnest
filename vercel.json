@@ -7,6 +7,7 @@
     { "source": "/api/wishlists/:path*", "destination": "/api/wishlists" },
     { "source": "/api/notifications/:path*", "destination": "/api/notifications" },
     { "source": "/sitemap.xml", "destination": "/api/sitemap" },
+    { "source": "/api/db-check", "destination": "/api/db-check" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ],
   "headers": [
