@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import {
   ArrowRight,
   CheckCircle2,
+  CheckSquare,
   Clock,
   Eye,
   Gift,
@@ -181,11 +182,46 @@ export default function LandingPage() {
         </div>
       </section>
 
+      <section id="how-it-works" className="landing-section landing-section--soft">
+        <div className="container">
+          <div className="landing-section__header">
+            <div className="landing-section__eyebrow">
+              <CheckSquare size={12} />
+              <span>SIMPLE 3-STEP PROCESS</span>
+            </div>
+            <h2>How WishNest Works</h2>
+            <p>Creating and sharing your perfect wishlist takes less than a minute.</p>
+          </div>
+
+          <div className="landing-steps-grid">
+            <div className="landing-step-card">
+              <div className="landing-step-number">01</div>
+              <h3>Build Your List</h3>
+              <p>Add anything you love from any store or browse our curated gift ideas.</p>
+            </div>
+            <div className="landing-step-card">
+              <div className="landing-step-number">02</div>
+              <h3>Make it Personal</h3>
+              <p>Add notes, sizes, and preferences so your loved ones get it exactly right.</p>
+            </div>
+            <div className="landing-step-card">
+              <div className="landing-step-number">03</div>
+              <h3>Share the Link</h3>
+              <p>Send your private link via WhatsApp, email, or social media. No sign-up required for others to view.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section id="features" className="landing-section">
         <div className="container">
           <div className="landing-section__header">
 
-            <h2>One place for every occasion.</h2>
+            <div className="landing-section__eyebrow">
+              <Gift size={12} />
+              <span>GIFT IDEAS</span>
+            </div>
+            <h2>Occasions for Every Celebration</h2>
             <p>
               Build a clear, personal wishlist for every celebration—from birthdays to weddings—and keep gifting stress-free.
             </p>
@@ -220,6 +256,12 @@ export default function LandingPage() {
                 Turn “What should we get you?” into something simple and kind.
               </p>
               <span className="landing-create-card__cta">Start with a list</span>
+            </Link>
+          </div>
+
+          <div style={{ marginTop: '2.5rem', textAlign: 'center' }}>
+            <Link to="/discover" className="btn btn-secondary">
+              Browse All Occasions <ArrowRight size={18} />
             </Link>
           </div>
         </div>
