@@ -90,6 +90,27 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
+.nav-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: var(--color-text-secondary);
+  background: #fff;
+  border: 1.5px solid rgba(240, 237, 232, 1);
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.nav-icon-btn:hover {
+  background: var(--color-surface-tint);
+  color: var(--color-brand);
+  border-color: var(--color-brand);
+  transform: translateY(-1px);
+}
+
 .nav-user-avatar,
 .avatar,
 .sidebar-user-avatar {
