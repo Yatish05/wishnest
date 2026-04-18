@@ -88,6 +88,9 @@ export default function WishlistPage() {
   };
 
   useEffect(() => {
+    // Immediate state reset on user/sync change
+    setWishlist(null);
+
     if (wishlistId && !isSyncing) {
       setLoading(true);
       const fetchWishlistData = async () => {
@@ -114,8 +117,10 @@ export default function WishlistPage() {
 
 
   useEffect(() => {
+    // Immediate state reset on user change
+    setWishlists([]);
+
     if (!user?.id) {
-      setWishlists([]);
       return;
     }
     if (isSyncing) return;

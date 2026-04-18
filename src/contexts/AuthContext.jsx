@@ -97,6 +97,13 @@ export function AuthProvider({ children }) {
     console.log('[AuthContext] Persisting auth for:', nextUser?.email || 'unknown');
     const normalizedUser = normalizeUser(nextUser, authType);
 
+    // Atomic cleanup of ALL cached data before persisting new user
+    // This prevents "Ghost Data" issues where User B sees User A's cached wishlists
+    console.log('[AuthContext] Clearing old session caches for isolated login...');
+    safeRemoveItem('wishlists');
+    safeRemoveItem('notifications');
+    safeRemoveItem('lastSync');
+
     // Sync localStorage first (atomic for other tabs/interceptors)
     safeSetItem('token', nextToken);
     safeSetItem('user', JSON.stringify(normalizedUser));

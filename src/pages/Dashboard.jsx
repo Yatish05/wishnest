@@ -137,6 +137,8 @@ export default function Dashboard() {
     }
 
     if (!isSyncing) {
+      // Explicitly clear state before fetching to prevent ghost data flicker
+      setWishlists([]); 
       fetchData();
     }
   }, [user?.id, isSyncing, syncKey]);
