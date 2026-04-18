@@ -184,12 +184,14 @@
 }
 
 .landing-hero-mockup {
-  width: 100%;
-  max-width: 480px;
+  width: 110%;
+  max-width: 620px;
   height: auto;
-  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.12));
+  filter: drop-shadow(0 20px 50px rgba(0,0,0,0.15));
   animation: floatPhone 6s ease-in-out infinite;
   transform-origin: center;
+  mix-blend-mode: multiply;
+  margin-left: -5%;
 }
 
 @keyframes floatPhone {
