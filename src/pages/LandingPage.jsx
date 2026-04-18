@@ -261,10 +261,6 @@ export default function LandingPage() {
                     <div className="landing-feed-card__avatar">{wishlist.initials}</div>
                     <div className="landing-feed-card__meta">
                       <h3>{wishlist.username}</h3>
-                      <div className="landing-feed-card__engagement">
-                        <span><Heart size={12} fill="currentColor" /> {wishlist.likes}</span>
-                        <span><Eye size={12} /> {wishlist.views}</span>
-                      </div>
                     </div>
                   </div>
                   <span className={getOccasionClass(wishlist.occasion)}>
