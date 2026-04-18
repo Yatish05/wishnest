@@ -108,6 +108,7 @@ function getOccasionClass(label) {
 }
 
 export default function LandingPage() {
+  const { user } = useAuth();
 
   return (
     <div className="landing-page landing-page--wishnest animate-fade-in">
