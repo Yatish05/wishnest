@@ -134,7 +134,7 @@ const STATIC_GIFTS = [
 
 export default function DiscoverPage() {
   const { user } = useAuth();
-  const isGuest = !user || user.isGuest || user.role === 'guest';
+  const isGuest = false;
   const [gifts, setGifts] = useState(STATIC_GIFTS);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');

@@ -49,7 +49,7 @@ export default function Settings() {
 }
 
 function SettingsForm({ user, updateUser, onLogout }) {
-  const isGuest = user?.isGuest || user?.role === 'guest';
+  const isGuest = false;
   const prefs = user?.preferences || {};
 
   const [name,                 setName]                 = useState(() => user?.name || '');

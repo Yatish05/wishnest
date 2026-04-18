@@ -312,9 +312,7 @@ export default function Dashboard() {
                 </div>
                 <h3>No wishlists yet</h3>
                 <p>
-                  {isGuest
-                    ? 'Sign in to create and share wishlists with the people who already want to celebrate you well.'
-                    : 'Create your first wishlist to make gifting easier, kinder, and more thoughtful for everyone.'}
+                  Create your first wishlist to make gifting easier, kinder, and more thoughtful for everyone.
                 </p>
                 <Link to="/wishlists" className="btn btn-primary">
                   Create Your First Wishlist
