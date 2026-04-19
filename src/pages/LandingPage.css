@@ -487,44 +487,100 @@
   color: var(--color-brand);
 }
 
-.landing-feed-card__items {
-  margin: 18px 0;
+.landing-feed-card {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  padding: 24px;
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+  border: 1px solid #F5F5F5;
+  transition: all 0.3s ease;
 }
 
-.landing-feed-item {
+.landing-feed-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+.landing-feed-card__header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 12px;
-  padding: 4px 0;
-  transition: opacity 0.2s ease;
+  margin-bottom: 20px;
 }
 
-.landing-feed-item:hover {
-  opacity: 0.7;
+.landing-feed-card__grid {
+  display: grid;
+  background: #F8F7F6;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid #EFEBE9;
+  margin-bottom: 20px;
 }
 
-.landing-feed-item span {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--color-text-primary);
+.landing-feed-card__grid--2 { grid-template-columns: 1fr 1fr; }
+.landing-feed-card__grid--3 { grid-template-columns: 1fr 1fr 1fr; }
+
+.landing-feed-card__item {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #EFEBE9;
 }
 
-.landing-feed-item__thumb {
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
+.landing-feed-card__item:last-child {
+  border-right: none;
+}
+
+.landing-feed-card__img-box {
+  aspect-ratio: 1;
+  padding: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  background: #fff;
 }
 
-.landing-feed-item__thumb--1 { background: var(--color-brand-gradient); }
-.landing-feed-item__thumb--2 { background: linear-gradient(135deg, #fb923c, #fdba74); }
-.landing-feed-item__thumb--3 { background: linear-gradient(135deg, #f97316, #fb923c); }
+.landing-feed-card__img-box img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.landing-feed-card__label {
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #fff;
+  border-top: 1px solid #EFEBE9;
+  color: #555;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.landing-feed-card__label svg {
+  color: #F97316;
+}
+
+.landing-feed-card__footer {
+  margin-top: auto;
+}
+
+.landing-feed-card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #F97316;
+  font-weight: 800;
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
+
+.landing-feed-card__link:hover {
+  gap: 12px;
+  opacity: 0.8;
+}
 
 .landing-nudge {
   padding: 32px 0 64px;

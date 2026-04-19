@@ -53,9 +53,11 @@ const inspirationWishlists = [
     initials: 'SJ',
     occasion: 'Birthday',
     emoji: '🎂',
-    likes: 24,
-    views: '1.2k',
-    items: ['Kindle Paperwhite', 'Leather Journal', 'Coffee Press'],
+    items: [
+      { name: 'Paperwhite', img: '/trends/kindle.png' },
+      { name: 'Journal', img: '/trends/journal.png' },
+      { name: 'Press', img: '/trends/dinnerware.png' }
+    ],
   },
   {
     id: 2,
@@ -63,9 +65,11 @@ const inspirationWishlists = [
     initials: 'KM',
     occasion: 'Wedding',
     emoji: '💍',
-    likes: 42,
-    views: '2.5k',
-    items: ['Dinnerware', 'Linen Set', 'Air Fryer'],
+    items: [
+      { name: 'Dinnerware', img: '/trends/dinnerware.png' },
+      { name: 'Linen Set', img: '/trends/linen.png' },
+      { name: 'Air Fryer', img: '/trends/linen.png' }
+    ],
   },
   {
     id: 3,
@@ -73,9 +77,10 @@ const inspirationWishlists = [
     initials: 'NR',
     occasion: 'Birthday',
     emoji: '🎉',
-    likes: 18,
-    views: '800',
-    items: ['Kindle', 'Journal', 'Pendant'],
+    items: [
+      { name: 'Journal', img: '/trends/journal.png' },
+      { name: 'Pendant', img: '/trends/pendant.png' }
+    ],
   },
 ];
 
@@ -268,7 +273,7 @@ export default function LandingPage() {
           <div className="landing-feed">
             {inspirationWishlists.map((wishlist) => (
               <article key={wishlist.id} className="landing-feed-card card">
-                <div className="landing-feed-card__top">
+                <div className="landing-feed-card__header">
                   <div className="landing-feed-card__user">
                     <div className="landing-feed-card__avatar">{wishlist.initials}</div>
                     <div className="landing-feed-card__meta">
@@ -280,21 +285,25 @@ export default function LandingPage() {
                   </span>
                 </div>
 
-                <div className="landing-feed-card__items">
-                  {wishlist.items.map((item, index) => (
-                    <div key={item} className="landing-feed-item">
-                      <div className={`landing-feed-item__thumb landing-feed-item__thumb--${index + 1}`}>
-                        <Gift size={14} />
+                <div className={`landing-feed-card__grid landing-feed-card__grid--${wishlist.items.length}`}>
+                  {wishlist.items.map((item) => (
+                    <div key={item.name} className="landing-feed-card__item">
+                      <div className="landing-feed-card__img-box">
+                        <img src={item.img} alt={item.name} />
                       </div>
-                      <span>{item}</span>
+                      <div className="landing-feed-card__label">
+                        <Gift size={14} />
+                        <span>{item.name}</span>
+                      </div>
                     </div>
                   ))}
                 </div>
 
-                <Link to={user ? '/discover' : '/signup'} className="landing-soft-link">
-                  <span>View Wishlist</span>
-                  <ArrowRight size={16} />
-                </Link>
+                <div className="landing-feed-card__footer">
+                  <Link to="/discover" className="landing-feed-card__link">
+                    View Wishlist <ArrowRight size={16} />
+                  </Link>
+                </div>
               </article>
             ))}
           </div>
