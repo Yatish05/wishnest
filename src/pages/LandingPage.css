@@ -292,27 +292,30 @@
 .landing-feed-card__user {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
 }
 
 .landing-feed-card__avatar {
-  width: 40px;
-  height: 40px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
-  background: var(--color-brand-gradient);
+  background: linear-gradient(135deg, #F97316, #EF4444);
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
   font-weight: 800;
-  font-size: 13px;
-  box-shadow: 0 4px 10px rgba(249, 115, 22, 0.15);
+  font-size: 20px;
+  letter-spacing: -0.02em;
+  box-shadow: 0 4px 15px rgba(249, 115, 22, 0.2);
 }
 
 .landing-feed-card__meta h3 {
   margin: 0;
-  font-size: 15px;
+  font-size: 24px;
   font-weight: 800;
+  color: #18181B;
+  letter-spacing: -0.02em;
 }
 
 .landing-feed-card__engagement {

@@ -280,9 +280,10 @@ export default function LandingPage() {
                       <h3>{wishlist.username}</h3>
                     </div>
                   </div>
-                  <span className={getOccasionClass(wishlist.occasion)}>
-                    {wishlist.emoji} {wishlist.occasion}
-                  </span>
+                  <div className={`landing-pill landing-pill--${wishlist.occasion.toLowerCase().replace(' ', '-')}`}>
+                    <div className="landing-pill__emoji">{wishlist.emoji}</div>
+                    <span>{wishlist.occasion}</span>
+                  </div>
                 </div>
 
                 <div className={`landing-feed-card__grid landing-feed-card__grid--${wishlist.items.length}`}>
