@@ -55,8 +55,7 @@ const inspirationWishlists = [
     emoji: '🎂',
     items: [
       { name: 'Paperwhite', img: '/trends/kindle.png' },
-      { name: 'Journal', img: '/trends/journal.png' },
-      { name: 'Press', img: '/trends/dinnerware.png' }
+      { name: 'Journal', img: '/trends/journal.png' }
     ],
   },
   {
@@ -67,8 +66,7 @@ const inspirationWishlists = [
     emoji: '💍',
     items: [
       { name: 'Dinnerware', img: '/trends/dinnerware.png' },
-      { name: 'Linen Set', img: '/trends/linen.png' },
-      { name: 'Air Fryer', img: '/trends/linen.png' }
+      { name: 'Linen Set', img: '/trends/linen.png' }
     ],
   },
   {
@@ -78,7 +76,7 @@ const inspirationWishlists = [
     occasion: 'Birthday',
     emoji: '🎉',
     items: [
-      { name: 'Journal', img: '/trends/journal.png' },
+      { name: 'Bracelet', img: '/trends/bracelet.png' },
       { name: 'Pendant', img: '/trends/pendant.png' }
     ],
   },
