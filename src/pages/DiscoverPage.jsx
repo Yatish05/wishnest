@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Gift, ShieldCheck, Sparkles, Filter, Lock } from 'lucide-react';
 import api from '../utils/api';
 import { useAuth } from '../contexts/AuthContext';
+import SEO from '../components/SEO';
 import './DiscoverPage.css';
 
 const OCCASIONS = ['All Occasions', 'Birthday', 'Wedding', 'Baby Shower', 'Anniversary', 'Other'];
@@ -219,6 +220,11 @@ export default function DiscoverPage() {
 
   return (
     <div className="discovery-container">
+      <SEO 
+        title="Discover Gift Ideas"
+        description="Browse thousands of gift ideas for every occasion. Filter by relationship and event to find the perfect present."
+        path="/discover"
+      />
       <header className="discovery-header">
         <div className="discovery-badge">
           <Sparkles size={14} />

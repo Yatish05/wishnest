@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Gift, ExternalLink, CheckCircle, Circle, Package, Copy, Check } from 'lucide-react';
 import api from '../utils/api';
+import SEO from '../components/SEO';
 import './PublicWishlist.css';
 
 const OCCASION_EMOJI = {
@@ -98,6 +99,11 @@ export default function PublicWishlist() {
 
   return (
     <div className="pw-shell">
+      <SEO 
+        title={wishlist ? `${wishlist.name}'s Wishlist` : 'Wishlist'} 
+        description={wishlist ? `View and purchase gifts from ${wishlist.name}'s ${wishlist.occasion} wishlist on WishNest.` : 'View this personal wishlist on WishNest.'}
+        path={`/wishlist/${publicWishlistId}`}
+      />
 
       {/* ── Branded Top Bar ── */}
       <header className="pw-topbar">

@@ -1,18 +1,15 @@
-import { useEffect } from 'react';
+import SEO from '../components/SEO';
 import { FileText } from 'lucide-react';
 import './LandingPage.css';
 
 export default function Terms() {
-  useEffect(() => {
-    document.title = 'Terms and Conditions | WishNest';
-    const metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute('content', 'Read the terms and conditions for using WishNest gift registry and wishlist services. Our terms are designed to protect users and comply with standard practices.');
-    }
-  }, []);
-
   return (
     <div className="landing-page landing-page--wishnest animate-fade-in">
+      <SEO 
+        title="Terms and Conditions"
+        description="Read the terms and conditions for using WishNest gift registry and wishlist services. Our terms are designed to protect users and comply with standard practices."
+        path="/terms"
+      />
       <section className="landing-section">
         <div className="container">
           <div className="landing-section__header">

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Gift } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import SEO from '../components/SEO';
 import './AuthPage.css';
 
 export default function AuthPage({ type }) {
@@ -57,6 +58,11 @@ export default function AuthPage({ type }) {
 
   return (
     <div className="auth-container animate-fade-in">
+      <SEO 
+        title={isLogin ? "Login" : "Sign Up"} 
+        description={isLogin ? "Login to your WishNest account to manage your wishlists." : "Create a WishNest account to start building and sharing your ultimate gift registry."}
+        path={isLogin ? "/login" : "/signup"}
+      />
       <div className="auth-card card">
         <div className="auth-header">
           <Link to="/" className="logo auth-logo">

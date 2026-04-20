@@ -1,18 +1,15 @@
-import { useEffect } from 'react';
+import SEO from '../components/SEO';
 import { Eye } from 'lucide-react';
 import './LandingPage.css';
 
 export default function PrivacyPolicy() {
-  useEffect(() => {
-    document.title = 'Privacy Policy | WishNest';
-    const metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute('content', 'Understand how WishNest handles your data and protects your privacy. Our policy is compliant with standard practices and Google AdSense requirements.');
-    }
-  }, []);
-
   return (
     <div className="landing-page landing-page--wishnest animate-fade-in">
+      <SEO 
+        title="Privacy Policy"
+        description="Understand how WishNest handles your data and protects your privacy. Our policy is compliant with standard practices and Google AdSense requirements."
+        path="/privacy-policy"
+      />
       <section className="landing-section">
         <div className="container">
           <div className="landing-section__header">

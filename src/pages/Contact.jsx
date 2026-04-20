@@ -1,18 +1,15 @@
-import { useEffect } from 'react';
+import SEO from '../components/SEO';
 import { Mail } from 'lucide-react';
 import './LandingPage.css';
 
 export default function Contact() {
-  useEffect(() => {
-    document.title = 'Contact Us | WishNest';
-    const metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute('content', 'Get in touch with the WishNest team for support, feedback, or business inquiries.');
-    }
-  }, []);
-
   return (
     <div className="landing-page landing-page--wishnest animate-fade-in">
+      <SEO 
+        title="Contact Us"
+        description="Get in touch with the WishNest team for support, feedback, or business inquiries."
+        path="/contact"
+      />
       <section className="landing-section">
         <div className="container">
           <div className="landing-section__header">

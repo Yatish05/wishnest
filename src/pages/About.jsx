@@ -1,19 +1,15 @@
-import { useEffect } from 'react';
+import SEO from '../components/SEO';
 import { HeartHandshake } from 'lucide-react';
 import './LandingPage.css';
 
 export default function About() {
-  useEffect(() => {
-    document.title = 'About Us | WishNest - Gifting Made Simple';
-    // Update meta description if needed (would require a helper or library for robustness)
-    const metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute('content', 'Learn more about WishNest and why we build tools to make gifting clearer, kinder, and less awkward.');
-    }
-  }, []);
-
   return (
     <div className="landing-page landing-page--wishnest animate-fade-in">
+      <SEO 
+        title="About Us"
+        description="Learn more about WishNest and why we build tools to make gifting clearer, kinder, and less awkward."
+        path="/about"
+      />
       <section className="landing-section">
         <div className="container">
           <div className="landing-section__header">
