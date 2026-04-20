@@ -18,20 +18,6 @@ import SEO from '../components/SEO';
 import './LandingPage.css';
 
 const sampleWishlists = [
-/* ... (unchanged) ... */
-];
-
-export default function LandingPage() {
-  const { user } = useAuth();
-
-  return (
-    <div className="landing-page landing-page--wishnest animate-fade-in">
-      <SEO 
-        title="WishNest — Free Wishlist & Gift Registry" 
-        description="Create and share your wishlist for any occasion. Perfect for birthdays, weddings, holidays & more. Build your premium registry today."
-        path="/"
-      />
-      <section className="landing-hero">
   {
     id: 1,
     name: 'Birthday Hints',
@@ -137,6 +123,11 @@ export default function LandingPage() {
 
   return (
     <div className="landing-page landing-page--wishnest animate-fade-in">
+      <SEO 
+        title="WishNest — Free Wishlist & Gift Registry" 
+        description="Create and share your wishlist for any occasion. Perfect for birthdays, weddings, holidays & more. Build your premium registry today."
+        path="/"
+      />
       <section className="landing-hero">
         <div className="container">
           <div className="landing-hero__banner">

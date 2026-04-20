@@ -61,16 +61,18 @@ export default async function handler(req, res) {
   </url>`;
 
     // 3. Add dynamic wishlist URLs
-    wishlists.forEach(wl => {
-      const lastMod = wl.updated_at ? wl.updated_at.split('T')[0] : '2026-04-20';
-      xml += `
+    if (Array.isArray(wishlists)) {
+      wishlists.forEach(wl => {
+        const lastMod = wl.updated_at ? wl.updated_at.split('T')[0] : '2026-04-20';
+        xml += `
   <url>
     <loc>${baseUrl}/wishlist/${wl.id}</loc>
     <lastmod>${lastMod}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>`;
-    });
+      });
+    }
 
     xml += '\n</urlset>';
 
