@@ -7,9 +7,9 @@ export default async function handler(req, res) {
     // 1. Fetch all public wishlists
     const { data: wishlists, error } = await supabase
       .from('wishlists')
-      .select('id, updated_at')
+      .select('id, created_at')
       .or('is_public.eq.true,visibility.eq.public')
-      .order('updated_at', { ascending: false });
+      .order('created_at', { ascending: false });
 
     if (error) {
       console.error('Sitemap fetch error:', error);
@@ -63,7 +63,7 @@ export default async function handler(req, res) {
     // 3. Add dynamic wishlist URLs
     if (Array.isArray(wishlists)) {
       wishlists.forEach(wl => {
-        const lastMod = wl.updated_at ? wl.updated_at.split('T')[0] : '2026-04-20';
+        const lastMod = (wl.updated_at || wl.created_at || '2026-04-20').split('T')[0];
         xml += `
   <url>
     <loc>${baseUrl}/wishlist/${wl.id}</loc>
