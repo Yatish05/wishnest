@@ -4,7 +4,7 @@ import api from '../utils/api';
 import toast from 'react-hot-toast';
 import { Plus, Edit3, Share2, ExternalLink, X, Image as ImageIcon, Lock, Globe, Eye, Check, Gift, Sparkles, Users, Package2, VenusAndMars } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { formatCurrency, getCurrencySymbol } from '../utils/currency';
+import { formatCurrency } from '../utils/currency';
 import './WishlistPage.css';
 
 export default function WishlistPage() {
@@ -218,9 +218,21 @@ export default function WishlistPage() {
   };
 
   const handleAddItem = async () => {
+    if (!newItem.name.trim()) {
+      toast.error("Item title is required");
+      return;
+    }
+
+    let itemLink = newItem.link.trim();
+    if (itemLink && !itemLink.startsWith('http://') && !itemLink.startsWith('https://')) {
+      itemLink = `https://${itemLink}`;
+    }
+
+    const payload = { ...newItem, name: newItem.name.trim(), link: itemLink };
+
     setSaving(true);
     try {
-      const res = await api.post(`/wishlists/${wishlistId}/items`, newItem);
+      const res = await api.post(`/wishlists/${wishlistId}/items`, payload);
       if (res.data) {
         toast.success("Item added to wishlist!");
         setWishlist(prev => ({
@@ -454,6 +466,7 @@ export default function WishlistPage() {
                       <div className="item-copy">
                         <div className="item-chip-row">
                           <span className="item-chip">{item.link ? 'Link attached' : 'No link yet'}</span>
+                          {item.price && <span className="item-chip item-chip-price">{formatCurrency(item.price)}</span>}
                         </div>
                         <h3 className="item-name">{item.name}</h3>
                         <p className="item-notes">{item.notes || 'No additional notes provided.'}</p>

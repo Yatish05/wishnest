@@ -1,5 +1,5 @@
 // Trigger redeployment to sync stable state
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { Home, CheckSquare, Settings as SettingsIcon, LogOut, Bell, Menu, X, Sparkles, Share2, ChevronRight, Compass } from 'lucide-react';
@@ -11,8 +11,9 @@ import './App.css';
 function MainLayout({ children }) {
   const { user } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const location = useLocation();
+  const navigate = useNavigate();
   const displayName = user?.name || 'User';
+
   const initials = displayName
     .split(' ')
     .filter(Boolean)
@@ -20,6 +21,20 @@ function MainLayout({ children }) {
     .map((part) => part[0]?.toUpperCase())
     .join('') || 'U';
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
+
+  const handleSectionNav = (sectionId) => {
+    closeMobileMenu();
+    if (window.location.pathname === '/') {
+      const el = document.getElementById(sectionId);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      navigate('/', { replace: false });
+      setTimeout(() => {
+        const el = document.getElementById(sectionId);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+  };
 
   return (
     <div className="app-container">
@@ -30,14 +45,14 @@ function MainLayout({ children }) {
             <span className="logo-wordmark">WishNest</span>
           </Link>
 
-          <button className="mobile-menu-toggle" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+          <button className="mobile-menu-toggle" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} aria-label="Toggle navigation menu">
             {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
 
           <nav className={`nav-links ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
-                <a href="#how-it-works" className="nav-link" onClick={closeMobileMenu}>How it works</a>
+                <button type="button" className="nav-link nav-btn-link" onClick={() => handleSectionNav('how-it-works')}>How it works</button>
                 <Link to="/discover" className="nav-link" onClick={closeMobileMenu}>Occasions</Link>
-                <a href="#ai-assistant" className="nav-link" onClick={closeMobileMenu}>AI Assistant</a>
+                <Link to={user ? "/ai-assistant" : "/#ai-assistant"} className="nav-link" onClick={(e) => { if (!user) { e.preventDefault(); handleSectionNav('ai-assistant'); } else { closeMobileMenu(); } }}>AI Assistant</Link>
             <div className="nav-actions-mobile">
               {user ? (
                 <>
@@ -99,7 +114,7 @@ function MainLayout({ children }) {
               <h4 style={{ color: 'white', marginBottom: '1.25rem', fontSize: '1.1rem' }}>Product</h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 <Link to="/discover" style={{ color: '#94A3B8', transition: 'var(--transition)' }}>Occasions</Link>
-                <a href="/#ai-assistant" style={{ color: '#94A3B8', transition: 'var(--transition)' }}>AI Assistant</a>
+                <button type="button" onClick={() => handleSectionNav('ai-assistant')} style={{ color: '#94A3B8', background: 'none', border: 'none', padding: 0, font: 'inherit', cursor: 'pointer', textAlign: 'left', transition: 'var(--transition)' }}>AI Assistant</button>
               </div>
             </div>
             <div>
@@ -257,6 +272,18 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import Terms from './pages/Terms';
 import Contact from './pages/Contact';
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    const mainEl = document.querySelector('.main-content') || document.querySelector('.dashboard-content');
+    if (mainEl) mainEl.scrollTop = 0;
+  }, [pathname]);
+
+  return null;
+}
+
 function App() {
   const { user, loading, isTransitioning } = useAuth();
 
@@ -272,6 +299,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Toaster
         position="top-right"
         toastOptions={{

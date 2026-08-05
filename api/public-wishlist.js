@@ -54,7 +54,7 @@ export default async function handler(req) {
         'Cache-Control': 's-maxage=60, stale-while-revalidate=300',
       },
     });
-  } catch (err) {
+  } catch {
     return new Response(JSON.stringify({ message: 'Unable to load wishlist.' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },

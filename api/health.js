@@ -10,7 +10,7 @@ export default async function handler(req) {
     status: 'ok',
     uptime: process.uptime ? process.uptime() : null, // process.uptime might not be available in Edge
     timestamp: new Date().toISOString(),
-    region: req.headers.get('x-vercel-id') || 'unknown',
+    region: (typeof req.headers?.get === 'function' ? req.headers.get('x-vercel-id') : req.headers?.['x-vercel-id']) || 'unknown',
   };
 
   const latency = Date.now() - start;

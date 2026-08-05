@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   const path = req.url.split('?')[0].replace('/api/wishlists', '').replace(/\/$/, '') || '/';
 
   // =============== PUBLIC WISHLIST ===============
-  const publicMatch = path.match(/^\/public\/([^\/]+)$/);
+  const publicMatch = path.match(/^\/public\/([^/]+)$/);
   if (publicMatch && req.method === 'GET') {
     try {
       const id = publicMatch[1];
@@ -17,7 +17,7 @@ export default async function handler(req, res) {
       const isPublic = wishlist.is_public || wishlist.visibility === 'public';
       if (!isPublic) return res.status(403).json({ message: 'This wishlist is private.' });
       return res.json(formatWishlist(wishlist, false));
-    } catch (err) { return res.status(500).json({ message: 'Unable to load wishlist.' }); }
+    } catch { return res.status(500).json({ message: 'Unable to load wishlist.' }); }
   }
 
   // ===========================================
@@ -63,7 +63,7 @@ export default async function handler(req, res) {
     } catch (err) { return res.status(500).json({ error: err.message }); }
   }
 
-  const idMatch = path.match(/^\/([^\/]+)$/);
+  const idMatch = path.match(/^\/([^/]+)$/);
   if (idMatch) {
     const id = idMatch[1];
     if (req.method === 'GET') {
@@ -71,7 +71,7 @@ export default async function handler(req, res) {
         const { data: wishlist, error } = await supabase.from('wishlists').select('*, items(*)').eq('id', id).single();
         if (error || !wishlist) return res.status(404).json({ message: "Wishlist not found" });
         return res.json(formatWishlist(wishlist, user.id === wishlist.user_id));
-      } catch (err) { return res.status(500).json({ message: "Failed to fetch wishlist" }); }
+      } catch { return res.status(500).json({ message: "Failed to fetch wishlist" }); }
     }
     if (req.method === 'PUT') {
       try {
@@ -102,7 +102,7 @@ export default async function handler(req, res) {
     }
   }
 
-  const itemsMatch = path.match(/^\/([^\/]+)\/items$/);
+  const itemsMatch = path.match(/^\/([^/]+)\/items$/);
   if (itemsMatch && req.method === 'POST') {
     const id = itemsMatch[1];
     try {
@@ -117,7 +117,7 @@ export default async function handler(req, res) {
     } catch (err) { return res.status(400).json({ error: err.message }); }
   }
 
-  const itemDeleteMatch = path.match(/^\/([^\/]+)\/items\/([^\/]+)$/);
+  const itemDeleteMatch = path.match(/^\/([^/]+)\/items\/([^/]+)$/);
   if (itemDeleteMatch && req.method === 'DELETE') {
     const id = itemDeleteMatch[1];
     const itemId = itemDeleteMatch[2];
@@ -130,7 +130,7 @@ export default async function handler(req, res) {
     } catch (err) { return res.status(500).json({ error: err.message }); }
   }
 
-  const shareMatch = path.match(/^\/([^\/]+)\/share$/);
+  const shareMatch = path.match(/^\/([^/]+)\/share$/);
   if (shareMatch && req.method === 'POST') {
     const id = shareMatch[1];
     try {
@@ -148,7 +148,7 @@ export default async function handler(req, res) {
     } catch (err) { return res.status(500).json({ error: err.message }); }
   }
 
-  const saveMatch = path.match(/^\/([^\/]+)\/save$/);
+  const saveMatch = path.match(/^\/([^/]+)\/save$/);
   if (saveMatch && req.method === 'POST') {
     const id = saveMatch[1];
     try {
@@ -166,7 +166,7 @@ export default async function handler(req, res) {
     } catch (err) { return res.status(500).json({ message: err.message }); }
   }
 
-  const purchaseMatch = path.match(/^\/([^\/]+)\/purchase$/);
+  const purchaseMatch = path.match(/^\/([^/]+)\/purchase$/);
   if (purchaseMatch && req.method === 'POST') {
     const id = purchaseMatch[1];
     try {
@@ -194,7 +194,7 @@ export default async function handler(req, res) {
     } catch (err) { return res.status(500).json({ message: err.message }); }
   }
 
-  const itemPurchaseMatch = path.match(/^\/([^\/]+)\/items\/([^\/]+)\/purchase$/);
+  const itemPurchaseMatch = path.match(/^\/([^/]+)\/items\/([^/]+)\/purchase$/);
   if (itemPurchaseMatch && req.method === 'PATCH') {
     const id = itemPurchaseMatch[1];
     const itemId = itemPurchaseMatch[2];
@@ -211,7 +211,7 @@ export default async function handler(req, res) {
       await sendNotification(wishlist.user_id, msg, 'purchase');
       const { data: updatedWishlist } = await supabase.from('wishlists').select('*, items(*)').eq('id', id).single();
       return res.json(formatWishlist(updatedWishlist, false));
-    } catch (err) { return res.status(500).json({ message: "Failed to mark item as purchased" }); }
+    } catch { return res.status(500).json({ message: "Failed to mark item as purchased" }); }
   }
 
   return res.status(404).json({ message: 'Route not found' });

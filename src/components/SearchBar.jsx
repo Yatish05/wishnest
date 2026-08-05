@@ -136,19 +136,37 @@ export default function SearchBar() {
                 <List size={13} /> Wishlists
               </p>
               <ul>
-                {results.wishlists.map((wl) => (
-                  <li key={wl._id} className="sb-item" role="option">
-                    <div className="sb-item-icon sb-icon-wishlist">
-                      <List size={14} />
-                    </div>
-                    <div className="sb-item-text">
-                      <span className="sb-item-name">{wl.name}</span>
-                      {wl.occasion && (
-                        <span className="sb-item-meta">{wl.occasion}</span>
-                      )}
-                    </div>
-                  </li>
-                ))}
+                {results.wishlists.map((wl) => {
+                  const targetId = wl._id || wl.id;
+                  return (
+                    <li
+                      key={targetId}
+                      className="sb-item"
+                      role="option"
+                      tabIndex={0}
+                      onClick={() => {
+                        setOpen(false);
+                        navigate(`/wishlists?id=${targetId}`);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          setOpen(false);
+                          navigate(`/wishlists?id=${targetId}`);
+                        }
+                      }}
+                    >
+                      <div className="sb-item-icon sb-icon-wishlist">
+                        <List size={14} />
+                      </div>
+                      <div className="sb-item-text">
+                        <span className="sb-item-name">{wl.name}</span>
+                        {wl.occasion && (
+                          <span className="sb-item-meta">{wl.occasion}</span>
+                        )}
+                      </div>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           )}
@@ -160,22 +178,48 @@ export default function SearchBar() {
                 <Package size={13} /> Items
               </p>
               <ul>
-                {results.items.map((item) => (
-                  <li key={item._id} className="sb-item" role="option">
-                    <div className="sb-item-icon sb-icon-item">
-                      <Package size={14} />
-                    </div>
-                    <div className="sb-item-text">
-                      <span className="sb-item-name">{item.name}</span>
-                      {item.notes && (
-                        <span className="sb-item-meta">{item.notes}</span>
+                {results.items.map((item) => {
+                  const targetId = item._id || item.id;
+                  return (
+                    <li
+                      key={targetId}
+                      className="sb-item"
+                      role="option"
+                      tabIndex={0}
+                      onClick={() => {
+                        setOpen(false);
+                        if (item.wishlistId || item.wishlist_id) {
+                          navigate(`/wishlists?id=${item.wishlistId || item.wishlist_id}`);
+                        } else {
+                          navigate(`/discover?q=${encodeURIComponent(item.name)}`);
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          setOpen(false);
+                          if (item.wishlistId || item.wishlist_id) {
+                            navigate(`/wishlists?id=${item.wishlistId || item.wishlist_id}`);
+                          } else {
+                            navigate(`/discover?q=${encodeURIComponent(item.name)}`);
+                          }
+                        }
+                      }}
+                    >
+                      <div className="sb-item-icon sb-icon-item">
+                        <Package size={14} />
+                      </div>
+                      <div className="sb-item-text">
+                        <span className="sb-item-name">{item.name}</span>
+                        {item.notes && (
+                          <span className="sb-item-meta">{item.notes}</span>
+                        )}
+                      </div>
+                      {(item.purchased || item.isPurchased) && (
+                        <span className="sb-badge sb-badge-purchased">Purchased</span>
                       )}
-                    </div>
-                    {item.purchased && (
-                      <span className="sb-badge sb-badge-purchased">Purchased</span>
-                    )}
-                  </li>
-                ))}
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           )}
