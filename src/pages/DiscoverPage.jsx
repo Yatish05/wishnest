@@ -1,5 +1,5 @@
-import { useEffect, useState, useMemo } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState, useMemo, useCallback } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Gift, ShieldCheck, Sparkles, Filter, Lock } from 'lucide-react';
 import api from '../utils/api';
 import { useAuth } from '../contexts/AuthContext';
@@ -134,7 +134,9 @@ const STATIC_GIFTS = [
 ];
 
 export default function DiscoverPage() {
-  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const searchQuery = (searchParams.get('q') || '').trim().toLowerCase();
+
   const { user } = useAuth();
   const isGuest = !user;
   const [gifts, setGifts] = useState(STATIC_GIFTS);
@@ -148,13 +150,9 @@ export default function DiscoverPage() {
     relationship: 'All'
   });
 
-  const fetchInitialGifts = async () => {
+  const fetchInitialGifts = useCallback(async () => {
     try {
-      // Clear errors but DONT set loading to true
-      // This allows STATIC_GIFTS (already in state) to show immediately
       setError('');
-      
-      // If user is logged in, fetch data added by other users in the background
       if (user) {
         try {
           const res = await api.get('/discover?limit=20');
@@ -166,38 +164,33 @@ export default function DiscoverPage() {
             occasion: item.wishlistOccasion || item.occasion || 'Personal',
             relationship: item.relationship || 'Everyone'
           }));
-          
-          // Append real ones after curated ones
           setGifts([...STATIC_GIFTS, ...apiGifts]);
         } catch (apiErr) {
           console.error('[Discover] Failed to fetch real user data:', apiErr);
-          // We already have STATIC_GIFTS in state, so no need to do anything
         }
       }
     } catch (err) {
       console.error('Discover fetch error:', err);
-      // Only show error if we somehow lost our static gifts
-      if (!gifts || gifts.length === 0) {
-        setError('Error loading the discovery feed.');
-      }
+      setError('Error loading the discovery feed.');
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
 
   useEffect(() => {
     fetchInitialGifts();
-  }, []);
+  }, [fetchInitialGifts]);
 
   const filteredGifts = useMemo(() => {
     const filtered = gifts.filter(gift => {
       const matchOccasion = activeFilters.occasion === 'All Occasions' || gift.occasion === activeFilters.occasion;
       const matchRelationship = activeFilters.relationship === 'All' || gift.relationship === activeFilters.relationship;
-      return matchOccasion && matchRelationship;
+      const matchSearch = !searchQuery || gift.title.toLowerCase().includes(searchQuery) || gift.category.toLowerCase().includes(searchQuery);
+      return matchOccasion && matchRelationship && matchSearch;
     });
 
     return isGuest ? filtered.slice(0, 15) : filtered;
-  }, [gifts, activeFilters, isGuest]);
+  }, [gifts, activeFilters, searchQuery, isGuest]);
 
   const handleFilterChange = (key, value) => {
     setActiveFilters(prev => ({ ...prev, [key]: value }));
@@ -205,12 +198,8 @@ export default function DiscoverPage() {
 
   const handleSeeMore = () => {
     if (isGuest) {
-      // Save redirect location so user comes back here after login
+      setShowLoginPrompt(true);
       localStorage.setItem('postLoginRedirect', '/discover');
-      navigate('/login');
-    } else {
-      // Logic for logged in users to load more would go here
-      console.log('Loading more gifts for authenticated user...');
     }
   };
 
@@ -305,9 +294,7 @@ export default function DiscoverPage() {
                   className="btn-soft" 
                   onClick={() => setActiveFilters({
                     occasion: 'All Occasions',
-                    category: 'All Categories',
-                    relationship: 'All Relationships',
-                    budget: 'All Budgets'
+                    relationship: 'All'
                   })}
                 >
                   Clear Filters

@@ -100,17 +100,15 @@ export default function Dashboard() {
     try {
       const raw = localStorage.getItem('wishlists');
       return raw ? JSON.parse(raw) : [];
-    } catch (e) {
+    } catch {
       return [];
     }
   });
   const [loading, setLoading] = React.useState(true);
   const [showShareNudge, setShowShareNudge] = React.useState(true);
 
-  const fetchData = async () => {
-    // Don't fetch if we're in the middle of a profile sync
+  const fetchData = React.useCallback(async () => {
     if (isSyncing) return;
-    
     setLoading(true);
     try {
       const wlRes = await api.get('/wishlists');
@@ -118,7 +116,7 @@ export default function Dashboard() {
       setWishlists(lists);
       try {
         localStorage.setItem('wishlists', JSON.stringify(lists));
-      } catch (e) {
+      } catch {
         // ignore storage errors
       }
     } catch (error) {
@@ -126,10 +124,9 @@ export default function Dashboard() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [isSyncing]);
 
   React.useEffect(() => {
-    // Reset local state if user changes or sync is triggered
     if (!user?.id) {
       setWishlists([]);
       setLoading(false);
@@ -137,11 +134,10 @@ export default function Dashboard() {
     }
 
     if (!isSyncing) {
-      // Explicitly clear state before fetching to prevent ghost data flicker
       setWishlists([]); 
       fetchData();
     }
-  }, [user?.id, isSyncing, syncKey]);
+  }, [user?.id, isSyncing, syncKey, fetchData]);
 
   const safeWishlists = Array.isArray(wishlists) ? wishlists : [];
   const visibleWishlists = safeWishlists;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Gift, ExternalLink, CheckCircle, Circle, Package, Copy, Check } from 'lucide-react';
+import { Gift, ExternalLink, CheckCircle, Circle, Package, Copy, Check, Sparkles, X } from 'lucide-react';
+import toast from 'react-hot-toast';
 import api from '../utils/api';
 import SEO from '../components/SEO';
 import './PublicWishlist.css';
@@ -21,6 +22,9 @@ export default function PublicWishlist() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);   // { status, message }
   const [copied, setCopied] = useState(false);
+  const [activeItemModal, setActiveItemModal] = useState(null);
+  const [isSurprise, setIsSurprise] = useState(false);
+  const [reserving, setReserving] = useState(false);
 
   /* ─── Fetch ─── */
   useEffect(() => {
@@ -58,8 +62,36 @@ export default function PublicWishlist() {
     const link = `${window.location.origin}/wishlist/${publicWishlistId}`;
     navigator.clipboard.writeText(link).then(() => {
       setCopied(true);
+      toast.success('Share link copied to clipboard!');
       setTimeout(() => setCopied(false), 2000);
+    }).catch(() => {
+      toast.error('Failed to copy link');
     });
+  };
+
+  /* ─── Reservation Handler ─── */
+  const handleToggleReservation = async (item, surpriseOverride) => {
+    const targetItemId = item._id || item.id;
+    setReserving(true);
+    try {
+      const isPurchased = item.purchased || item.isPurchased;
+      const res = await api.post(`/wishlists/${publicWishlistId}/purchase`, {
+        itemId: targetItemId,
+        hiddenFromOwner: surpriseOverride !== undefined ? surpriseOverride : isSurprise,
+      });
+
+      if (res.data) {
+        setWishlist(res.data);
+        toast.success(isPurchased ? 'Item marked available again' : 'Item reserved! Gift owner notified 🎁');
+      }
+    } catch (err) {
+      console.error('Reservation failed:', err);
+      toast.error(err.response?.data?.message || 'Failed to update item reservation.');
+    } finally {
+      setReserving(false);
+      setActiveItemModal(null);
+      setIsSurprise(false);
+    }
   };
 
   /* ─── Loading ─── */
@@ -94,8 +126,8 @@ export default function PublicWishlist() {
 
   const occasionEmoji = OCCASION_EMOJI[wishlist.occasion] ?? '🎁';
   const items = Array.isArray(wishlist.items) ? wishlist.items : [];
-  const availableCount = items.filter(i => !i.purchased).length;
-  const purchasedCount = items.filter(i => i.purchased).length;
+  const availableCount = items.filter(i => !(i.purchased || i.isPurchased)).length;
+  const purchasedCount = items.filter(i => (i.purchased || i.isPurchased)).length;
 
   return (
     <div className="pw-shell">
@@ -140,46 +172,123 @@ export default function PublicWishlist() {
           </div>
         ) : (
           <div className="pw-items-grid">
-            {items.map((item) => (
-              <div key={item._id} className={`pw-item-card ${item.purchased ? 'pw-item--purchased' : ''}`}>
-                {/* Image */}
-                {item.img ? (
-                  <div className="pw-item-img-wrap">
-                    <img src={item.img} alt={item.name} className="pw-item-img" />
-                  </div>
-                ) : (
-                  <div className="pw-item-img-placeholder">
-                    <Gift size={32} />
-                  </div>
-                )}
-
-                {/* Body */}
-                <div className="pw-item-body">
-                  <div className="pw-item-top">
-                    <h3 className="pw-item-name">{item.name}</h3>
-                    <span className={`pw-status-badge ${item.purchased ? 'pw-badge--purchased' : 'pw-badge--available'}`}>
-                      {item.purchased
-                        ? <><CheckCircle size={13} /> Purchased</>
-                        : <><Circle size={13} /> Available</>
-                      }
-                    </span>
-                  </div>
-
-                  {item.notes && (
-                    <p className="pw-item-notes">{item.notes}</p>
+            {items.map((item) => {
+              const isPurchased = item.purchased || item.isPurchased;
+              const itemId = item._id || item.id;
+              return (
+                <div key={itemId} className={`pw-item-card ${isPurchased ? 'pw-item--purchased' : ''}`}>
+                  {/* Image */}
+                  {item.img ? (
+                    <div className="pw-item-img-wrap">
+                      <img src={item.img} alt={item.name} className="pw-item-img" />
+                    </div>
+                  ) : (
+                    <div className="pw-item-img-placeholder">
+                      <Gift size={32} />
+                    </div>
                   )}
 
-                  {item.link && (
-                    <a href={item.link} target="_blank" rel="noopener noreferrer" className="pw-item-link">
-                      <ExternalLink size={14} /> View item
-                    </a>
-                  )}
+                  {/* Body */}
+                  <div className="pw-item-body">
+                    <div className="pw-item-top">
+                      <h3 className="pw-item-name">{item.name}</h3>
+                      <span className={`pw-status-badge ${isPurchased ? 'pw-badge--purchased' : 'pw-badge--available'}`}>
+                        {isPurchased
+                          ? <><CheckCircle size={13} /> Purchased</>
+                          : <><Circle size={13} /> Available</>
+                        }
+                      </span>
+                    </div>
+
+                    {item.notes && (
+                      <p className="pw-item-notes">{item.notes}</p>
+                    )}
+
+                    <div className="pw-item-actions-row">
+                      {!isPurchased ? (
+                        <button
+                          type="button"
+                          className="pw-reserve-btn"
+                          onClick={() => setActiveItemModal(item)}
+                        >
+                          <Gift size={15} /> Reserve Gift
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          className="pw-unreserve-btn"
+                          onClick={() => handleToggleReservation(item, false)}
+                          disabled={reserving}
+                        >
+                          Mark Available
+                        </button>
+                      )}
+
+                      {item.link && (
+                        <a
+                          href={item.link.startsWith('http') ? item.link : `https://${item.link}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="pw-item-link"
+                        >
+                          <ExternalLink size={14} /> Store Link
+                        </a>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
+
+      {/* ── Reserve Confirmation Modal ── */}
+      {activeItemModal && (
+        <div className="pw-modal-overlay" onClick={() => setActiveItemModal(null)}>
+          <div className="pw-modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="pw-modal-header">
+              <h3>Reserve "{activeItemModal.name}"</h3>
+              <button className="pw-modal-close" onClick={() => setActiveItemModal(null)}>
+                <X size={20} />
+              </button>
+            </div>
+            <div className="pw-modal-body">
+              <p>Reserving prevents duplicate gifts by letting others know this item is taken.</p>
+              
+              <label className="pw-surprise-option">
+                <input
+                  type="checkbox"
+                  checked={isSurprise}
+                  onChange={(e) => setIsSurprise(e.target.checked)}
+                />
+                <span>
+                  <strong>Keep as a surprise gift 🎁</strong>
+                  <br />
+                  <small style={{ color: '#64748B' }}>The list owner will see it as reserved without revealing which item it is.</small>
+                </span>
+              </label>
+            </div>
+            <div className="pw-modal-footer">
+              <button
+                type="button"
+                className="pw-cancel-btn"
+                onClick={() => setActiveItemModal(null)}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="pw-confirm-btn"
+                onClick={() => handleToggleReservation(activeItemModal)}
+                disabled={reserving}
+              >
+                {reserving ? 'Reserving...' : 'Confirm Reservation'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── Footer ── */}
       <footer className="pw-footer">

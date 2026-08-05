@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import api from '../utils/api';
 
 const AuthContext = createContext();
@@ -6,14 +6,12 @@ const AuthContext = createContext();
 const safeBase64Decode = (str) => {
   try {
     if (!str) return null;
-    // Add padding if missing
     let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
     while (base64.length % 4) {
       base64 += '=';
     }
     return atob(base64);
-  } catch (e) {
-    console.error('[AuthContext] safeBase64Decode failed', e);
+  } catch {
     return null;
   }
 };
@@ -21,7 +19,6 @@ const safeBase64Decode = (str) => {
 const normalizeUser = (nextUser, authType) => (
   nextUser
     ? {
-      // ensure frontend always has `id` field mapped from common server shapes
       id: nextUser.id || (nextUser._id ? String(nextUser._id) : undefined),
       ...nextUser,
       isGuest: authType === 'guest' || nextUser.isGuest || nextUser.role === 'guest',
@@ -39,15 +36,7 @@ export function AuthProvider({ children }) {
     try {
       const storedUser = localStorage.getItem('user');
       return storedUser ? JSON.parse(storedUser) : null;
-    } catch (e) {
-      return null;
-    }
-  });
-
-  const [token, setToken] = useState(() => {
-    try {
-      return localStorage.getItem('token');
-    } catch (e) {
+    } catch {
       return null;
     }
   });
@@ -57,7 +46,6 @@ export function AuthProvider({ children }) {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [syncKey, setSyncKey] = useState(Date.now());
 
-  // Storage helpers to prevent Safari SecurityErrors
   const safeSetItem = (key, val) => {
     try { 
       if (val === null || val === undefined) {
@@ -65,22 +53,21 @@ export function AuthProvider({ children }) {
       } else {
         localStorage.setItem(key, val); 
       }
-    } catch (e) { 
-      console.warn('[AuthContext] Storage set blocked', e); 
+    } catch { 
+      // ignore storage errors
     }
   };
 
   const safeRemoveItem = (key) => {
-    try { localStorage.removeItem(key); } catch (e) { console.warn('[AuthContext] Storage remove blocked', e); }
+    try { localStorage.removeItem(key); } catch { /* ignore storage errors */ }
   };
 
   const safeGetItem = (key) => {
-    try { return localStorage.getItem(key); } catch (e) { return null; }
+    try { return localStorage.getItem(key); } catch { return null; }
   };
 
   const clearAuth = useCallback(() => {
-    console.log('[AuthContext] Performing deep cleanup of auth state and caches...');
-    setToken(null);
+    console.log('[AuthContext] Clearing auth state and session caches...');
     setUser(null);
     safeRemoveItem('token');
     safeRemoveItem('user');
@@ -88,25 +75,21 @@ export function AuthProvider({ children }) {
     safeRemoveItem('wishlists');
     safeRemoveItem('notifications');
     safeRemoveItem('lastSync');
-    
-    // Increment sync key to force components to re-fetch/reset
     setSyncKey(Date.now());
-  }, [setSyncKey]);
+  }, []);
 
-  const persistAuth = useCallback((nextToken, nextUser, authType) => {
+  const persistAuth = useCallback((nextUser, token, authType) => {
     console.log('[AuthContext] Persisting auth for:', nextUser?.email || 'unknown');
     const normalizedUser = normalizeUser(nextUser, authType);
 
-    // Atomic cleanup of ALL cached data before persisting new user
-    // This prevents "Ghost Data" issues where User B sees User A's cached wishlists
-    console.log('[AuthContext] Clearing old session caches for isolated login...');
     safeRemoveItem('wishlists');
     safeRemoveItem('notifications');
     safeRemoveItem('lastSync');
 
-    // Sync localStorage first (atomic for other tabs/interceptors)
-    safeSetItem('token', nextToken);
     safeSetItem('user', JSON.stringify(normalizedUser));
+    if (token) {
+      safeSetItem('token', token);
+    }
 
     if (authType) {
       safeSetItem('authType', authType);
@@ -114,93 +97,53 @@ export function AuthProvider({ children }) {
       safeRemoveItem('authType');
     }
 
-    // Then update React state
-    setToken(nextToken);
     setUser(normalizedUser);
-
-    // signal other consumers to sync immediately
     setSyncKey(Date.now());
-  }, [setSyncKey]);
+  }, []);
 
   useEffect(() => {
     let isSubscribed = true;
 
     const fetchProfile = async () => {
-      // RACE CONDITION FIX: If we are on the auth callback page, let THAT page handle the sync.
-      // Doing a profile fetch here while AuthCallback is also setting the token causes state conflicts.
       if (window.location.pathname === '/auth/callback') {
-        console.log('[AuthContext] Skipping initial sync because we are on callback route.');
+        console.log('[AuthContext] Skipping initial sync on callback route.');
         setLoading(false);
         return;
       }
 
-      const storedToken = safeGetItem('token');
       const storedUser = safeGetItem('user');
       const storedAuthType = safeGetItem('authType');
 
-      if (!storedToken) {
-        if (isSubscribed) {
-          clearAuth();
-          setLoading(false);
-        }
-        return;
-      }
-
-      // Initial local hydration
-      if (storedUser && !user) {
+      if (storedUser) {
         try {
           const parsed = JSON.parse(storedUser);
-          if (isSubscribed) setUser(parsed);
-        } catch (e) {
-          console.error('[AuthContext] Local user hydration failed', e);
+          if (isSubscribed) {
+            setUser((prev) => prev || parsed);
+          }
+        } catch {
+          // ignore parsing error
         }
       }
 
       try {
         setIsSyncing(true);
-        const response = await api.get('/auth/profile', {
-          headers: { Authorization: `Bearer ${storedToken}` },
-        });
+        const response = await api.get('/auth/profile');
 
         if (isSubscribed) {
           if (response.data?.user) {
             persistAuth(
-              storedToken,
               response.data.user,
+              safeGetItem('token'),
               storedAuthType || (response.data.user.role === 'guest' ? 'guest' : undefined)
             );
-            setSyncKey(Date.now());
           } else {
             clearAuth();
           }
         }
       } catch (error) {
-        console.error('[AuthContext] Profile sync failed:', error.message);
-        
+        console.error('[AuthContext] Profile sync status:', error.message);
         if (isSubscribed) {
-          if (error?.response?.status === 401) {
-            clearAuth();
-          } else if (storedToken) {
-            // Robust fallback for Safari compatibility and legacy tokens
-            try {
-              const decoded = safeBase64Decode(storedToken.split('.')[1]);
-              if (decoded) {
-                const payload = JSON.parse(decoded);
-                const basicUser = {
-                  id: payload.id,
-                  name: payload.name || 'User',
-                  email: payload.email || '',
-                  isGuest: false,
-                };
-                persistAuth(storedToken, basicUser);
-                setSyncKey(Date.now());
-              } else {
-                clearAuth();
-              }
-            } catch (jwtErr) {
-              clearAuth();
-            }
-          }
+          clearAuth();
         }
       } finally {
         if (isSubscribed) {
@@ -212,12 +155,12 @@ export function AuthProvider({ children }) {
 
     fetchProfile();
     return () => { isSubscribed = false; };
-  }, [clearAuth, persistAuth]); // Removed token and user to prevent infinite sync loop
+  }, [clearAuth, persistAuth]);
 
   const login = async (email, password) => {
     try {
       const response = await api.post('/auth/login', { email, password });
-      persistAuth(response.data.token, response.data.user);
+      persistAuth(response.data.user, response.data.token);
       return response.data.user;
     } catch (error) {
       throw new Error(error.response?.data?.message || 'Login failed');
@@ -227,18 +170,15 @@ export function AuthProvider({ children }) {
   const signup = async (name, email, password) => {
     try {
       const response = await api.post('/auth/register', { name, email, password });
-      persistAuth(response.data.token, response.data.user);
+      persistAuth(response.data.user, response.data.token);
       return response.data.user;
     } catch (error) {
       throw new Error(error.response?.data?.message || 'Registration failed');
     }
   };
 
-  // loginAsGuest removed to eliminate conflicts between guest and authenticated sessions
-
   const loginWithToken = (jwtToken) => {
     try {
-      console.log('[AuthContext] Logging in with explicit token');
       const decoded = safeBase64Decode(jwtToken.split('.')[1]);
       if (!decoded) throw new Error('JWT Decode failed');
       const payload = JSON.parse(decoded);
@@ -248,18 +188,21 @@ export function AuthProvider({ children }) {
         email: payload.email || '',
         isGuest: false,
       };
-      // Explicitly clear any old state before persisting the new one
       safeRemoveItem('wishlists');
-      persistAuth(jwtToken, oauthUser);
-    } catch (err) {
-      console.error('loginWithToken failed:', err.message);
-      setToken(jwtToken);
-      safeSetItem('token', jwtToken);
+      persistAuth(oauthUser, jwtToken);
+    } catch {
+      // Fallback
     }
   };
 
-  const logout = () => {
-    clearAuth();
+  const logout = async () => {
+    try {
+      await api.post('/auth/logout');
+    } catch {
+      // ignore network errors on logout
+    } finally {
+      clearAuth();
+    }
   };
 
   const updateUser = (nextUser) => {
@@ -271,7 +214,6 @@ export function AuthProvider({ children }) {
 
   const value = {
     user,
-    token,
     loading,
     isSyncing,
     isTransitioning,

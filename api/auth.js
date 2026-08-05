@@ -3,12 +3,34 @@ import { supabase } from './_utils/supabase.js';
 import generateToken from './_utils/generateToken.js';
 import { protect } from './_utils/authMiddleware.js';
 import { serializeUser } from './_utils/formatters.js';
+import { checkRateLimit } from './_utils/rateLimiter.js';
 
 export default async function handler(req, res) {
   const path = req.url.split('?')[0].replace('/api/auth', '').replace(/\/$/, '') || '/';
+  const clientIp = req.headers['x-forwarded-for']?.split(',')[0] || req.headers['x-real-ip'] || req.socket?.remoteAddress || '127.0.0.1';
+
+  // Secure attribute is strictly enabled in production HTTPS, omitted for localhost HTTP
+  const isProd = process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production';
+  const secureFlag = isProd ? 'Secure; ' : '';
+  const cookieFlags = `HttpOnly; ${secureFlag}SameSite=Lax; Path=/`;
+
+  // Helper to determine accurate callback redirect URI
+  const getGoogleRedirectUri = (request) => {
+    if (process.env.GOOGLE_CALLBACK_URL) {
+      return process.env.GOOGLE_CALLBACK_URL;
+    }
+    const host = request.headers['x-forwarded-host'] || request.headers.host || 'localhost:5173';
+    const proto = request.headers['x-forwarded-proto'] || 'http';
+    return `${proto}://${host}/api/auth/google/callback`;
+  };
 
   // =============== REGISTER ===============
   if (path === '/register' && req.method === 'POST') {
+    const rateCheck = await checkRateLimit(`register_${clientIp}`, 10, 900);
+    if (!rateCheck.allowed) {
+      return res.status(429).json({ success: false, message: 'Too many registration attempts. Please try again later.' });
+    }
+
     try {
       const { name, email, password } = req.body;
       if (!name || !email || !password) return res.status(400).json({ success: false, message: 'Name, email, and password are required' });
@@ -27,7 +49,10 @@ export default async function handler(req, res) {
       if (error && error.code === '23505') return res.status(400).json({ success: false, message: 'An account with that email already exists' });
       if (error) throw error;
 
-      return res.status(201).json({ success: true, message: 'User registered', user: serializeUser(user), token: generateToken(user.id) });
+      const token = generateToken(user.id);
+      res.setHeader('Set-Cookie', `token=${token}; ${cookieFlags}; Max-Age=2592000`);
+
+      return res.status(201).json({ success: true, message: 'User registered', user: serializeUser(user), token });
     } catch (err) {
       return res.status(500).json({ success: false, message: 'Server error', error: err.message });
     }
@@ -35,6 +60,11 @@ export default async function handler(req, res) {
 
   // =============== LOGIN ===============
   if (path === '/login' && req.method === 'POST') {
+    const rateCheck = await checkRateLimit(`login_${clientIp}`, 10, 900);
+    if (!rateCheck.allowed) {
+      return res.status(429).json({ success: false, message: 'Too many login attempts. Please try again in 15 minutes.' });
+    }
+
     try {
       const { email, password } = req.body;
       if (!email || !password) return res.status(400).json({ success: false, message: 'Email and password are required' });
@@ -45,10 +75,19 @@ export default async function handler(req, res) {
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) return res.status(401).json({ success: false, message: 'Invalid email or password' });
 
-      return res.status(200).json({ success: true, message: 'Login successful', user: serializeUser(user), token: generateToken(user.id) });
+      const token = generateToken(user.id);
+      res.setHeader('Set-Cookie', `token=${token}; ${cookieFlags}; Max-Age=2592000`);
+
+      return res.status(200).json({ success: true, message: 'Login successful', user: serializeUser(user), token });
     } catch (err) {
       return res.status(500).json({ success: false, message: 'Server error', error: err.message });
     }
+  }
+
+  // =============== LOGOUT ===============
+  if (path === '/logout' && req.method === 'POST') {
+    res.setHeader('Set-Cookie', `token=; ${cookieFlags}; Max-Age=0`);
+    return res.status(200).json({ success: true, message: 'Logged out successfully' });
   }
 
   // =============== PROFILE ===============
@@ -93,8 +132,8 @@ export default async function handler(req, res) {
   // =============== GOOGLE OAUTH URL ===============
   if (path === '/google' && req.method === 'GET') {
     const clientID = process.env.GOOGLE_CLIENT_ID;
-    const redirectURI = process.env.GOOGLE_CALLBACK_URL;
-    if (!clientID || !redirectURI) return res.status(500).json({ message: 'Google OAuth not configured' });
+    const redirectURI = getGoogleRedirectUri(req);
+    if (!clientID) return res.status(500).json({ message: 'Google OAuth client ID not configured' });
     const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientID}&redirect_uri=${encodeURIComponent(redirectURI)}&response_type=code&scope=profile%20email&access_type=offline`;
     return res.redirect(url);
   }
@@ -103,28 +142,44 @@ export default async function handler(req, res) {
   if (path === '/google/callback' && req.method === 'GET') {
     const { code } = req.query;
     if (!code) return res.redirect('/login?error=auth_failed');
+    const redirectURI = getGoogleRedirectUri(req);
     
     try {
       const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
         method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({ code, client_id: process.env.GOOGLE_CLIENT_ID, client_secret: process.env.GOOGLE_CLIENT_SECRET, redirect_uri: process.env.GOOGLE_CALLBACK_URL, grant_type: 'authorization_code' })
+        body: new URLSearchParams({ code, client_id: process.env.GOOGLE_CLIENT_ID, client_secret: process.env.GOOGLE_CLIENT_SECRET, redirect_uri: redirectURI, grant_type: 'authorization_code' })
       });
       const tokenData = await tokenRes.json();
-      if (tokenData.error) return res.redirect('/login?error=auth_failed');
+      if (tokenData.error) {
+        console.error('[Google OAuth] Token exchange failed:', tokenData.error_description || tokenData.error);
+        return res.redirect('/login?error=auth_failed');
+      }
       
       const profile = await (await fetch('https://www.googleapis.com/oauth2/v2/userinfo', { headers: { Authorization: `Bearer ${tokenData.access_token}` }})).json();
       if (!profile.email) return res.redirect('/login?error=no_email_provided');
       
       let { data: user } = await supabase.from('users').select('*').eq('email', profile.email).single();
       if (!user) {
+        const oauthPassword = await bcrypt.hash(`g_${Date.now()}_${Math.random()}`, 10);
         const { data: newUser, error } = await supabase.from('users').insert({
-          name: profile.name || profile.email.split('@')[0], email: profile.email, password: `g_${Date.now()}`, role: 'user', preferences: { theme: 'light', notificationsEnabled: true, defaultVisibility: 'public' }
+          name: profile.name || profile.email.split('@')[0], email: profile.email, password: oauthPassword, role: 'user', preferences: { theme: 'light', notificationsEnabled: true, defaultVisibility: 'public' }
         }).select().single();
         if (error) throw error;
         user = newUser;
       }
-      return res.redirect(`/auth/callback?token=${generateToken(user.id)}`);
-    } catch (err) { return res.redirect('/login?error=auth_failed'); }
+      const token = generateToken(user.id);
+      res.setHeader('Set-Cookie', `token=${token}; ${cookieFlags}; Max-Age=2592000`);
+
+      const targetHost = req.headers['x-forwarded-host'] || req.headers.host || '';
+      let targetUrl = '/auth/callback';
+      if (targetHost.includes('5001') || targetHost.includes('3000')) {
+        targetUrl = 'http://localhost:5173/auth/callback';
+      }
+      return res.redirect(targetUrl);
+    } catch (err) {
+      console.error('[Google OAuth] Callback exception:', err);
+      return res.redirect('/login?error=auth_failed');
+    }
   }
 
   return res.status(404).json({ message: 'Route not found' });

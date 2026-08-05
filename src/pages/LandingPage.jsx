@@ -1,17 +1,10 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
   ArrowRight,
-  CheckCircle2,
   CheckSquare,
-  Clock,
-  Eye,
   Gift,
-  Heart,
-  HeartHandshake,
-  Mail,
   Share2,
   Sparkles,
-  Users,
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import SEO from '../components/SEO';
@@ -105,18 +98,6 @@ const assistantHighlights = [
 ];
 
 
-function getOccasionClass(label) {
-  switch (label) {
-    case 'Birthday':
-      return 'landing-tag landing-tag--birthday';
-    case 'Wedding':
-      return 'landing-tag landing-tag--wedding';
-    case 'Moving In':
-      return 'landing-tag landing-tag--moving';
-    default:
-      return 'landing-tag';
-  }
-}
 
 export default function LandingPage() {
   const { user } = useAuth();

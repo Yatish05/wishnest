@@ -7,7 +7,7 @@ import './AuthPage.css';
 
 export default function AuthPage({ type }) {
   const isLogin = type === 'login';
-  const { login, signup, loginAsGuest, setIsTransitioning } = useAuth();
+  const { login, signup, setIsTransitioning } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -92,7 +92,7 @@ export default function AuthPage({ type }) {
         <form className="auth-form" onSubmit={handleSubmit}>
           {oauthError === 'google_failed' && (
             <div className="auth-error">
-              Google sign-in failed on the server. Check that MongoDB is connected and try again.
+              Google sign-in failed on the server. Please try again or log in with email.
             </div>
           )}
           {error && <div className="auth-error">{error}</div>}

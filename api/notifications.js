@@ -45,7 +45,7 @@ export default async function handler(req, res) {
     } catch (err) { return res.status(500).json({ error: err.message }); }
   }
 
-  const readMatch = path.match(/^\/([^\/]+)\/read$/);
+  const readMatch = path.match(/^\/([^/]+)\/read$/);
   if (readMatch && req.method === 'PUT') {
     const id = readMatch[1];
     try {

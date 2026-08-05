@@ -1,5 +1,14 @@
 import axios from 'axios';
 
+/**
+ * WishNest API Client Configuration
+ * Security & Compatibility Architecture:
+ * - Primary Auth: HttpOnly, Secure, SameSite=Lax cookies issued by /api/auth handlers.
+ * - Local & Client Fallback: Bearer token in Authorization header for environments
+ *   where browsers (e.g. Safari on HTTP localhost) block cookies on unencrypted origins.
+ * - withCredentials: true ensures cookies are automatically sent on same-origin/cross-origin requests.
+ */
+
 const apiBaseUrl = '/api';
 
 const api = axios.create({
@@ -7,11 +16,10 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  // include cookies for same-origin requests (helps OAuth/session flows)
   withCredentials: true,
 });
 
-// Add a request interceptor to include the auth token
+// Request interceptor to attach Bearer token if present in local storage
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -23,7 +31,7 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Add a response interceptor to handle session expiry (401)
+// Response interceptor for session expiry (401)
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -32,8 +40,10 @@ api.interceptors.response.use(
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       localStorage.removeItem('authType');
-      // Force a reload or redirect if we are not on a public page
-      if (window.location.pathname !== '/login' && window.location.pathname !== '/signup' && window.location.pathname !== '/') {
+      
+      const protectedRoutes = ['/dashboard', '/wishlists', '/shared', '/notifications', '/ai-assistant', '/settings'];
+      const isProtectedRoute = protectedRoutes.some((route) => window.location.pathname.startsWith(route));
+      if (isProtectedRoute) {
         window.location.href = '/login?error=session_expired';
       }
     }
