@@ -7,7 +7,7 @@ import './AuthPage.css';
 
 export default function AuthPage({ type }) {
   const isLogin = type === 'login';
-  const { login, signup, setIsTransitioning } = useAuth();
+  const { login, signup, loginAsGuest, setIsTransitioning } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -18,6 +18,12 @@ export default function AuthPage({ type }) {
   const [name, setName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const handleGuestBrowse = () => {
+    loginAsGuest();
+    navigate('/discover');
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -73,7 +79,7 @@ export default function AuthPage({ type }) {
           <p>{isLogin ? 'Enter your details to access your account.' : 'Join WishNest to start creating and sharing.'}</p>
         </div>
 
-        <div className="auth-social">
+        <div className="auth-social" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           <button
             type="button"
             className="btn btn-secondary social-btn"
@@ -82,6 +88,15 @@ export default function AuthPage({ type }) {
           >
             <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="social-icon" />
             Continue with Google
+          </button>
+          <button
+            type="button"
+            className="btn btn-outline social-btn"
+            onClick={handleGuestBrowse}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+          >
+            <Gift size={18} />
+            Explore as Guest (No Account Required)
           </button>
         </div>
 

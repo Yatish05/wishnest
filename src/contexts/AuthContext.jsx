@@ -78,6 +78,41 @@ export function AuthProvider({ children }) {
     setSyncKey(Date.now());
   }, []);
 
+  const syncDraftWishlistToServer = async () => {
+    try {
+      const rawDraft = safeGetItem('draftWishlist');
+      if (!rawDraft) return;
+      const parsed = JSON.parse(rawDraft);
+
+      // Expire drafts older than 24 hours (86,400,000 ms)
+      if (parsed.createdAt && Date.now() - parsed.createdAt > 86400000) {
+        console.log('[AuthContext] Guest draft wishlist expired (>24h), removing...');
+        safeRemoveItem('draftWishlist');
+        return;
+      }
+
+      if (parsed && Array.isArray(parsed.items) && parsed.items.length > 0) {
+        console.log('[AuthContext] Migrating guest draft wishlist to authenticated account...');
+        await api.post('/wishlists', {
+          name: `${parsed.occasion || 'AI Curated'} Wishlist`,
+          occasion: parsed.occasion || 'Other',
+          visibility: 'public',
+          isPublic: true,
+          items: parsed.items.map((i) => ({
+            name: i.name,
+            notes: i.reason || i.notes || '',
+            link: i.link || '',
+            img: i.img || ''
+          }))
+        });
+        safeRemoveItem('draftWishlist');
+        console.log('[AuthContext] Guest draft wishlist successfully migrated!');
+      }
+    } catch (err) {
+      console.error('[AuthContext] Failed to migrate guest draft wishlist:', err.message);
+    }
+  };
+
   const persistAuth = useCallback((nextUser, token, authType) => {
     console.log('[AuthContext] Persisting auth for:', nextUser?.email || 'unknown');
     const normalizedUser = normalizeUser(nextUser, authType);
@@ -136,13 +171,13 @@ export function AuthProvider({ children }) {
               safeGetItem('token'),
               storedAuthType || (response.data.user.role === 'guest' ? 'guest' : undefined)
             );
-          } else {
+          } else if (storedAuthType !== 'guest') {
             clearAuth();
           }
         }
       } catch (error) {
         console.error('[AuthContext] Profile sync status:', error.message);
-        if (isSubscribed) {
+        if (isSubscribed && storedAuthType !== 'guest') {
           clearAuth();
         }
       } finally {
@@ -161,6 +196,7 @@ export function AuthProvider({ children }) {
     try {
       const response = await api.post('/auth/login', { email, password });
       persistAuth(response.data.user, response.data.token);
+      await syncDraftWishlistToServer();
       return response.data.user;
     } catch (error) {
       throw new Error(error.response?.data?.message || 'Login failed');
@@ -171,10 +207,24 @@ export function AuthProvider({ children }) {
     try {
       const response = await api.post('/auth/register', { name, email, password });
       persistAuth(response.data.user, response.data.token);
+      await syncDraftWishlistToServer();
       return response.data.user;
     } catch (error) {
       throw new Error(error.response?.data?.message || 'Registration failed');
     }
+  };
+
+  const loginAsGuest = () => {
+    const guestUser = {
+      id: 'guest',
+      name: 'Guest Visitor',
+      email: '',
+      isGuest: true,
+      role: 'guest',
+    };
+    safeRemoveItem('draftWishlist');
+    persistAuth(guestUser, null, 'guest');
+    return guestUser;
   };
 
   const loginWithToken = (jwtToken) => {
@@ -190,6 +240,7 @@ export function AuthProvider({ children }) {
       };
       safeRemoveItem('wishlists');
       persistAuth(oauthUser, jwtToken);
+      syncDraftWishlistToServer();
     } catch {
       // Fallback
     }
@@ -202,6 +253,7 @@ export function AuthProvider({ children }) {
       // ignore network errors on logout
     } finally {
       clearAuth();
+      safeRemoveItem('draftWishlist');
     }
   };
 
@@ -220,6 +272,7 @@ export function AuthProvider({ children }) {
     syncKey,
     login,
     signup,
+    loginAsGuest,
     loginWithToken,
     updateUser,
     logout,

@@ -4,6 +4,8 @@ import { Gift, ShieldCheck, Sparkles, Filter, Lock } from 'lucide-react';
 import api from '../utils/api';
 import { useAuth } from '../contexts/AuthContext';
 import SEO from '../components/SEO';
+import { useCurrency } from '../utils/currency';
+import CurrencySelector from '../components/CurrencySelector';
 import './DiscoverPage.css';
 
 const OCCASIONS = ['All Occasions', 'Birthday', 'Wedding', 'Baby Shower', 'Anniversary', 'Other'];
@@ -17,15 +19,17 @@ const STATIC_GIFTS = [
     image: 'https://images.unsplash.com/photo-1603006905003-be475563bc59',
     category: 'Home',
     occasion: 'Anniversary',
-    relationship: 'Partner'
+    relationship: 'Partner',
+    price: 45
   },
   {
     id: 2,
     title: 'Apple Watch Series 9',
     image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30',
-    category: 'Home', // Adjusted since Electronics is removed
+    category: 'Home',
     occasion: 'Anniversary',
-    relationship: 'Partner'
+    relationship: 'Partner',
+    price: 399
   },
   {
     id: 3,
@@ -33,7 +37,8 @@ const STATIC_GIFTS = [
     image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3',
     category: 'Other',
     occasion: 'Birthday',
-    relationship: 'Family'
+    relationship: 'Family',
+    price: 250
   },
   {
     id: 4,
@@ -41,7 +46,8 @@ const STATIC_GIFTS = [
     image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e',
     category: 'Experiences',
     occasion: 'Other',
-    relationship: 'Self'
+    relationship: 'Self',
+    price: 299
   },
   {
     id: 5,
@@ -49,7 +55,8 @@ const STATIC_GIFTS = [
     image: 'https://images.unsplash.com/photo-1526170315870-ef6846055c9d',
     category: 'Experiences',
     occasion: 'Birthday',
-    relationship: 'Friends'
+    relationship: 'Friends',
+    price: 79
   },
   {
     id: 6,
@@ -57,7 +64,8 @@ const STATIC_GIFTS = [
     image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338',
     category: 'Other',
     occasion: 'Wedding',
-    relationship: 'Family'
+    relationship: 'Family',
+    price: 180
   },
   {
     id: 7,
@@ -65,7 +73,8 @@ const STATIC_GIFTS = [
     image: 'https://images.unsplash.com/photo-1485955900006-10f4d324d411',
     category: 'Home',
     occasion: 'Other',
-    relationship: 'Family'
+    relationship: 'Family',
+    price: 65
   },
   {
     id: 8,
@@ -73,7 +82,8 @@ const STATIC_GIFTS = [
     image: 'https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6',
     category: 'Home',
     occasion: 'Wedding',
-    relationship: 'Family'
+    relationship: 'Family',
+    price: 129
   },
   {
     id: 9,
@@ -81,7 +91,8 @@ const STATIC_GIFTS = [
     image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874',
     category: 'Experiences',
     occasion: 'Anniversary',
-    relationship: 'Partner'
+    relationship: 'Partner',
+    price: 350
   },
   {
     id: 10,
@@ -89,7 +100,8 @@ const STATIC_GIFTS = [
     image: 'https://images.unsplash.com/photo-1543005128-d1b210a56d95',
     category: 'Books',
     occasion: 'Birthday',
-    relationship: 'Friends'
+    relationship: 'Friends',
+    price: 35
   },
   {
     id: 11,
@@ -97,7 +109,8 @@ const STATIC_GIFTS = [
     image: 'https://images.unsplash.com/photo-1588423770674-f2855ee82639',
     category: 'Other',
     occasion: 'Birthday',
-    relationship: 'Self'
+    relationship: 'Self',
+    price: 199
   },
   {
     id: 12,
@@ -138,6 +151,7 @@ export default function DiscoverPage() {
   const searchQuery = (searchParams.get('q') || '').trim().toLowerCase();
 
   const { user } = useAuth();
+  const { format } = useCurrency();
   const isGuest = !user;
   const [gifts, setGifts] = useState(STATIC_GIFTS);
   const [loading, setLoading] = useState(false);
@@ -162,7 +176,8 @@ export default function DiscoverPage() {
             image: item.image_url || item.image || item.img || '/images/default-gift.png',
             category: item.category || 'Other',
             occasion: item.wishlistOccasion || item.occasion || 'Personal',
-            relationship: item.relationship || 'Everyone'
+            relationship: item.relationship || 'Everyone',
+            price: item.price
           }));
           setGifts([...STATIC_GIFTS, ...apiGifts]);
         } catch (apiErr) {
@@ -242,6 +257,10 @@ export default function DiscoverPage() {
             {RELATIONSHIPS.map(r => <option key={r} value={r}>{r}</option>)}
           </select>
         </div>
+        <div className="filter-group">
+          <label>Currency</label>
+          <CurrencySelector />
+        </div>
       </section>
 
       <div className="discovery-results-meta">
@@ -283,6 +302,7 @@ export default function DiscoverPage() {
                     <div className="discovery-card-tags">
                       <span className="tag tag--category">{gift.category}</span>
                       <span className="tag tag--occasion">{gift.occasion || 'Personal'}</span>
+                      {gift.price ? <span className="tag tag--price" style={{ fontWeight: 600, color: '#16A34A', background: '#F0FDF4' }}>{format(gift.price)}</span> : null}
                     </div>
                   </div>
                 </article>

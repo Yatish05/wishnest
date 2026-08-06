@@ -4,6 +4,8 @@ import { Gift, ExternalLink, CheckCircle, Circle, Package, Copy, Check, Sparkles
 import toast from 'react-hot-toast';
 import api from '../utils/api';
 import SEO from '../components/SEO';
+import { useCurrency } from '../utils/currency';
+import CurrencySelector from '../components/CurrencySelector';
 import './PublicWishlist.css';
 
 const OCCASION_EMOJI = {
@@ -17,6 +19,7 @@ const OCCASION_EMOJI = {
 export default function PublicWishlist() {
   const { id, wishlistId } = useParams();
   const publicWishlistId = id || wishlistId;
+  const { format } = useCurrency();
 
   const [wishlist, setWishlist] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -160,6 +163,8 @@ export default function PublicWishlist() {
           <span><span className="pw-stat-num">{availableCount}</span> Available</span>
           <span className="pw-stat-dot" />
           <span><span className="pw-stat-num">{purchasedCount}</span> Purchased</span>
+          <span className="pw-stat-dot" />
+          <CurrencySelector compact />
         </div>
       </div>
 
@@ -192,6 +197,11 @@ export default function PublicWishlist() {
                   <div className="pw-item-body">
                     <div className="pw-item-top">
                       <h3 className="pw-item-name">{item.name}</h3>
+                      {item.price ? (
+                        <span className="pw-item-price" style={{ fontWeight: 600, color: '#16A34A', background: '#F0FDF4', padding: '2px 8px', borderRadius: '12px', fontSize: '13px' }}>
+                          {format(item.price)}
+                        </span>
+                      ) : null}
                       <span className={`pw-status-badge ${isPurchased ? 'pw-badge--purchased' : 'pw-badge--available'}`}>
                         {isPurchased
                           ? <><CheckCircle size={13} /> Purchased</>

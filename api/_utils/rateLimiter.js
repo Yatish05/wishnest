@@ -11,6 +11,7 @@ export async function checkRateLimit(ip, limit = 10, windowSeconds = 900) {
 
   if (url && token) {
     try {
+      console.log(`[RateLimiter] Active Backend: Upstash Redis REST (IP: ${ip})`);
       // Use Upstash REST pipeline: INCR key and EXPIRE key if first request
       const response = await fetch(`${url}/pipeline`, {
         method: 'POST',
@@ -37,6 +38,7 @@ export async function checkRateLimit(ip, limit = 10, windowSeconds = 900) {
     }
   }
 
+  console.log(`[RateLimiter] Active Backend: In-Memory Fallback (IP: ${ip})`);
   // Local/Development Fallback: In-memory window tracking per warm instance
   const now = Date.now();
   const windowMs = windowSeconds * 1000;

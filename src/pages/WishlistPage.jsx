@@ -142,8 +142,9 @@ export default function WishlistPage() {
 
     const { name, occasion, visibility, gender } = newWishlist;
 
-    if (!user?.id) {
-      alert("Please login to create a wishlist");
+    if (!user?.id || user?.isGuest) {
+      toast.error("Sign up to save your wishlist!");
+      navigate('/signup');
       return;
     }
 
@@ -218,6 +219,12 @@ export default function WishlistPage() {
   };
 
   const handleAddItem = async () => {
+    if (!user?.id || user?.isGuest) {
+      toast.error("Sign up to save items to your wishlist!");
+      navigate('/signup');
+      return;
+    }
+
     if (!newItem.name.trim()) {
       toast.error("Item title is required");
       return;

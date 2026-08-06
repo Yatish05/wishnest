@@ -5,6 +5,7 @@ import { Toaster } from 'react-hot-toast';
 import { Home, CheckSquare, Settings as SettingsIcon, LogOut, Bell, Menu, X, Sparkles, Share2, ChevronRight, Compass } from 'lucide-react';
 import SearchBar from './components/SearchBar';
 import ProtectedRoute from './components/ProtectedRoute';
+import CurrencySelector from './components/CurrencySelector';
 import { useAuth } from './contexts/AuthContext';
 import './App.css';
 
@@ -50,9 +51,9 @@ function MainLayout({ children }) {
           </button>
 
           <nav className={`nav-links ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
-                <button type="button" className="nav-link nav-btn-link" onClick={() => handleSectionNav('how-it-works')}>How it works</button>
-                <Link to="/discover" className="nav-link" onClick={closeMobileMenu}>Occasions</Link>
-                <Link to={user ? "/ai-assistant" : "/#ai-assistant"} className="nav-link" onClick={(e) => { if (!user) { e.preventDefault(); handleSectionNav('ai-assistant'); } else { closeMobileMenu(); } }}>AI Assistant</Link>
+            <button type="button" className="nav-link nav-btn-link" onClick={() => handleSectionNav('how-it-works')}>How it works</button>
+            <Link to="/discover" className="nav-link" onClick={closeMobileMenu}>Occasions</Link>
+            <Link to="/ai-assistant" className="nav-link" onClick={closeMobileMenu}>AI Assistant</Link>
             <div className="nav-actions-mobile">
               {user ? (
                 <>
@@ -78,6 +79,7 @@ function MainLayout({ children }) {
           </nav>
 
           <div className="nav-actions">
+            <CurrencySelector />
             {user ? (
               <>
                 <div className="nav-user-pill">
@@ -114,7 +116,7 @@ function MainLayout({ children }) {
               <h4 style={{ color: 'white', marginBottom: '1.25rem', fontSize: '1.1rem' }}>Product</h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 <Link to="/discover" style={{ color: '#94A3B8', transition: 'var(--transition)' }}>Occasions</Link>
-                <button type="button" onClick={() => handleSectionNav('ai-assistant')} style={{ color: '#94A3B8', background: 'none', border: 'none', padding: 0, font: 'inherit', cursor: 'pointer', textAlign: 'left', transition: 'var(--transition)' }}>AI Assistant</button>
+                <Link to="/ai-assistant" style={{ color: '#94A3B8', transition: 'var(--transition)' }}>AI Assistant</Link>
               </div>
             </div>
             <div>
@@ -330,7 +332,7 @@ function App() {
         <Route path="/wishlists" element={<ProtectedRoute><DashboardLayout><WishlistPage /></DashboardLayout></ProtectedRoute>} />
         <Route path="/shared" element={<ProtectedRoute><DashboardLayout><SharedWithMe /></DashboardLayout></ProtectedRoute>} />
         <Route path="/notifications" element={<ProtectedRoute><DashboardLayout><Notifications /></DashboardLayout></ProtectedRoute>} />
-        <Route path="/ai-assistant" element={<ProtectedRoute><DashboardLayout><AIAssistantPage /></DashboardLayout></ProtectedRoute>} />
+        <Route path="/ai-assistant" element={user ? <DashboardLayout><AIAssistantPage /></DashboardLayout> : <MainLayout><AIAssistantPage /></MainLayout>} />
         <Route path="/settings" element={<ProtectedRoute><DashboardLayout><Settings /></DashboardLayout></ProtectedRoute>} />
 
         {/* Public — no login required */}
