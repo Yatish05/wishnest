@@ -66,15 +66,6 @@ export default async function handler(req, res) {
   </url>
   <!-- Static Blog Posts -->
   <url><loc>${baseUrl}/blog/how-to-create-a-wishlist</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>${baseUrl}/blog/the-awkward-gift-problem</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>${baseUrl}/blog/stop-getting-duplicate-gifts</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>${baseUrl}/blog/wedding-registry-alternatives-india</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>${baseUrl}/blog/rakhi-gift-ideas-under-500</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>${baseUrl}/blog/run-group-gift-without-whatsapp</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>${baseUrl}/blog/baby-shower-wishlist-ideas</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>${baseUrl}/blog/diwali-gifting-guide</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>${baseUrl}/blog/what-to-gift-someone-who-has-everything</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>${baseUrl}/blog/secret-santa-101</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   `;
 
     // 3. Add dynamic wishlist URLs
