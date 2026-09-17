@@ -8,10 +8,11 @@
     { "source": "/api/notifications/:path*", "destination": "/api/notifications" },
     { "source": "/sitemap.xml", "destination": "/api/sitemap" },
     { "source": "/api/db-check", "destination": "/api/db-check" },
-    { "source": "/blog/:path*", "destination": "/blog/:path*" },
+    { "source": "/blog", "destination": "/blog/index.html" },
+    { "source": "/blog/", "destination": "/blog/index.html" },
+    { "source": "/blog/:slug", "destination": "/blog/:slug.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
-  "cleanUrls": true,
   "headers": [
     {
       "source": "/(.*)",
