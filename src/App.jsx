@@ -54,6 +54,7 @@ function MainLayout({ children }) {
             <button type="button" className="nav-link nav-btn-link" onClick={() => handleSectionNav('how-it-works')}>How it works</button>
             <Link to="/discover" className="nav-link" onClick={closeMobileMenu}>Occasions</Link>
             <Link to="/ai-assistant" className="nav-link" onClick={closeMobileMenu}>AI Assistant</Link>
+            <a href="/blog" className="nav-link" onClick={closeMobileMenu}>Blog</a>
             <div className="nav-actions-mobile">
               {user ? (
                 <>
@@ -117,6 +118,7 @@ function MainLayout({ children }) {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 <Link to="/discover" style={{ color: '#94A3B8', transition: 'var(--transition)' }}>Occasions</Link>
                 <Link to="/ai-assistant" style={{ color: '#94A3B8', transition: 'var(--transition)' }}>AI Assistant</Link>
+                <a href="/blog" style={{ color: '#94A3B8', transition: 'var(--transition)' }}>Blog</a>
               </div>
             </div>
             <div>
