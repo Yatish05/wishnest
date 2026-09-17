@@ -58,7 +58,15 @@ export default async function handler(req, res) {
     <loc>${baseUrl}/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
-  </url>`;
+  </url>
+  <url>
+    <loc>${baseUrl}/blog</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <!-- Static Blog Posts -->
+  <url><loc>${baseUrl}/blog/how-to-create-a-wishlist</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  `;
 
     // 3. Add dynamic wishlist URLs
     if (Array.isArray(wishlists)) {

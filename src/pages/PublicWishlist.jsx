@@ -4,6 +4,7 @@ import { Gift, ExternalLink, CheckCircle, Circle, Package, Copy, Check, Sparkles
 import toast from 'react-hot-toast';
 import api from '../utils/api';
 import SEO from '../components/SEO';
+import JsonLd from '../components/JsonLd';
 import { useCurrency } from '../utils/currency';
 import CurrencySelector from '../components/CurrencySelector';
 import './PublicWishlist.css';
@@ -132,13 +133,36 @@ export default function PublicWishlist() {
   const availableCount = items.filter(i => !(i.purchased || i.isPurchased)).length;
   const purchasedCount = items.filter(i => (i.purchased || i.isPurchased)).length;
 
+  const jsonLdData = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "itemListElement": items.map((item, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "item": {
+        "@type": "Product",
+        "name": item.name,
+        ...(item.img && { "image": item.img }),
+        ...(item.price && {
+          "offers": {
+            "@type": "Offer",
+            "price": item.price,
+            "priceCurrency": "INR"
+          }
+        })
+      }
+    }))
+  };
+
   return (
     <div className="pw-shell">
       <SEO 
         title={wishlist ? `${wishlist.name}'s Wishlist` : 'Wishlist'} 
         description={wishlist ? `View and purchase gifts from ${wishlist.name}'s ${wishlist.occasion} wishlist on WishNest.` : 'View this personal wishlist on WishNest.'}
         path={`/wishlist/${publicWishlistId}`}
+        image={items.length > 0 && items[0].img ? items[0].img : undefined}
       />
+      <JsonLd data={jsonLdData} />
 
       {/* ── Branded Top Bar ── */}
       <header className="pw-topbar">
