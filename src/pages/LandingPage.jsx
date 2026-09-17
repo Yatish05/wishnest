@@ -9,7 +9,7 @@ import {
   Heart
 } from 'lucide-react';
 import SEO from '../components/SEO';
-import { formatCurrency } from '../utils/currency';
+import { useCurrency } from '../utils/currency';
 import './LandingPage.css';
 
 const sampleWishlists = [
@@ -76,11 +76,12 @@ const inspirationWishlists = [
 ];
 
 export default function LandingPage() {
+  const { format } = useCurrency();
 
   return (
     <div className="landing-page landing-page--wishnest animate-fade-in">
-      <SEO 
-        title="WishNest — Free Wishlist & Gift Registry Maker" 
+      <SEO
+        title="WishNest — Free Wishlist & Gift Registry Maker"
         description="Create and share your wishlist for any occasion. Let loved ones reserve items in 1 click so you never receive duplicate gifts."
         path="/"
       />
@@ -92,7 +93,7 @@ export default function LandingPage() {
             <div className="landing-hero__container">
               <div className="landing-hero__copy">
 
-                <div className="landing-trust-tag mb-3" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(255,255,255,0.25)', padding: '6px 16px', borderRadius: '50px', color: '#FFFFFF', fontWeight: 700, fontSize: '13px' }}>
+                <div className="landing-trust-tag mb-3">
                   <Sparkles size={14} />
                   <span>100% Free Wishlist & Gift Finder</span>
                 </div>
@@ -105,15 +106,15 @@ export default function LandingPage() {
                 </p>
 
                 {/* Explicit Clarifying Banner */}
-                <div style={{ background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(10px)', padding: '12px 18px', borderRadius: '12px', color: '#FFFFFF', fontSize: '13.5px', fontWeight: 500, marginBottom: '24px', border: '1px solid rgba(255, 255, 255, 0.3)' }}>
+                <div className="landing-clarifying-banner">
                   🎁 <strong>WishNest is not a store — we don&apos;t sell products.</strong> We help you curate, organize, and share wishlists so gifting is always spot on.
                 </div>
 
                 <div className="landing-actions">
-                  <Link to="/ai-assistant" className="btn btn-primary btn-lg" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                  <Link to="/ai-assistant" className="btn btn-primary btn-lg">
                     <Sparkles size={18} /> Try AI Gift Finder
                   </Link>
-                  <Link to="/discover" className="btn btn-outline btn-lg" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: '#FFFFFF', borderColor: '#FFFFFF' }}>
+                  <Link to="/discover" className="btn btn-outline btn-lg">
                     Explore Gift Ideas <ArrowRight size={18} />
                   </Link>
                 </div>
@@ -121,62 +122,62 @@ export default function LandingPage() {
 
               {/* Above the Fold Live Behavioral Preview (Wishlist Builder & AI Matching) */}
               <div className="landing-hero__panel">
-                <div className="landing-behavior-preview card" style={{ background: '#FFFFFF', padding: '24px', borderRadius: '20px', boxShadow: '0 20px 40px rgba(0,0,0,0.15)', color: '#0F172A', border: '1.5px solid #E2E8F0' }}>
-                  
+                <div className="landing-behavior-preview card">
+
                   {/* Shareable Link Banner */}
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', background: '#F8FAFC', borderRadius: '12px', marginBottom: '16px', border: '1px solid #E2E8F0' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', fontWeight: 600, color: '#334155' }}>
-                      <Share2 size={15} style={{ color: '#EA580C' }} />
+                  <div className="landing-preview-header">
+                    <div className="landing-preview-link">
+                      <Share2 size={15} className="landing-preview-icon" />
                       <span>wishnest.app/w/sarah-bday</span>
                     </div>
-                    <span style={{ fontSize: '11px', background: '#FFEDD5', color: '#C2410C', fontWeight: 700, padding: '2px 8px', borderRadius: '50px' }}>
+                    <span className="landing-preview-copy-btn">
                       Copy Link
                     </span>
                   </div>
 
-                  <h3 style={{ fontSize: '17px', fontWeight: 700, marginBottom: '12px', color: '#0F172A', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <h3 className="landing-preview-title">
                     <span>🎂 Sarah&apos;s 30th Birthday Wishlist</span>
                   </h3>
 
                   {/* Sample Wishlist Items with Reservation States */}
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '16px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 12px', background: '#F0FDF4', borderRadius: '10px', border: '1px solid #DCFCE7' }}>
+                  <div className="landing-preview-items">
+                    <div className="landing-preview-item available">
                       <div>
-                        <span style={{ fontSize: '13px', fontWeight: 700, display: 'block', color: '#0F172A' }}>Smart Digital Picture Frame</span>
-                        <span style={{ fontSize: '12px', color: '#16A34A', fontWeight: 600 }}>{formatCurrency(159)}</span>
+                        <span className="landing-preview-item-name">Smart Digital Picture Frame</span>
+                        <span className="landing-preview-item-price">{format(159)}</span>
                       </div>
-                      <span style={{ fontSize: '11px', background: '#DCFCE7', color: '#15803D', fontWeight: 700, padding: '3px 10px', borderRadius: '50px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                      <span className="landing-preview-badge available">
                         <CheckCircle size={12} /> Available
                       </span>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 12px', background: '#FFF7ED', borderRadius: '10px', border: '1px solid #FFEDD5' }}>
+                    <div className="landing-preview-item reserved">
                       <div>
-                        <span style={{ fontSize: '13px', fontWeight: 700, display: 'block', color: '#0F172A' }}>Weekend Spa & Aromatherapy Set</span>
-                        <span style={{ fontSize: '12px', color: '#EA580C', fontWeight: 600 }}>{formatCurrency(85)}</span>
+                        <span className="landing-preview-item-name">Weekend Spa & Aromatherapy Set</span>
+                        <span className="landing-preview-item-price">{format(85)}</span>
                       </div>
-                      <span style={{ fontSize: '11px', background: '#FFEDD5', color: '#C2410C', fontWeight: 700, padding: '3px 10px', borderRadius: '50px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                      <span className="landing-preview-badge reserved">
                         <Gift size={12} /> Reserved 🎁
                       </span>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 12px', background: '#F8FAFC', borderRadius: '10px', border: '1px solid #E2E8F0' }}>
+                    <div className="landing-preview-item clickable">
                       <div>
-                        <span style={{ fontSize: '13px', fontWeight: 700, display: 'block', color: '#0F172A' }}>Pour-Over Coffee Dripper Stand</span>
-                        <span style={{ fontSize: '12px', color: '#64748B', fontWeight: 600 }}>{formatCurrency(45)}</span>
+                        <span className="landing-preview-item-name">Pour-Over Coffee Dripper Stand</span>
+                        <span className="landing-preview-item-price">{format(45)}</span>
                       </div>
-                      <span style={{ fontSize: '11px', background: '#E2E8F0', color: '#475569', fontWeight: 700, padding: '3px 10px', borderRadius: '50px' }}>
+                      <span className="landing-preview-badge action">
                         1-Click Reserve
                       </span>
                     </div>
                   </div>
 
                   {/* AI Finder Match Teaser */}
-                  <div style={{ padding: '10px 12px', background: 'linear-gradient(135deg, #FFF8F5, #FFF1EB)', borderRadius: '12px', border: '1px solid #FDBA74', fontSize: '12px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700, color: '#EA580C', marginBottom: '2px' }}>
+                  <div className="landing-preview-ai-teaser">
+                    <div className="landing-preview-ai-header">
                       <Sparkles size={13} /> AI Finder Recommendation
                     </div>
-                    <p style={{ color: '#475569', margin: 0, lineHeight: 1.3 }}>
+                    <p className="landing-preview-ai-copy">
                       Matched <strong>Smart Digital Frame</strong> (98% match) — &ldquo;Syncs photos from phone for shared memories.&rdquo;
                     </p>
                   </div>
@@ -189,7 +190,7 @@ export default function LandingPage() {
       </section>
 
       {/* Visual Social Loop & Sharing Section */}
-      <section className="landing-section">
+      <section className="landing-section landing-section--sharing">
         <div className="container">
           <div className="landing-section__header">
             <div className="landing-section__eyebrow">
@@ -200,33 +201,33 @@ export default function LandingPage() {
             <p>Share your link with anyone. Friends view and reserve items without signing up.</p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px' }}>
-            <div className="card" style={{ padding: '24px', borderRadius: '18px', border: '1.5px solid #E2E8F0' }}>
-              <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: '#FFF7ED', color: '#EA580C', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
+          <div className="landing-share-grid">
+            <div className="landing-share-card card brand-amber">
+              <div className="landing-share-icon amber">
                 <Share2 size={24} />
               </div>
-              <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '8px', color: '#0F172A' }}>1. Share Your Private Link</h3>
-              <p style={{ color: '#64748B', fontSize: '14px', lineHeight: 1.5 }}>
+              <h3>1. Share Your Private Link</h3>
+              <p>
                 Send your custom WishNest URL via WhatsApp, SMS, or social media. Anyone can view your wishlist instantly on any device.
               </p>
             </div>
 
-            <div className="card" style={{ padding: '24px', borderRadius: '18px', border: '1.5px solid #E2E8F0' }}>
-              <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: '#F0FDF4', color: '#16A34A', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
+            <div className="landing-share-card card brand-emerald">
+              <div className="landing-share-icon emerald">
                 <Gift size={24} />
               </div>
-              <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '8px', color: '#0F172A' }}>2. 1-Click Secret Reservation</h3>
-              <p style={{ color: '#64748B', fontSize: '14px', lineHeight: 1.5 }}>
+              <h3>2. 1-Click Secret Reservation</h3>
+              <p>
                 Friends click &ldquo;Reserve Gift&rdquo; to claim what they want to buy. Others see it is taken so nobody buys the same thing twice.
               </p>
             </div>
 
-            <div className="card" style={{ padding: '24px', borderRadius: '18px', border: '1.5px solid #E2E8F0' }}>
-              <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: '#EFF6FF', color: '#2563EB', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
+            <div className="landing-share-card card brand-blue">
+              <div className="landing-share-icon blue">
                 <Heart size={24} />
               </div>
-              <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '8px', color: '#0F172A' }}>3. Pure Delight, Zero Waste</h3>
-              <p style={{ color: '#64748B', fontSize: '14px', lineHeight: 1.5 }}>
+              <h3>3. Pure Delight, Zero Waste</h3>
+              <p>
                 You get gifts you genuinely love, and your loved ones enjoy stress-free gifting knowing their present is 100% appreciated.
               </p>
             </div>
@@ -292,7 +293,7 @@ export default function LandingPage() {
                     {wishlist.items} items
                   </div>
                 </div>
-                
+
                 <div className="landing-wishlist-card__body">
                   <h3>{wishlist.name}</h3>
                   <p>{wishlist.note}</p>
@@ -377,7 +378,7 @@ export default function LandingPage() {
       <section id="ai-assistant" className="landing-section landing-section--ai">
         <div className="container">
           <div className="landing-section__header">
-            <div className="landing-section__eyebrow" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#FFF7ED', color: '#EA580C', padding: '4px 14px', borderRadius: '50px', fontSize: '12px', fontWeight: 700, marginBottom: '12px' }}>
+            <div className="landing-section__eyebrow">
               <Sparkles size={14} />
               <span>AI GIFT FINDER IN ACTION</span>
             </div>
@@ -387,48 +388,48 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="landing-ai-showcase card" style={{ padding: '28px', borderRadius: '20px', background: 'linear-gradient(135deg, #FFFFFF, #FFF8F5)', border: '1.5px solid #FDBA74', marginBottom: '28px', boxShadow: '0 12px 32px rgba(249, 115, 22, 0.08)' }}>
-            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '12px', marginBottom: '20px', paddingBottom: '16px', borderBottom: '1px solid #FED7AA' }}>
+          <div className="landing-ai-showcase card">
+            <div className="landing-ai-showcase-header">
               <div>
-                <span style={{ fontSize: '12px', fontWeight: 700, color: '#EA580C', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Sample AI Search</span>
-                <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#1E293B', marginTop: '2px' }}>Shopping for Partner &bull; 30th Birthday &bull; $50–$150</h3>
+                <span className="landing-ai-showcase-kicker">Sample AI Search</span>
+                <h3 className="landing-ai-showcase-query">Shopping for Partner &bull; 30th Birthday &bull; {format(50)}–{format(150)}</h3>
               </div>
-              <span className="tag" style={{ background: '#FFEDD5', color: '#C2410C', fontWeight: 700, padding: '6px 14px', borderRadius: '50px' }}>
-                <Sparkles size={13} style={{ marginRight: '4px', inlineSize: 'auto' }} /> 3 Instant Matches Found
+              <span className="tag landing-ai-showcase-badge">
+                <Sparkles size={13} /> 3 Instant Matches Found
               </span>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
-              <div style={{ background: '#FFFFFF', padding: '16px', borderRadius: '14px', border: '1px solid #F1F5F9' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                  <span style={{ fontSize: '12px', fontWeight: 700, color: '#16A34A', background: '#F0FDF4', padding: '2px 8px', borderRadius: '12px' }}>98% Match</span>
-                  <span style={{ fontWeight: 700, color: '#0F172A' }}>$159</span>
+            <div className="landing-ai-showcase-grid">
+              <div className="landing-ai-item-card">
+                <div className="landing-ai-item-top">
+                  <span className="landing-ai-match">98% Match</span>
+                  <span className="landing-ai-price">{format(159)}</span>
                 </div>
-                <h4 style={{ fontSize: '15px', fontWeight: 700, color: '#0F172A', marginBottom: '4px' }}>Smart Digital Frame</h4>
-                <p style={{ fontSize: '13px', color: '#64748B', lineHeight: '1.4' }}>&ldquo;Syncs photos from phone instantly — perfect for joint memories.&rdquo;</p>
+                <h4>Smart Digital Frame</h4>
+                <p>&ldquo;Syncs photos from phone instantly — perfect for joint memories.&rdquo;</p>
               </div>
 
-              <div style={{ background: '#FFFFFF', padding: '16px', borderRadius: '14px', border: '1px solid #F1F5F9' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                  <span style={{ fontSize: '12px', fontWeight: 700, color: '#16A34A', background: '#F0FDF4', padding: '2px 8px', borderRadius: '12px' }}>95% Match</span>
-                  <span style={{ fontWeight: 700, color: '#0F172A' }}>$85</span>
+              <div className="landing-ai-item-card">
+                <div className="landing-ai-item-top">
+                  <span className="landing-ai-match">95% Match</span>
+                  <span className="landing-ai-price">{format(85)}</span>
                 </div>
-                <h4 style={{ fontSize: '15px', fontWeight: 700, color: '#0F172A', marginBottom: '4px' }}>Weekend Spa Set</h4>
-                <p style={{ fontSize: '13px', color: '#64748B', lineHeight: '1.4' }}>&ldquo;Relaxing organic aromas for a restful birthday weekend.&rdquo;</p>
+                <h4>Weekend Spa Set</h4>
+                <p>&ldquo;Relaxing organic aromas for a restful birthday weekend.&rdquo;</p>
               </div>
 
-              <div style={{ background: '#FFFFFF', padding: '16px', borderRadius: '14px', border: '1px solid #F1F5F9' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                  <span style={{ fontSize: '12px', fontWeight: 700, color: '#16A34A', background: '#F0FDF4', padding: '2px 8px', borderRadius: '12px' }}>92% Match</span>
-                  <span style={{ fontWeight: 700, color: '#0F172A' }}>$45</span>
+              <div className="landing-ai-item-card">
+                <div className="landing-ai-item-top">
+                  <span className="landing-ai-match">92% Match</span>
+                  <span className="landing-ai-price">{format(45)}</span>
                 </div>
-                <h4 style={{ fontSize: '15px', fontWeight: 700, color: '#0F172A', marginBottom: '4px' }}>Pour-Over Dripper Stand</h4>
-                <p style={{ fontSize: '13px', color: '#64748B', lineHeight: '1.4' }}>&ldquo;Elegant tabletop coffee brewer for cozy mornings.&rdquo;</p>
+                <h4>Pour-Over Dripper Stand</h4>
+                <p>&ldquo;Elegant tabletop coffee brewer for cozy mornings.&rdquo;</p>
               </div>
             </div>
           </div>
 
-          <div className="landing-assistant-actions" style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
+          <div className="landing-assistant-actions">
             <Link to="/ai-assistant" className="btn btn-primary btn-lg">
               Try AI Assistant <ArrowRight size={18} />
             </Link>
