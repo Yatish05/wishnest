@@ -9,6 +9,7 @@ import {
   Heart
 } from 'lucide-react';
 import SEO from '../components/SEO';
+import JsonLd from '../components/JsonLd';
 import { useCurrency } from '../utils/currency';
 import './LandingPage.css';
 
@@ -85,6 +86,18 @@ export default function LandingPage() {
         description="Create and share your wishlist for any occasion. Let loved ones reserve items in 1 click so you never receive duplicate gifts."
         path="/"
       />
+      <JsonLd data={{
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "WishNest",
+        "url": "https://www.wishnest.co.in/",
+        "description": "Create and share your wishlist for any occasion. Let loved ones reserve items in 1 click so you never receive duplicate gifts.",
+        "publisher": {
+          "@type": "Organization",
+          "name": "WishNest",
+          "logo": "https://www.wishnest.co.in/favicon.png"
+        }
+      }} />
 
       {/* Hero Section */}
       <section className="landing-hero">

@@ -170,7 +170,7 @@ export default function AIAssistantPage() {
             </div>
 
             <div className="ai-hero-illustration">
-              <img src="/hero-3d-gift.png" alt="3D Gift Box" className="ai-3d-gift-img" />
+              <img src="/hero-3d-gift.webp" alt="3D Gift Box" className="ai-3d-gift-img" />
             </div>
           </div>
 
