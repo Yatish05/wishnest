@@ -8,7 +8,8 @@
     { "source": "/api/notifications/:path*", "destination": "/api/notifications" },
     { "source": "/sitemap.xml", "destination": "/api/sitemap" },
     { "source": "/api/db-check", "destination": "/api/db-check" },
-    { "source": "/((?!api/|blog/).*)", "destination": "/index.html" }
+    { "source": "/blog/:path*", "destination": "/blog/:path*" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ],
   "cleanUrls": true,
   "headers": [
